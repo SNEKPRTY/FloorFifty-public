@@ -1,0 +1,18 @@
+# Cosmetic only. A character is a body; the seat keeps its colour, so each seat
+# colour has its own recoloured sheet and portrait. Nothing here reaches a race.
+id = "penguin"
+displayName = "Penguin"
+
+[sheetAliases]
+scarlet = "penguin.scarlet"
+cyan = "penguin.cyan"
+gold = "penguin.gold"
+violet = "penguin.violet"
+
+# The neutral bust per seat; the win and lose moods are the same alias with
+# `Win` and `Lose` appended.
+[portraitAliases]
+scarlet = "portrait.penguinScarlet"
+cyan = "portrait.penguinCyan"
+gold = "portrait.penguinGold"
+violet = "portrait.penguinViolet"

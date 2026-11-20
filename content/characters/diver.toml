@@ -1,0 +1,18 @@
+# Cosmetic only. A character is a body; the seat keeps its colour, so each seat
+# colour has its own recoloured sheet and portrait. Nothing here reaches a race.
+id = "diver"
+displayName = "Diver"
+unlock = "games-8"
+[sheetAliases]
+scarlet = "diver.scarlet"
+cyan = "diver.cyan"
+gold = "diver.gold"
+violet = "diver.violet"
+
+# The neutral bust per seat; the win and lose moods are the same alias with
+# `Win` and `Lose` appended.
+[portraitAliases]
+scarlet = "portrait.diverScarlet"
+cyan = "portrait.diverCyan"
+gold = "portrait.diverGold"
+violet = "portrait.diverViolet"

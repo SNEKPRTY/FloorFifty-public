@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Deliberately no `DOM` lib and no `node` types. The simulation must stay
+    // callable from a browser-side host in a later initiative, so a reference
+    // to `window`, `process`, or `Date` has to fail the build here.
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src/**/*.ts"]
+}

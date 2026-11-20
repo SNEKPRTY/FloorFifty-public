@@ -1,0 +1,33 @@
+# One Floor Fifty server per colour: floor-fifty@blue (3001), floor-fifty@green (3002).
+# deploy/bin/activate starts the idle colour and stops the live one; stopping
+# sends SIGTERM, and the server drains its rooms for up to 270 s.
+[Unit]
+Description=Floor Fifty race server (%i)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=floorfifty
+Group=floorfifty
+WorkingDirectory=/srv/floor-fifty/%i/server
+EnvironmentFile=/etc/floor-fifty/env
+EnvironmentFile=/etc/floor-fifty/%i.env
+ExecStart=/usr/bin/node --max-old-space-size=${FF_HEAP_MB} dist/main.js
+Restart=on-failure
+RestartSec=2
+KillSignal=SIGTERM
+# The drain cap (DRAIN_MAX_MS, 270 s) plus 30 s to close sockets, and a
+# further 30 s of margin: a longer stop timeout than the cap is harmless.
+TimeoutStopSec=330
+LimitNOFILE=65536
+MemoryMax=3G
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+
+[Install]
+WantedBy=multi-user.target

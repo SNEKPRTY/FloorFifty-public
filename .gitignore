@@ -1,0 +1,130 @@
+# Evidence-only reference checkouts and skill state; not runtime dependencies.
+References/
+.superpowers/
+
+# Command Code agent state. Local settings and learned taste, specific to a
+# checkout; not part of the project.
+.commandcode/
+
+# Local credentials. Never commit: the art procurement stage reads PixelLab and
+# OpenAI keys from .env.local.
+.env
+.env.*
+!.env.example
+
+# Dependencies and build output
+node_modules/
+dist/
+*.tsbuildinfo
+# Paraglide compiles the message catalogues here (Vite, Vitest, `pnpm i18n:compile`).
+apps/client/src/paraglide/
+
+# Test output
+coverage/
+test-results/
+playwright-report/
+playwright-report-remote/
+playwright-report-smoke/
+evidence-remote/
+# The evidence specs write here (tests/e2e/support/evidence.ts);
+# tools/promote-evidence copies the approved shots into docs/art/screenshots/.
+/evidence/
+snapshots-remote/
+blob-report/
+.playwright/
+
+# PixelLab source exports. The raw, unreviewed generator output is regenerable
+# and stays out of history; the approved manifest and the final optimized
+# assets under packages/asset-contract/assets/production are committed.
+# Contents rather than the directory itself: git does not descend into an
+# excluded directory, so a negation below it would never be considered.
+packages/asset-contract/assets/source/*
+!packages/asset-contract/assets/source/city-mid.png
+!packages/asset-contract/assets/source/brand
+!packages/asset-contract/assets/source/rooftop-details.png
+
+# The city sources are the exception, and are committed.
+#
+# That rule rests on the output being regenerable. These are not: the image
+# model is not deterministic, so re-running the prompt returns a different
+# city, and the bytes that were reviewed are the only ones that reproduce the
+# plates. `pnpm assets:city` reads them, so without them in history the
+# conversion cannot be run again at all.
+!packages/asset-contract/assets/source/city-far.png
+!packages/asset-contract/assets/source/city-near.png
+!packages/asset-contract/assets/source/platform.png
+!packages/asset-contract/assets/source/menu-backdrop.png
+!packages/asset-contract/assets/source/racer-sheet.png
+!packages/asset-contract/assets/source/racer-climbs.png
+# The gpt-image-2.5-flare sources for mockup parity and the living stage
+# (launch polish spec §2.8, §2.9), committed for the same reason: the converters
+# read them, and the model will not return the same image twice.
+!packages/asset-contract/assets/source/portrait-sheet.png
+!packages/asset-contract/assets/source/clouds-streaks.png
+!packages/asset-contract/assets/source/sun-low.png
+!packages/asset-contract/assets/source/city-mid-spires.png
+!packages/asset-contract/assets/source/city-near-dense.png
+!packages/asset-contract/assets/source/rooftop-props.png
+!packages/asset-contract/assets/source/menu-city.png
+!packages/asset-contract/assets/source/menu-ledge.png
+!packages/asset-contract/assets/source/menu-sky-clear.png
+!packages/asset-contract/assets/source/menu-facade.png
+# The tutorial's dawn (tutorial stage spec §3.4), committed for the same reason.
+!packages/asset-contract/assets/source/dawn-sky.png
+!packages/asset-contract/assets/source/dawn-mist.png
+!packages/asset-contract/assets/source/dawn-concept.png
+!packages/asset-contract/assets/source/dawn-near.png
+# The stage ascent's boards and the layers made against them (stage ascent spec §4-5).
+!packages/asset-contract/assets/source/snow-shrine-board.png
+!packages/asset-contract/assets/source/snow-shrine-mid.png
+!packages/asset-contract/assets/source/snow-shrine-details.png
+!packages/asset-contract/assets/source/sunken-dome-board.png
+!packages/asset-contract/assets/source/rooftops-board.png
+!packages/asset-contract/assets/source/rooftops-sky.png
+!packages/asset-contract/assets/source/rooftops-horizon.png
+!packages/asset-contract/assets/source/sunken-dome-mid.png
+!packages/asset-contract/assets/source/sunken-dome-details.png
+!packages/asset-contract/assets/source/sunken-dome-fish.png
+!packages/asset-contract/assets/source/sunken-dome-mantas.png
+# The supplied icon and splash art, at the size it was drawn and at its
+# native pixel size. Hand-delivered rather than generated, so there is no
+# prompt to re-run: these bytes are the only copy. The splash plate under
+# assets/production and the icons under apps/client/public/icons derive from
+# them.
+!packages/asset-contract/assets/source/icon.png
+!packages/asset-contract/assets/source/icon-sm.png
+!packages/asset-contract/assets/source/splash.png
+!packages/asset-contract/assets/source/splash-sm.png
+packages/asset-contract/.pixellab-cache/
+
+# Derived from packages/asset-contract by `pnpm assets:sync`.
+apps/client/public/assets/
+
+# OS noise
+.DS_Store
+
+# Native worktree tooling creates isolated checkouts here.
+.claude/worktrees/
+
+# PixelLab frame cache. Downloaded once from the object recorded in the
+# manifest's provenance; re-downloadable, so not committed.
+packages/asset-contract/.pixellab-cache/
+
+# Supplied audio masters. The delivery encode under
+# packages/asset-contract/assets/production/ is what ships; a master is kept
+# locally and reproduced from the source URL in its manifest provenance.
+*.mp3
+*.wav
+# Except the generated sound set's delivery files, which ship as they are:
+# `generate-sounds.ts` writes them here from the ignored MP3 sources.
+!packages/asset-contract/assets/production/sounds/**/*.wav
+# And the ambience beds' generated sources, which are kept: a bed's encode is
+# cut from a seamless loop that a second generation would not reproduce.
+!packages/asset-contract/assets/source/sounds/
+packages/asset-contract/assets/source/sounds/*
+!packages/asset-contract/assets/source/sounds/ambience/
+!packages/asset-contract/assets/source/sounds/ambience/*.mp3
+
+# Ruken packs (tools/ruken-pack).
+/ruken-build*.zip
+prod-secrets/

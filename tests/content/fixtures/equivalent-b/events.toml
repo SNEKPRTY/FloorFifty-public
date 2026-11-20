@@ -1,0 +1,79 @@
+[[routes]]
+action = "flow.leave-race"
+order = 10
+source = "ui.leave-race-settled"
+
+[[routes]]
+action = "flow.back"
+order = 10
+source = "ui.back-requested"
+
+[[routes]]
+action = "flow.play"
+order = 10
+source = "ui.play-requested"
+
+[[routes]]
+action = "flow.resume-room"
+order = 10
+source = "app.room-resumed"
+
+[[routes]]
+action = "flow.return-to-menu"
+order = 10
+source = "ui.return-to-menu-settled"
+
+[[routes]]
+action = "flow.race-again"
+order = 10
+source = "ui.race-again-settled"
+
+[[routes]]
+action = "flow.recover-to-menu"
+order = 10
+source = "room.recovery-required"
+
+[[routes]]
+action = "flow.race-finished"
+order = 10
+source = "room.finished"
+
+[[routes]]
+action = "flow.room-racing"
+order = 10
+source = "room.racing"
+
+[[routes]]
+action = "flow.splash-complete"
+order = 10
+source = "app.splash-ready"
+
+[[routes]]
+source = "ui.tutorial-requested"
+order = 10
+action = "flow.tutorial"
+
+[[routes]]
+source = "ui.tutorial-closed-to-title"
+order = 10
+action = "flow.tutorial-to-title"
+
+[[routes]]
+source = "ui.tutorial-closed-to-lobby"
+order = 10
+action = "flow.tutorial-to-lobby"
+
+[[routes]]
+source = "ui.watch-replay"
+order = 10
+action = "flow.watch-replay"
+
+[[routes]]
+source = "ui.replay-exit"
+order = 10
+action = "flow.replay-exit"
+
+[[routes]]
+source = "ui.replay-exit-to-room"
+order = 10
+action = "flow.replay-exit-to-room"

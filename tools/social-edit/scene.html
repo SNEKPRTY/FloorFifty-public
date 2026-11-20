@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Every screen is a race — accent layer</title>
+  <style>
+    /* No CSS animation anywhere: every transform is set from the frame index by
+     * scene.js, so one `t` always draws one frame and a re-render matches. */
+    html, body { margin: 0; background: transparent; }
+    #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
+    #stage > div { position: absolute; inset: 0; }
+    @font-face { font-family: 'Fraunces'; src: url('fonts/fraunces.woff2') format('woff2'); font-weight: 100 900; font-style: normal; }
+    @font-face { font-family: 'Manrope'; src: url('fonts/manrope.woff2') format('woff2'); font-weight: 200 800; font-style: normal; }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <script src="scene.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "races": [
+    { "stage": "rooftops",     "song": "moving-on",           "mode": "floors-20", "seats": ["ninja", "frog", "diver", "kitsune"] },
+    { "stage": "snow-shrine",  "song": "crash-mode",          "mode": "floors-20", "seats": ["ninja", "frog", "robo",  "kitsune"] },
+    { "stage": "sunken-dome",  "song": "we-outside",          "mode": "floors-20", "seats": ["ninja", "frog", "diver", "robo"] },
+    { "stage": "rooftops",     "song": "chrome-in-the-rain",  "mode": "floors-50", "seats": ["ninja", "frog", "diver", "kitsune"] },
+    { "stage": "snow-shrine",  "song": "whats-next",          "mode": "infinite",  "seats": ["ninja", "frog", "diver", "kitsune"] }
+  ],
+  "fps": 30,
+  "viewport": { "width": 1920, "height": 1080 }
+}

@@ -1,0 +1,21 @@
+# intake-hash: a99a771a7d7a7fce
+# Measured from the master by pnpm intake:song: tempo and first beat by the
+# method in docs/art/exceptional-race-slice-review.md, -15.46 LUFS integrated.
+# Nothing in the simulation reads these. The whole file loops. The results
+# window, which the song step also previews, is chosen by ear and added by
+# hand; once this file is edited, a re-run needs --force.
+id = "crash-mode"
+displayName = "Crash Mode"
+bpm = 143.05
+beatOffsetTicks = 23
+loopStartMs = 0
+loopEndMs = 143520
+# The owner's splits, by ear (2026-10-03): the song step's preview and the
+# post-game window.
+previewStartMs = 51000
+previewEndMs = 71000
+resultsStartMs = 115000
+resultsEndMs = 143000
+audioAlias = "music.crashMode"
+coverAlias = "cover.crashMode"
+unlock = "any-match"

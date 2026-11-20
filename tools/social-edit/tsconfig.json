@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // The capture harness runs under vite-node in Node and touches the DOM
+    // through Playwright's `page.evaluate`, so it needs both libs.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["node"]
+  },
+  "include": ["./**/*.ts"]
+}

@@ -1,0 +1,48 @@
+# The tutorial's stage (tutorial stage spec). Not in `catalog.toml`: no room
+# can be raced here. `content/tutorial.toml` names it, and the compiler emits
+# it inside the tutorial alone, so it reaches `contentRevision` only.
+#
+# A hazy dawn with the sun on a pyramid's apex, painted as one plate
+# (`world.dawnSky`), misty teal hills that part from it as the climb goes on
+# (`world.dawnMist`), black rooftops and a domed building in front
+# (`world.dawnNear`), and the play layer in silhouette. The look is
+# `packages/asset-contract/assets/source/dawn-concept.png`.
+id = "dawn"
+displayName = "Dawn"
+platformAlias = "world.platform"
+
+# Empty on purpose: the tutorial's course is `tutorial.toml`'s seed on base tuning.
+[courseTuning]
+
+[theme]
+backdropAlias = "world.dawnSky"
+
+[[theme.layers]]
+extend = "plate"
+sink = 440
+depth = 0.06
+plate = "sky"
+alias = "world.dawnSky"
+
+# The hills fade toward the sky behind them; the rooftops stand crisp.
+[[theme.layers]]
+extend = "skirt"
+haze = 0.3
+sink = 240
+depth = 0.15
+plate = "city"
+alias = "world.dawnMist"
+
+[[theme.layers]]
+extend = "skirt"
+haze = 0
+sink = 290
+depth = 0.35
+plate = "city"
+alias = "world.dawnNear"
+
+[theme.presentation]
+profile = "aquarian"
+refractionIntensity = 0.45
+horizonLift = 12
+silhouette = true

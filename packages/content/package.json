@@ -1,0 +1,24 @@
+{
+  "name": "@floor-fifty/content",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "description": "The only compiler of authored TOML into the generated content artifact.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./*": "./src/*.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@floor-fifty/asset-contract": "workspace:*",
+    "@floor-fifty/shared": "workspace:*",
+    "smol-toml": "^1.9.0",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "chokidar": "^3.6.0"
+  }
+}

@@ -1,0 +1,22 @@
+# Only what the server image needs goes into the build context. The client is
+# served by Ruken, not by this server, so it stays out. `vendor/` stays in:
+# the lockfile names the old Ruken's tarballs there (spec A1 removes them).
+.git
+.claude
+.github
+**/node_modules
+**/dist
+**/*.tsbuildinfo
+evidence
+evidence-remote
+test-results
+playwright-report*
+_CommericalArt
+docs
+!docs/content-authoring.md
+tests
+apps/client
+# the server's build checks the generated content messages and the author guide
+!apps/client/messages
+.env
+.env.*

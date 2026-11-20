@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+# Tidies the agents' worktrees under `.claude/worktrees/`. Reports by default;
+# changes nothing without --apply.
+#
+# Usage: tools/worktree-gc                    report
+#        tools/worktree-gc --apply            do what the report says it would
+#        tools/worktree-gc --apply --orphans  also delete orphan directories
+#
+# What it removes with --apply:
+#   - a worktree whose branch is merged into main, with nothing uncommitted
+#     and no lock, and then its branch (`git branch -d`, which refuses an
+#     unmerged one);
+#   - downloaded reports and test output in every unlocked worktree
+#     (playwright-report-remote/, evidence-remote/, test-results/,
+#     playwright-report/): regenerated on demand, and a gigabyte or more each;
+#   - git's records of worktrees whose directory is gone (`git worktree prune`).
+# With --orphans, also a directory under .claude/worktrees/ that git does not
+# know as a worktree (left by a checkout that moved). Anything in one is
+# unrecoverable through git, so it is reported and left unless asked.
+#
+# Never touched: the main checkout, the worktree this runs from, a locked
+# worktree, one with uncommitted changes, or one with unmerged commits. Those
+# are listed so a person can decide.
+set -euo pipefail
+
+apply=0
+orphans=0
+for arg in "$@"; do
+  case "$arg" in
+    --apply) apply=1 ;;
+    --orphans) orphans=1 ;;
+    *) echo "unknown argument: $arg" >&2; exit 2 ;;
+  esac
+done
+
+main="$(git worktree list --porcelain | awk '/^worktree /{print substr($0, 10); exit}')"
+here="$(git rev-parse --show-toplevel)"
+base="main"
+git -C "$main" fetch -q origin main 2>/dev/null && base="origin/main"
+scratch=(playwright-report-remote evidence-remote test-results playwright-report)
+
+act() {
+  if [[ $apply -eq 1 ]]; then "$@"; fi
+}
+
+size() { du -sh "$1" 2>/dev/null | cut -f1; }
+
+echo "base: $base"
+git -C "$main" worktree prune --dry-run -v
+act git -C "$main" worktree prune
+
+known=()
+while IFS= read -r line; do
+  case "$line" in
+    "worktree "*) path="${line#worktree }"; branch=""; locked=0 ;;
+    "branch "*) branch="${line#branch refs/heads/}" ;;
+    locked*) locked=1 ;;
+    "")
+      [[ -z "${path:-}" ]] && continue
+      known+=("$path")
+      if [[ "$path" != "$main" && -d "$path" ]]; then
+        # A locked worktree belongs to a session still at work, which may be
+        # reading its report; its scratch waits until the lock is gone.
+        for d in "${scratch[@]}"; do
+          if [[ -d "$path/$d" ]]; then
+            if [[ $locked -eq 1 ]]; then
+              echo "scratch  $(size "$path/$d")	${path#"$main"/}/$d (locked: left)"
+            else
+              echo "scratch  $(size "$path/$d")	${path#"$main"/}/$d"
+              act rm -rf "${path:?}/$d"
+            fi
+          fi
+        done
+        name="${path#"$main"/}"
+        dirty="$(git -C "$path" status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
+        ahead="$(git -C "$path" rev-list --count "$base..HEAD" 2>/dev/null || echo "?")"
+        behind="$(git -C "$path" rev-list --count "HEAD..$base" 2>/dev/null || echo "?")"
+        if [[ "$path" == "$here" ]]; then
+          echo "keep     $name (this checkout)"
+        elif [[ $locked -eq 1 ]]; then
+          echo "keep     $name (locked; ${ahead} ahead, ${behind} behind, ${dirty} uncommitted)"
+        elif [[ "$dirty" != "0" ]]; then
+          echo "keep     $name ($dirty uncommitted; ${ahead} ahead, ${behind} behind)"
+        elif [[ "$ahead" != "0" ]]; then
+          echo "keep     $name ($ahead unmerged commits, ${behind} behind)"
+        else
+          echo "remove   $name (merged, clean)$([[ -n "$branch" ]] && echo "; branch $branch")"
+          act git -C "$main" worktree remove "$path"
+          if [[ -n "$branch" ]]; then act git -C "$main" branch -d "$branch" >/dev/null || true; fi
+        fi
+      fi
+      path=""
+      ;;
+  esac
+done < <(git -C "$main" worktree list --porcelain; echo)
+
+if [[ -d "$main/.claude/worktrees" ]]; then
+  for dir in "$main"/.claude/worktrees/*/; do
+    dir="${dir%/}"
+    is_known=0
+    for k in "${known[@]}"; do [[ "$k" == "$dir" ]] && is_known=1; done
+    if [[ $is_known -eq 0 ]]; then
+      echo "orphan   $(size "$dir")	${dir#"$main"/} (not a worktree git knows)"
+      if [[ $orphans -eq 1 ]]; then act rm -rf "${dir:?}"; fi
+    fi
+  done
+fi
+
+[[ $apply -eq 1 ]] || echo "(report only: --apply to act)"

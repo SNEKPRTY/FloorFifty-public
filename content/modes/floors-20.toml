@@ -1,0 +1,9 @@
+# Twenty floors: the race as it has always been (race-options spec §3.1).
+# The only mode that offers three laps.
+id = "floors-20"
+displayName = "20 floors"
+course = "finite"
+laps = [1, 3]
+
+[tuning]
+COURSE_FLOOR_COUNT = 20

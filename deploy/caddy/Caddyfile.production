@@ -1,0 +1,26 @@
+# The production box (release readiness D-R4 = A, Hetzner CAX11): the API
+# alone. The client is Ruken PROD's; there is no standalone client here.
+# {$FF_DOMAIN} and {$FF_ACME_EMAIL} come from /etc/floor-fifty/caddy.env
+# through caddy-env.conf. Installed by deploy/bin/provision-prod.
+#
+# No player IP address is stored (release readiness spec §7): no access log,
+# and the default logger deletes the address fields from every entry, as on
+# staging (deploy/caddy/Caddyfile).
+{
+	email {$FF_ACME_EMAIL}
+	log default {
+		format filter {
+			wrap json
+			request>remote_ip delete
+			request>remote_port delete
+			request>client_ip delete
+			request>headers>X-Forwarded-For delete
+			request>headers>X-Real-Ip delete
+		}
+	}
+}
+
+api.{$FF_DOMAIN} {
+	# Rewritten by deploy/bin/activate to point at the live colour.
+	import /etc/caddy/upstream.caddy
+}

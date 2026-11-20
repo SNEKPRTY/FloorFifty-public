@@ -1,0 +1,73 @@
+# Staging on the rig (phase 7a). {$FF_DOMAIN} and {$FF_ACME_EMAIL} come from
+# /etc/floor-fifty/caddy.env through caddy-env.conf.
+#
+# No player IP address is stored (release readiness spec §7). There is no
+# `log` directive in a site, so no access log. Errors are still logged, and an
+# error entry carries the request it failed; on staging a failed proxy wrote
+# players' addresses to the journal. The default logger therefore deletes the
+# address fields from every entry, errors included, and keeps the rest.
+{
+	email {$FF_ACME_EMAIL}
+	log default {
+		format filter {
+			wrap json
+			request>remote_ip delete
+			request>remote_port delete
+			request>client_ip delete
+			request>headers>X-Forwarded-For delete
+			request>headers>X-Real-Ip delete
+		}
+	}
+}
+
+staging-api.{$FF_DOMAIN} {
+	# Rewritten by deploy/bin/activate to point at the live colour.
+	import /etc/caddy/upstream.caddy
+}
+
+staging.{$FF_DOMAIN} {
+	import security-headers.caddy
+	# The main bundle is 1.5 MB raw and under 0.5 MB compressed. Already-packed
+	# media (m4a, png, webp) is left alone by Caddy's default type list.
+	encode zstd gzip
+
+	# One cache rule per folder (release readiness §6.4): Vite's hashed output
+	# lives in build/ and never changes under its name; everything else
+	# revalidates by ETag, so a reload after a deploy gets the new entry point.
+	@hashed path /build/*
+	header @hashed Cache-Control "public, max-age=31536000, immutable"
+	@revalidate path / /index.html /manifest.webmanifest /assets/* /fonts/* /icons/*
+	header @revalidate Cache-Control "no-cache"
+
+	# The dev build hosts (release readiness D-R6): each GitHub release's
+	# client, at /builds/<id>/, listed for the owner's site at
+	# /builds/index.json. deploy installs them from build-tag's tarballs.
+	handle /builds/index.json {
+		header Access-Control-Allow-Origin "https://mcthaydt.com"
+		header Cache-Control "no-cache"
+		root * /srv/floor-fifty
+		rewrite * /builds-index.json
+		file_server
+	}
+	@build path_regexp build ^/builds/([0-9]{12}-[0-9a-f]{7,40})/(.*)$
+	handle @build {
+		# Releases before v0.10.0 compile Pixi's shaders with eval (the no-eval
+		# build came with the CSP), so here alone the CSP allows it. The rest is
+		# security-headers.caddy's policy, word for word.
+		header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; worker-src 'self' blob:; connect-src 'self' https://staging-api.{$FF_DOMAIN} wss://staging-api.{$FF_DOMAIN}; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+		root * /srv/floor-fifty/builds
+		rewrite * /{re.build.1}/client/{re.build.2}
+		file_server
+	}
+
+	# How to report a problem is the API's to say (§7.4).
+	handle /.well-known/security.txt {
+		import /etc/caddy/upstream.caddy
+	}
+
+	# The release host: the live release's client.
+	handle {
+		root * /srv/floor-fifty/client
+		file_server
+	}
+}

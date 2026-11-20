@@ -1,0 +1,31 @@
+{
+  "name": "@floor-fifty/client",
+  "version": "1.0.0-rc.1",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "description": "PixiJS client: screens, input, interpolation, and rendering only.",
+  "scripts": {
+    "dev": "pnpm -w assets:sync && VITE_SERVER_URL=http://127.0.0.1:3000 vite",
+    "build": "pnpm -w content:check --verify-artifact && pnpm -w assets:sync && vite build",
+    "preview": "vite preview --port ${E2E_CLIENT_PORT:-4173} --strictPort",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@colyseus/sdk": "^0.18.5",
+    "@floor-fifty/asset-contract": "workspace:*",
+    "@floor-fifty/shared": "workspace:*",
+    "gsap": "^3.15.0",
+    "pixi.js": "^8.21.0",
+    "zod": "^4.6.6"
+  },
+  "devDependencies": {
+    "@inlang/paraglide-js": "^2.25.4",
+    "@inlang/plugin-message-format": "^4.4.4",
+    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@tailwindcss/vite": "^4.3.3",
+    "svelte": "^5.57.1",
+    "tailwindcss": "^4.3.3",
+    "vite": "^6.4.6"
+  }
+}

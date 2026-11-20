@@ -1,0 +1,14 @@
+# A draft: parsed and validated, but absent from catalog.toml, so it reaches
+# neither the payload nor either revision.
+id = "draft-ghost"
+displayName = "Ghost"
+[sheetAliases]
+scarlet = "ninja.scarlet"
+cyan = "ninja.cyan"
+gold = "ninja.gold"
+violet = "ninja.violet"
+[portraitAliases]
+scarlet = "portrait.scarlet"
+cyan = "portrait.cyan"
+gold = "portrait.gold"
+violet = "portrait.violet"

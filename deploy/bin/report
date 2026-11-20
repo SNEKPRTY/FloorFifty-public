@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# The weekly report (release readiness §7.3), over this box's journal.
+#
+# Usage: report [--json]
+#   FF_REPORT_SINCE  how far back to read (default "7 days ago")
+#
+# Run weekly, and after every release. What each number means, and what to do
+# about it, is in docs/release.md › "What an alert means".
+set -euo pipefail
+
+journalctl -u 'floor-fifty@*' -u caddy --since "${FF_REPORT_SINCE:-7 days ago}" -o cat \
+  | node "$(dirname "$0")/report.mjs" "$@"

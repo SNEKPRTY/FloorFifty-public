@@ -1,0 +1,23 @@
+# Words a typed name may not contain in a public room (quick-match spec §6).
+#
+# A name is checked after lowercasing, folding look-alike characters
+# (0 to o, 1 to i, 3 to e, 4 to a, 5 to s, 7 to t, @ to a, $ to s) and removing
+# everything that is not a letter, so spacing and punctuation cannot split a
+# word. A name that contains any word here is replaced by a "Racer NN" name,
+# with no error shown. Letters and digits only, three or more characters.
+#
+# Keep every word one that does not appear inside an ordinary name, surname or
+# place: the check matches anywhere in a name, and `tests/content/blocked-names.test.ts`
+# names the ordinary names the list must leave alone.
+words = [
+  "bastard",
+  "bitch",
+  "bollocks",
+  "faggot",
+  "fuck",
+  "nigger",
+  "retard",
+  "slut",
+  "wanker",
+  "whore",
+]

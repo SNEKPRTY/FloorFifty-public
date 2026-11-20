@@ -1,0 +1,48 @@
+# Conditions an item can be earned by, in the order phase 4b's queue grants
+# them (unlockables spec D-U1).
+#
+# The rule behind each ID is code (`packages/shared/src/unlocks/conditions.ts`),
+# not content. `goal` is what a tile counts progress against ("2/5").
+#
+# Every condition is met by playing on one device: a match against CPUs counts,
+# so nothing here needs a second player or a second device.
+
+[[unlocks]]
+id = "any-match"
+hint = "Finish any race"
+goal = 1
+
+[[unlocks]]
+id = "games-2"
+hint = "Finish 2 races"
+goal = 2
+
+[[unlocks]]
+id = "share-replay"
+hint = "Save or share a video"
+goal = 1
+
+[[unlocks]]
+id = "games-3"
+hint = "Finish 3 races"
+goal = 3
+
+[[unlocks]]
+id = "games-5"
+hint = "Finish 5 races"
+goal = 5
+
+[[unlocks]]
+id = "games-7"
+hint = "Finish 7 races"
+goal = 7
+
+[[unlocks]]
+id = "games-8"
+hint = "Finish 8 races"
+goal = 8
+
+[[unlocks]]
+id = "games-10"
+hint = "Finish 10 races"
+goal = 10

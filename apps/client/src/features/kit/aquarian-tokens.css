@@ -1,0 +1,419 @@
+/* The menus' colours, panels and type.
+   -------------------------------------------------------------------------
+   The one file that names what a menu looks like. Every colour here is a
+   Resurrect 64 swatch, the world's own palette (Owner, 2026-11-18: "the
+   colours need to be on the Resurrect 64 palette for UI"; this replaces the
+   Sanzo Wada "Violet dusk" set of 2026-11-15). The roles are listed with their
+   names in `ui-palette.json`. White is the palette's own: `--ff-ui-text`.
+
+   A hex typed into this file that is not in `ui-palette.json` is a defect, and
+   so is an entry in that file nothing uses: `tests/client/features/kit/contrast.test.ts`
+   fails on both, and pins each token to its colour, so a new palette is one
+   deliberate edit of this block, that file and that table.
+   `tests/client/features/app/palette-resurrect64.test.ts` holds every colour in the
+   client to `resurrect64.hex`.
+
+   Components read the semantic names below (`--ff-panel-fill`, `--ff-text`,
+   `--ff-go`, ...). `theme.css` binds them to Tailwind, so the utilities
+   (`bg-panel`, `text-text-2`, `bg-go`, ...) and hand-written CSS resolve through
+   the same values. The measured contrast of each pairing is pinned by that
+   test, not asserted here. */
+
+:root {
+  /* A panel: a rounded chip, 85% opaque, with a soft blur
+     of the world behind it (Owner, 2026-11-18 15:16Z, card: "Rounder, light
+     frost"), a dark outline and a lighter bevel inside it. The one radius
+     token below sets every panel's corner; a control's is two thirds of it.
+     The opacity is where the contrast is measured, over the brightest world
+     colour: `contrast.test.ts` holds white on it at 9:1. A software renderer
+     and a player who asks for less transparency get the solid panel
+     (`aquarian.css`, "Panels"). */
+  --ff-panel-fill: #2e222f; /* Plum Black */
+  --ff-panel-border: #2e222f; /* Plum Black */
+  --ff-panel-bevel: #484a77; /* Dusk Violet */
+  --ff-panel-radius: 12px;
+  --ff-panel-opacity: 60%;
+  --ff-panel-blur: 16px;
+  --ff-panel-saturate: 1.8;
+  /* The glass darkens what is behind it before the fill is drawn, so a mostly see-through panel is dark
+     over even the brightest sky and white text holds 9:1 (contrast.test.ts). */
+  --ff-panel-dim: 0.48;
+  --ff-control-radius: calc(var(--ff-panel-radius) * 2 / 3);
+
+  /* Text. The primary is white. The secondary is for hints and captions; the
+     "off" grey is for disabled things only, and nothing else may read it. */
+  --ff-text: var(--ff-ui-text);
+  --ff-text-2: #c7dcd0; /* Pale Mint Grey */
+  --ff-text-off: #7f708a; /* Muted Lilac */
+
+  /* The three button colours: green is the one step forward, red leaves or
+     gives something up, blue is everything else. Each is a face, a border and
+     the lit bevel inside it. White on each face is at least 5.4:1. */
+  --ff-go: #165a4c; /* Deep Pine */
+  --ff-go-edge: #2e222f; /* Plum Black */
+  --ff-go-bevel: #239063; /* Jade */
+  --ff-stop: #ae2334; /* Cranberry */
+  --ff-stop-edge: #6e2727; /* Oxblood */
+  --ff-stop-bevel: #e83b3b; /* Signal Red */
+  --ff-plain: #4d65b4; /* Cornflower Blue */
+  --ff-plain-edge: #2e222f; /* Plum Black */
+  --ff-plain-bevel: #4d9be6; /* Sky Blue */
+  /* The type scale at phone size (UI overhaul spec, "Type"). From the tablet
+     size up the shell's zoom grows all of it by a quarter. Nothing a player
+     must read is under the hint size. */
+  --ff-step-hint: 12px;
+  --ff-step-body: 12px;
+  --ff-step-button: 24px;
+  --ff-step-title: 24px;
+  --ff-step-hero: 36px;
+  --ff-step-display: 48px;
+  --ff-type-hint: var(--ff-step-hint);
+  --ff-type-body: var(--ff-step-body);
+  --ff-type-button: var(--ff-step-button);
+  --ff-type-title: var(--ff-step-title);
+  --ff-type-hero: var(--ff-step-hero);
+  --ff-type-display: var(--ff-step-display);
+
+  /* The pale blue the wordmark and the loader glow in. */
+  --ff-glow: #8fd3ff; /* Ice Blue */
+  /* A non-text mark that says something is wrong (the offline chip's border):
+     light enough to read against the panel at 3:1. */
+  --ff-danger: #ed8099; /* Rose Pink */
+
+  /* The palette's white under its first name: a label or a line on dark. */
+  --ff-aq-white: var(--ff-ui-text);
+  --ff-aq-hairline: 1px;
+
+  /* Geometry. A 4px rhythm; the field height and gaps are the accessibility
+     floor made concrete rather than a style choice. */
+  --ff-aq-panel-padding: 24px;
+  /* A dialog's padding and the gap between its parts (Modal). Set per form
+     factor here, so the dialog itself branches on nothing. */
+  --ff-dialog-pad: var(--ff-panel-pad);
+  --ff-dialog-gap: 12px;
+  /* How far a ring reaches past its control: the focus ring (2 px, 2 px
+     out) and the winner's ink ring. A box that clips its overflow pads in by
+     this much, and pulls back by it, so a ring inside it is drawn whole. */
+  --ff-ring-room: 4px;
+  /* The margin between a dialog and the band's edges (Modal). */
+  --ff-dialog-inset: 16px;
+  --ff-aq-control-height: 48px;
+  --ff-aq-field-gap: 8px;
+  --ff-aq-group-gap: 20px;
+  --ff-aq-form-min-width: 340px;
+  --ff-aq-form-max-width: 400px;
+
+  /* The interactive floor, in CSS pixels. Named once so a control that shrinks
+     can be checked against it instead of against a remembered number. */
+  --ff-aq-target: 44px;
+  /* The corner row's height (Back, the language flag, Mute): a notice sits 8 px under it. */
+  --ff-corner-h: var(--ff-aq-target);
+
+  /* Sizes by form factor (responsive parity spec §3.2).
+     ---------------------------------------------------------------------
+     These are the desktop values, copied from what the components hard-coded
+     before phase 1d. The desktop guard holds them there. The blocks below this
+     one override them per form factor and are the only place a phone or tablet
+     layout sets a size. */
+  --ff-gutter: clamp(1rem, 4vmin, 2.5rem);
+  --ff-type-wordmark: clamp(72px, 12vw, 184px);
+  --ff-racer-cell: 64px;
+  --ff-form-width: 380px;
+  --ff-content-max: 512px;
+  --ff-hud-numeral: 24px;
+  --ff-hud-timer: 24px;
+  --ff-hud-value: 12px;
+  --ff-hud-label: 12px;
+  --ff-touch-size: clamp(56px, 16vmin, 88px);
+  /* The seat badges (YOU, HOST): the hint size, the floor for anything a
+     player must read. */
+  --ff-type-tag: var(--ff-type-hint);
+  /* A seat or result row: its portrait and its vertical padding. Phone
+     landscape scales both with the height a browser leaves (spec §5.7). */
+  --ff-row-portrait: 40px;
+  --ff-row-pad-y: 8px;
+  /* One list row's whole height (UI layout system §3.1): the portrait, its
+     padding above and below, and the 1 px border on each side. Derived, so
+     every list that reserves rows (ScrollList) agrees with the rows drawn. */
+  --ff-row-h: calc(var(--ff-row-portrait) + 2 * var(--ff-row-pad-y) + 2px);
+  /* The narrowest and widest a content panel may be. Split and ScreenFrame
+     read them; the arrangement decides which applies. */
+  --ff-panel-min: 280px;
+  --ff-panel-max: 560px;
+  /* The visible band, until app.ts publishes the real one: the whole layout
+     viewport, so a screen with no canvas behind it still lays out. */
+  --ff-band-top: 0px;
+  --ff-band-bottom: 100dvh;
+  --ff-band-height: 100dvh;
+  /* The menus' frame (UI layout spec §6.1-6.2): how a stack shares its
+     height, where its sheet stands in it, and how wide the sheet is. */
+  --ff-stack-rows: minmax(0, 1fr) auto;
+  --ff-stack-sheet-align: end;
+  --ff-sheet-width: var(--ff-form-width);
+  /* The menu hero: the gap between its parts, the inset it starts from (the
+     ledge reaches back across it), the ledge's scale, the racers' spacing. */
+  --ff-hero-gap: 10px;
+  --ff-hero-inset: 8vw;
+  --ff-ledge-scale: 1;
+  --ff-ensemble-gap: 8px;
+  /* The title's secondary choices (Character, Settings). */
+  --ff-title-tile-height: var(--ff-aq-control-height);
+  /* A menu card's gap and padding: the title's panel and the connect card.
+     16 / 20, so the connect card and the tutorial offer fit the band at
+     1280 x 720. */
+  --ff-panel-gap: 16px;
+  --ff-panel-pad: 24px;
+  /* The space between the ready room's seats, and every badge's height, so
+     You, Host and Change stand level (Change drawn as a button on a row that
+     is one). */
+  --ff-seat-gap: 8px;
+  --ff-badge-h: 22px;
+  /* The local racer's name pill: the ink edge's inner padding. */
+  --ff-namepill-self-pad: 2px 8px;
+  /* The connect card (ConnectPanel): one column, each label over its field
+     over its button. The short tier sets each field beside its button; the
+     compact tier also sends the two field labels to screen readers. */
+  --ff-connect-gap-x: var(--ff-panel-gap);
+  --ff-connect-gap-y: var(--ff-panel-gap);
+  --ff-connect-group-gap: var(--ff-panel-gap);
+  --ff-connect-cols: none;
+  --ff-connect-span: auto;
+  --ff-connect-group-cols: none;
+  --ff-connect-group-align: normal;
+  --ff-connect-friends: block;
+  --ff-connect-help-touch: block;
+  --ff-connect-control-height: var(--ff-aq-control-height);
+  --ff-connect-split-height: 52px;
+  --ff-connect-field-gap: var(--ff-aq-field-gap);
+  --ff-connect-label-position: static;
+  --ff-connect-label-size: auto;
+  --ff-connect-label-clip: none;
+  --ff-connect-label-wrap: normal;
+  --ff-connect-field-span: auto;
+  --ff-connect-field-rows: auto;
+  --ff-connect-field-grid: none;
+  --ff-connect-group-rows: none;
+  --ff-connect-button-cell: auto;
+  --ff-connect-label-span: auto;
+  --ff-connect-label-pull: 0px;
+}
+
+/* Phone portrait, and an iPad held upright, which draws the same layout and
+   the shell's zoom makes a quarter larger (UI overhaul spec, "Layout by form
+   factor"). The menu board's values (responsive parity spec §5.2). A
+   tighter gutter, and a wordmark and racers sized by the screen's height as
+   well as its width, so the hero and the whole form share a 640 px screen and
+   still fill a 932 px one. */
+[data-form-factor="phone-portrait"],
+[data-form-factor="tablet-portrait"] {
+  --ff-gutter: 16px;
+  --ff-type-wordmark: clamp(48px, min(20vw, 8dvh), 96px);
+  --ff-racer-cell: clamp(40px, 6.5dvh, 48px);
+  /* The race board's HUD: slightly smaller numerals in the top band, and
+     thumbs sized for the bottom band (race-hud.svelte.ts's BOTTOM_BAND). */
+  --ff-hud-numeral: 24px;
+  --ff-hud-timer: 24px;
+  /* 76 px: 64 read as small under a thumb. Still inside the 180 px band with
+     the pips above it -- 44 px of pips, a 44 px gap, 76 px of buttons and
+     their 16 px margin -- so the field does not give up a pixel for it. */
+  --ff-touch-size: 76px;
+  /* The phone boards' full-width sheet, tighter hero and cards (12 / 16). */
+  --ff-sheet-width: 100%;
+  --ff-hero-gap: 6px;
+  --ff-hero-inset: 0px;
+  --ff-ledge-scale: 0.75;
+  --ff-panel-gap: 12px;
+  --ff-panel-pad: 16px;
+}
+
+/* The shell's scale: everything a screen draws, text and rows included, grows
+   by a quarter from the tablet size up, so a desktop player reads 20 px body
+   text, not 11. One knob: `ScreenFrame` and `Modal` apply it as CSS `zoom`, so
+   what is scaled lays out in the scaled space and every size and container
+   query inside it is unchanged. A short desktop window (under 600 px tall)
+   stays at 1. The desktop's content is held to 880 px, which the zoom draws as
+   1100. */
+[data-form-factor="tablet-portrait"] {
+  --ff-ui-zoom: 1.25;
+  /* The race HUD sits outside the zoom, so its floors number takes the grid's next step here. */
+  --ff-hud-numeral: 36px;
+}
+
+[data-form-factor="desktop"]:not([data-height="short"]) {
+  --ff-ui-zoom: 1.25;
+  --ff-content-max: 880px;
+  --ff-hud-numeral: 36px;
+}
+
+/* Phone landscape: today's short-landscape values, moved here from the three
+   components that each tested a 480 px maximum height. The gutter and the
+   rows follow the height a browser actually leaves (spec §5.7): Chrome on a
+   Galaxy leaves about 270 px, where they reach their floors, and a full
+   390 px screen keeps them within a pixel of the desktop values. */
+[data-form-factor="phone-landscape"] {
+  /* A short window has no room for a 24 px button label: the options row would wrap. */
+  --ff-step-button: 12px;
+  --ff-gutter: clamp(8px, 4dvh, 16px);
+  --ff-row-portrait: clamp(28px, 10dvh, 40px);
+  --ff-row-pad-y: clamp(3px, 1.6dvh, 8px);
+  --ff-type-wordmark: 56px;
+  --ff-racer-cell: 40px;
+  --ff-hud-numeral: 24px;
+  /* Scaled with the height a browser leaves: 56 px at a Galaxy's 270, where
+     13vmin had held it at its 48 px floor, and 70 px on a full 390 px screen. */
+  --ff-touch-size: clamp(56px, 18vmin, 72px);
+  /* A panel is 16 px padded on a phone; a dialog keeps the 12 px this
+     squeezed height has always given it. */
+  --ff-panel-pad: 16px;
+  --ff-dialog-pad: 12px;
+  --ff-dialog-gap: 8px;
+  /* 8 px at a Galaxy's 270, where the settings' title, tabs and two rows
+     need every pixel; 12 px on a full 390 px screen. */
+  --ff-dialog-inset: clamp(6px, 3dvh, 16px);
+  --ff-hero-gap: 6px;
+  --ff-hero-inset: 0px;
+  --ff-ledge-scale: 0.625;
+  --ff-ensemble-gap: 12px;
+}
+
+/* Desktop: a dialog's roomier padding and gap. */
+[data-form-factor="desktop"] {
+  --ff-dialog-gap: 20px;
+}
+
+/* Height tiers (UI layout system spec §3.2), from `features/platform/height-tier.ts`. They
+   come after the form factors so a tier tightens whichever form factor it
+   lands on: a 900 x 600 desktop window and a full-height landscape phone are
+   both short, and both give up the same few pixels: the gutter, the rows'
+   padding (so `--ff-row-h` tightens with it), the HUD's type and the hero. */
+/* Compact is also short: it takes every short token, then the compact block
+   below tightens further (as the `short:` variant covers compact too). */
+[data-height="short"],
+[data-height="compact"] {
+  --ff-gutter: clamp(12px, 3dvh, 20px);
+  --ff-row-pad-y: clamp(3px, 1.2dvh, 6px);
+  --ff-hud-numeral: 24px;
+  --ff-hud-timer: 24px;
+  --ff-type-wordmark: clamp(48px, 12dvh, 72px);
+  --ff-racer-cell: clamp(32px, 7dvh, 48px);
+  --ff-panel-max: 520px;
+  /* A short screen sets each connect field beside its button, so the form is
+     two rows high (spec §5.7), and tightens the cards to 8 / 12. */
+  --ff-panel-gap: 8px;
+  --ff-panel-pad: 12px;
+  --ff-connect-gap-x: 12px;
+  --ff-connect-gap-y: 8px;
+  --ff-connect-group-gap: 12px;
+  /* The field keeps room for its whole default ("Piloto 12") beside its button. */
+  --ff-connect-cols: minmax(6rem, 1fr) auto;
+  --ff-connect-span: 1 / -1;
+  --ff-connect-group-cols: subgrid;
+  --ff-connect-group-align: end;
+  --ff-connect-friends: none;
+  --ff-connect-help-touch: none;
+  --ff-connect-control-height: var(--ff-aq-target);
+  --ff-connect-split-height: var(--ff-aq-target);
+  --ff-connect-field-gap: 4px;
+  /* Beside its button, a field's label runs over both on one line, rather
+     than wrapping in the field's column ("ルームコードを / お持ちですか？",
+     visual audit 2026-10-05): the label and its field span the group's two
+     columns and two rows (a subgrid), the label across both, the field under
+     it in the first, and the button takes the cell beside the field. */
+  --ff-connect-field-span: 1 / -1;
+  --ff-connect-field-rows: 1 / span 2;
+  --ff-connect-field-grid: subgrid;
+  --ff-connect-group-rows: auto auto;
+  --ff-connect-button-cell: 2 / 2;
+  --ff-connect-label-span: 1 / -1;
+  --ff-connect-label-pull: -8px;
+}
+
+/* Compact: the height a browser leaves a sideways phone. Rows reach their
+   floors here, and the gutter is what is left after the touch targets. */
+[data-height="compact"] {
+  --ff-step-button: 12px;
+  --ff-gutter: 8px;
+  --ff-row-portrait: 28px;
+  --ff-row-pad-y: 3px;
+  --ff-type-wordmark: 40px;
+  --ff-racer-cell: 28px;
+  --ff-panel-min: 240px;
+  /* 270 px: the two field labels go to screen readers (each field's
+     placeholder names it), rows close up, and the touch help goes; every
+     action stays at the 44 px floor. Owner's call, 2026-09-26. */
+  --ff-connect-gap-y: 4px;
+  --ff-connect-help-touch: none;
+  /* Four whole seats at 270 px (M12): closer seats, a thinner card, and a
+     Change badge that is drawn, not pressed, at the row's own scale. */
+  --ff-seat-gap: 2px;
+  --ff-panel-pad: 6px;
+  --ff-badge-h: 18px;
+  --ff-namepill-self-pad: 0 6px;
+  --ff-connect-label-position: absolute;
+  --ff-connect-label-size: 1px;
+  --ff-connect-label-clip: inset(50%);
+  --ff-connect-label-wrap: nowrap;
+  /* The labels are hidden here, so each field keeps its own column. */
+  --ff-connect-field-span: auto;
+  --ff-connect-field-rows: auto;
+  --ff-connect-field-grid: none;
+  --ff-connect-group-rows: none;
+  --ff-connect-button-cell: auto;
+  --ff-connect-label-span: auto;
+  --ff-connect-label-pull: 0px;
+}
+
+/* A desktop window just over 600 px tall is not short, so it is drawn a
+   quarter bigger, and that leaves its screens less height than a short
+   window's: a ready room of 391 px at 985 x 624, where Ready and Leave ran
+   14 px past the panel's foot (art-acceptance:44). Up to 690 px tall it takes
+   a short window's spacing and row padding; 1280 x 720 (a 459 px room, where
+   they fit) keeps the full values. */
+@media (max-height: 690px) {
+  [data-form-factor="desktop"]:not([data-height]) {
+    --ff-row-pad-y: 4px;
+    --ff-panel-gap: 8px;
+    --ff-panel-pad: 12px;
+    --ff-seat-gap: 4px;
+  }
+}
+
+/* A desktop window under 600 px tall (900 x 600): the hero gives way so the
+   whole menu sits beside it (UI layout spec §6.1, B3), and the cards keep a
+   little more room than a phone's. */
+[data-form-factor="desktop"][data-height="short"] {
+  --ff-type-wordmark: clamp(56px, 13dvh, 96px);
+  --ff-racer-cell: clamp(36px, 7dvh, 48px);
+  --ff-gutter: 16px;
+  --ff-panel-gap: 12px;
+  --ff-panel-pad: 16px;
+}
+
+/* The shell zooms a tablet or desktop screen by --ff-ui-zoom (1.25). Fusion
+   Pixel is crisp only at whole multiples of 12 px as drawn, so inside the zoom
+   each type step is divided by it: 12 / 1.25 here is 12 on the glass. */
+.ff-screen-frame__body,
+.ff-screen-frame > [data-corner-controls] {
+  --ff-type-hint: calc(var(--ff-step-hint) / var(--ff-ui-zoom, 1));
+  --ff-type-body: calc(var(--ff-step-body) / var(--ff-ui-zoom, 1));
+  --ff-type-button: calc(var(--ff-step-button) / var(--ff-ui-zoom, 1));
+  --ff-type-title: calc(var(--ff-step-title) / var(--ff-ui-zoom, 1));
+  --ff-type-hero: calc(var(--ff-step-hero) / var(--ff-ui-zoom, 1));
+  --ff-type-display: calc(var(--ff-step-display) / var(--ff-ui-zoom, 1));
+  --ff-type-tag: var(--ff-type-hint);
+  --text-xs: var(--ff-type-hint);
+}
+
+/* A dialog opened from inside the body is drawn inside the body's zoom and zooms
+   itself as well, so each step is divided by both (ScreenFrame sets
+   `--ff-ancestor-zoom` on the body; outside a body it is 1). */
+.ff-modal__dialog {
+  --ff-type-hint: calc(var(--ff-step-hint) / var(--ff-ui-zoom, 1) / var(--ff-ancestor-zoom, 1));
+  --ff-type-body: calc(var(--ff-step-body) / var(--ff-ui-zoom, 1) / var(--ff-ancestor-zoom, 1));
+  --ff-type-button: calc(var(--ff-step-button) / var(--ff-ui-zoom, 1) / var(--ff-ancestor-zoom, 1));
+  --ff-type-title: calc(var(--ff-step-title) / var(--ff-ui-zoom, 1) / var(--ff-ancestor-zoom, 1));
+  --ff-type-hero: calc(var(--ff-step-hero) / var(--ff-ui-zoom, 1) / var(--ff-ancestor-zoom, 1));
+  --ff-type-display: calc(var(--ff-step-display) / var(--ff-ui-zoom, 1) / var(--ff-ancestor-zoom, 1));
+  --ff-type-tag: var(--ff-type-hint);
+  --text-xs: var(--ff-type-hint);
+}

@@ -1,0 +1,15 @@
+{
+  "duration": 13.32,
+  "fps": 30,
+  "accents": [
+    { "id": "fifty-pop",   "kind": "numeral",  "from": 0.00,  "to": 0.40,  "text": "50" },
+    { "id": "wordmark",    "kind": "wordmark", "from": 0.40,  "to": 2.60 },
+    { "id": "devices",     "kind": "devices",  "from": 2.60,  "to": 5.00 },
+    { "id": "card-colors", "kind": "card",     "from": 5.60,  "to": 6.20, "text": "FOUR COLORS", "sub": "scarlet · cyan · gold · violet" },
+    { "id": "card-stages", "kind": "card",     "from": 7.20,  "to": 7.80, "text": "THREE STAGES", "sub": "rooftops · snow shrine · sunken dome" },
+    { "id": "card-racers", "kind": "card",     "from": 8.80,  "to": 9.40, "text": "FIVE RACERS", "sub": "pick your crew" },
+    { "id": "card-modes",  "kind": "card",     "from": 10.90, "to": 11.50, "text": "20 · 50 · INFINITE", "sub": "climb as far as you can" },
+    { "id": "endcard",     "kind": "endcard",  "from": 12.50, "to": 13.32 }
+  ],
+  "gameplayWindow": { "from": 0.40, "to": 12.50 }
+}

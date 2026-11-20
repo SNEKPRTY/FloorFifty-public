@@ -1,0 +1,59 @@
+# Floor Fifty's game server on Fly.io: exactly ONE Machine.
+#
+# Rooms and seat reservations live in one process's memory, so a second
+# Machine would break every join. Never `fly scale count 2`, and the first
+# deploy is `fly deploy --ha=false` (docs/fly-owner-steps.md). Every value
+# here is pinned by tests/deploy/fly-config.test.ts.
+
+# Fly app names are global; the Owner confirms this one is free.
+app = "floorfifty-api"
+primary_region = "ord"
+
+# Fly's default stop signal is SIGINT; the server drains its races only on
+# SIGTERM (apps/server/src/drain.ts). kill_timeout is in seconds, at most 300
+# and best-effort; the drain cap is 270 s, so the server leaves inside it.
+kill_signal = "SIGTERM"
+kill_timeout = 300
+
+[build]
+  dockerfile = "Dockerfile"
+
+# bluegreen starts the new Machine beside the old one, waits for its checks,
+# moves traffic, and only then stops the old one, which drains its races.
+[deploy]
+  strategy = "bluegreen"
+
+[env]
+  # Every production guard hangs on this (apps/server/src/process-safety.ts).
+  NODE_ENV = "production"
+  PORT = "3000"
+  # Sized by the load test for the shared-cpu-2x 512 MB Machine below
+  # (docs/release.md, "Sizing MAX_ROOMS"): 10 rooms of racing bots average
+  # about 70% of the Machine's CPU baseline, so its burst balance never runs out.
+  MAX_ROOMS = "10"
+  # Behind Fly's proxy, players are told apart by Fly-Client-IP.
+  FLOOR_FIFTY_PROXY = "fly"
+  # Exact origins, comma-separated. Ruken's test site serves every test game from
+  # this one origin (the game's name is in the path). Add the launch origin,
+  # https://g-<game id>.<games domain>, once Ruken's games domain exists (B4).
+  FLOOR_FIFTY_ALLOWED_ORIGINS = "https://ruken-games.ruken-beta.workers.dev"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  # Always on: the proxy must never stop an "idle" Machine under live races.
+  auto_stop_machines = "off"
+  auto_start_machines = false
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "15s"
+    timeout = "5s"
+    method = "GET"
+    path = "/ready"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 2
+  memory = "512MB"

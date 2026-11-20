@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Frees the e2e ports before a CI run.
+#
+# Usage: free-ports <port>...
+#
+# A cancelled job can leave `vite preview` (4173) or the e2e server (4100)
+# listening. Under CI=1, Playwright's reuseExistingServer is false, so a
+# squatter makes the run fail on "port already in use" instead of testing it.
+set -euo pipefail
+for port in "$@"; do
+  pids="$(lsof -ti "tcp:$port" -sTCP:LISTEN || true)"
+  if [[ -n "$pids" ]]; then
+    echo "freeing port $port (pids $pids)"
+    # shellcheck disable=SC2086 # one pid per word
+    kill $pids || true
+  fi
+done

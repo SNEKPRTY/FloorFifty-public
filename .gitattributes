@@ -1,0 +1,13 @@
+# Every text file is LF in every checkout, whatever the machine's core.autocrlf.
+# Git for Windows defaults to autocrlf=true, and the Windows runner (phase 7a)
+# would then check out CRLF: the content check hashes the TOML's bytes and
+# calls the artifact stale, and bash refuses the deploy scripts.
+* text=auto eol=lf
+
+# The palette exactly as downloaded. Its mixed line endings are part of the
+# canonical source the swatches regenerate from byte for byte.
+packages/asset-contract/palettes/resurrect64.hex -text
+
+# The translation review sheets exactly as exported: CRLF rows and a UTF-8 BOM,
+# which spreadsheet apps need to open CJK text correctly (docs/i18n/README.md).
+docs/i18n/review/*.csv -text

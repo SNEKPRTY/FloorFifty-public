@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Copies evidence the owner has approved from `evidence/` into
+# `docs/art/screenshots/`, which is committed. The evidence specs write to
+# `evidence/` (git-ignored; tests/e2e/support/evidence.ts), and the two trees
+# share a layout.
+#
+# Usage: tools/promote-evidence               list what differs, copy nothing
+#        tools/promote-evidence <path> [...]  copy these, e.g. `responsive` or
+#                                             `tutorial/phone-portrait-1-cleared.png`
+set -euo pipefail
+
+root="$(git rev-parse --show-toplevel)"
+src="$root/evidence"
+dst="$root/docs/art/screenshots"
+
+if [[ ! -d "$src" ]]; then
+  echo "no evidence/ here: run an evidence spec first" >&2
+  exit 2
+fi
+
+if [[ $# -eq 0 ]]; then
+  (cd "$src" && find . -type f ! -name '.*' | sed 's#^\./##' | sort) | while read -r f; do
+    if [[ ! -f "$dst/$f" ]]; then
+      echo "new      $f"
+    elif ! cmp -s "$src/$f" "$dst/$f"; then
+      echo "changed  $f"
+    fi
+  done
+  exit 0
+fi
+
+for p in "$@"; do
+  if [[ ! -e "$src/$p" ]]; then
+    echo "not in evidence/: $p" >&2
+    exit 2
+  fi
+  if [[ -d "$src/$p" ]]; then
+    mkdir -p "$dst/$p"
+    cp -R "$src/$p/." "$dst/$p/"
+  else
+    mkdir -p "$(dirname "$dst/$p")"
+    cp "$src/$p" "$dst/$p"
+  fi
+  echo "promoted $p"
+done

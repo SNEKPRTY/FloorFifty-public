@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Ships a tarball to the staging VM without SSH (owner, 2026-10-17: SSH on the
+# VM is limited to the owner's home IP), and runs deploy on it there.
+#
+# Usage: az-ship <release.tgz|build.tgz>
+#
+# Needs an `az` signed in as floor-fifty-ci (azure/login, OIDC) and
+# STAGING_STORAGE_ACCOUNT. `az vm run-command` cannot stream stdin, so the
+# tarball goes up to the "releases" container, the VM fetches it once through
+# a read-only link that expires in an hour, and the container's lifecycle rule
+# drops it after a day (deploy/tools/azure-staging-deploy-setup.sh).
+set -euo pipefail
+
+tarball="${1:?usage: az-ship <tarball>}"
+account="${STAGING_STORAGE_ACCOUNT:?STAGING_STORAGE_ACCOUNT is not set}"
+rg="${FF_AZ_RESOURCE_GROUP:-floor-fifty}"
+vm="${FF_AZ_VM:-floor-fifty-staging}"
+container="releases"
+blob="${GITHUB_RUN_ID:-local}-${GITHUB_RUN_ATTEMPT:-1}-$(date -u +%Y%m%d%H%M%S)-$(basename "$tarball")"
+
+az storage blob upload --auth-mode login --account-name "$account" -c "$container" \
+  -n "$blob" -f "$tarball" --overwrite --only-show-errors -o none
+expiry="$(date -u -d '+1 hour' +%Y-%m-%dT%H:%MZ 2>/dev/null || date -u -v+1H +%Y-%m-%dT%H:%MZ)"
+url="$(az storage blob generate-sas --auth-mode login --as-user --account-name "$account" \
+  -c "$container" -n "$blob" --permissions r --expiry "$expiry" --https-only --full-uri -o tsv)"
+
+# run-command runs this as root, which is what deploy expects (deploy/sudoers
+# grants the SSH user the same). It reports success whatever the script exits
+# with, so the script prints a marker last and this checks for it. PATH is
+# sudo's secure_path, so deploy finds node as it does over SSH. Plain `set -eu`:
+# should the agent run this with sh rather than its #!, pipefail would stop it.
+script="#!/bin/bash
+set -eu
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+t=\"\$(mktemp)\"; trap 'rm -f \"\$t\"' EXIT
+curl -fsS --retry 3 -o \"\$t\" '$url'
+/usr/local/lib/floor-fifty/bin/deploy \"\$t\"
+echo FF_SHIP_OK"
+out="$(az vm run-command invoke -g "$rg" -n "$vm" --command-id RunShellScript \
+  --scripts "$script" --query 'value[0].message' -o tsv)"
+# The link is a credential for an hour; keep it out of the job log.
+printf '%s\n' "${out//"$url"/<link>}"
+az storage blob delete --auth-mode login --account-name "$account" -c "$container" \
+  -n "$blob" --only-show-errors -o none || true
+grep -q '^FF_SHIP_OK$' <<<"$out"

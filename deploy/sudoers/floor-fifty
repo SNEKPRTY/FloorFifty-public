@@ -1,0 +1,6 @@
+# The `deploy` user may install and activate a release, and nothing else. CI's
+# staging job reaches it over SSH with a key whose authorized_keys entry forces
+# the one command that calls this (docs/release.md, "Staging"). The target is
+# the hand-installed copy in /usr/local/lib, never a checkout: branch code must
+# not be able to rewrite what runs as root.
+deploy ALL=(root) NOPASSWD: /usr/local/lib/floor-fifty/bin/deploy /home/deploy/release.tgz

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    // Test code is the one place that legitimately spans both runtimes: shared
+    // simulation tests are pure, server tests need Node, and client tests need
+    // the DOM that jsdom provides.
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    // `vite/client` alongside `node` because a client test compiles client
+    // source, and client source reads `import.meta.env` -- the gameplay screen
+    // gates its dev-only panel overrides on it.
+    "types": ["node", "vite/client"],
+    // tools/ci runs on Node's own type stripping, which needs the .ts in imports.
+    "allowImportingTsExtensions": true
+  },
+  "include": ["tests/**/*.ts", "deploy/**/*.ts", "tools/build-stamp.ts", "tools/ci/**/*.ts", "vitest.config.ts", "playwright.config.ts", "playwright.release.config.ts"]
+}

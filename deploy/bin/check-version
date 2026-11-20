@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Refuses a release tag whose packages do not say its version, so the title
+# never shows a version but the release's. Run on a published release by
+# release-builds.yml.
+#
+# Usage: check-version <tag>
+set -euo pipefail
+
+tag="${1:?usage: check-version <tag>}"
+cd "$(git rev-parse --show-toplevel)"
+version="$(git show "$tag:apps/client/package.json" | node -e 'process.stdout.write(JSON.parse(require("fs").readFileSync(0, "utf8")).version)')"
+if [[ "v$version" != "$tag" ]]; then
+  echo "$tag's packages say $version: run deploy/bin/bump-version ${tag#v} on main, merge, and move the tag to that commit" >&2
+  exit 1
+fi
+echo "$tag's packages say $version"

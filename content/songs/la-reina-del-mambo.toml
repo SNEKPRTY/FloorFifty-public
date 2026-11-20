@@ -1,0 +1,20 @@
+# intake-hash: 67dbd8243784aab6
+# Measured from the master by pnpm intake:song: tempo and first beat by the
+# method in docs/art/exceptional-race-slice-review.md, -16.07 LUFS integrated.
+# Nothing in the simulation reads these. The whole file loops. The results
+# window, which the song step also previews, is chosen by ear and added by
+# hand; once this file is edited, a re-run needs --force.
+id = "la-reina-del-mambo"
+displayName = "La Reina del Mambo"
+bpm = 184.10
+beatOffsetTicks = 2
+loopStartMs = 0
+loopEndMs = 178800
+# The owner's splits, by ear (2026-10-03): the song step's preview and the
+# post-game window.
+previewStartMs = 30000
+previewEndMs = 52000
+resultsStartMs = 93000
+resultsEndMs = 125000
+audioAlias = "music.laReinaDelMambo"
+coverAlias = "cover.laReinaDelMambo"

@@ -1,0 +1,35 @@
+# The slice's stage song, now the commercially licensed remaster the project
+# owner supplied on 2026-09-25 (CommericalSongs/Chrome in the Rain Remastered.wav).
+# It decodes sample-aligned with the original (zero lag, same 5 819 520 frames),
+# so every value below still holds.
+#
+# Every number below was measured from the original delivery encode rather than read
+# from a tag: the file carries no `TBPM` frame. Method and evidence are in
+# `docs/art/exceptional-race-slice-review.md`.
+#
+# `beatOffsetTicks` is 24 because the first downbeat sits at 405.5 ms and a
+# tick is 16.667 ms. The 5.5 ms of residual is a third of one tick and is
+# visual only -- nothing in the simulation reads any of this.
+#
+# The race loops the whole file (0 to its 121 240 ms length), by the project
+# owner's choice on 2026-09-24. It replaces the measured 32-bar loop
+# (405 - 53 008 ms), which restarted the song after under a minute. The music
+# was never phase-locked to the race, so a loop that is not a whole number of
+# bars moves nothing the beat clock draws.
+#
+# `resultsStartMs`/`resultsEndMs` are the stretch the "[name] wins" screen plays
+# once, without looping: 1:19 to 1:36.
+id = "chrome-in-the-rain"
+displayName = "Chrome in the Rain"
+bpm = 146.0
+beatOffsetTicks = 24
+loopStartMs = 0
+loopEndMs = 121240
+# The owner's splits, by ear (2026-10-03): the song step's preview and the
+# post-game window.
+previewStartMs = 40000
+previewEndMs = 66000
+resultsStartMs = 79000
+resultsEndMs = 96000
+audioAlias = "music.chromeInTheRain"
+coverAlias = "cover.chromeInTheRain"

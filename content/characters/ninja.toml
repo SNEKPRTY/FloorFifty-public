@@ -1,0 +1,18 @@
+# Cosmetic only. A character is a body; the seat keeps its colour, so each seat
+# colour has its own recoloured sheet and portrait. Nothing here reaches a race.
+id = "ninja"
+displayName = "Ninja"
+
+[sheetAliases]
+scarlet = "ninja.scarlet"
+cyan = "ninja.cyan"
+gold = "ninja.gold"
+violet = "ninja.violet"
+
+# The neutral bust per seat; the win and lose moods are the same alias with
+# `Win` and `Lose` appended.
+[portraitAliases]
+scarlet = "portrait.scarlet"
+cyan = "portrait.cyan"
+gold = "portrait.gold"
+violet = "portrait.violet"

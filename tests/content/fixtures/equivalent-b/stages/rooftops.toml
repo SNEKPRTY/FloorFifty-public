@@ -1,0 +1,90 @@
+platformAlias = "world.platform"
+displayName = "Rooftops"
+id = "rooftops"
+
+[theme]
+previewAlias = "still.rooftopsPreview"
+backdropAlias = "menu.backdrop"
+
+[[theme.layers]]
+drift = 1.5
+extend = "none"
+sink = 0
+depth = 0.06
+plate = "sky"
+alias = "world.clouds"
+
+[[theme.layers]]
+extend = "skirt"
+haze = 0.25
+sink = 240
+depth = 0.15
+plate = "city"
+alias = "world.cityFar"
+
+[[theme.layers]]
+extend = "skirt"
+haze = 0.125
+sink = 270
+depth = 0.24
+plate = "city"
+alias = "world.cityMid"
+
+[[theme.layers]]
+extend = "skirt"
+haze = 0
+sink = 290
+depth = 0.35
+plate = "city"
+alias = "world.cityNear"
+
+[[theme.layers]]
+extend = "tile"
+sink = 290
+depth = 0.35
+plate = "city"
+alias = "world.lanterns"
+
+[[theme.layers]]
+extend = "none"
+sink = 180
+depth = 0.42
+plate = "city"
+alias = "world.rooftopDetails"
+
+[[theme.layers]]
+extend = "none"
+sink = 180
+depth = 0.42
+plate = "city"
+alias = "world.rooftopProps"
+
+[courseTuning]
+COURSE_FLOOR_COUNT = 24
+
+[course]
+seed = 1234
+
+[[course.phrases]]
+purpose = "Fixture phrase."
+toFloor = 6
+fromFloor = 1
+name = "teach"
+
+[[course.phrases]]
+toFloor = 12
+purpose = "Fixture phrase."
+name = "combine"
+fromFloor = 7
+
+[[course.phrases]]
+name = "recover"
+toFloor = 18
+fromFloor = 13
+purpose = "Fixture phrase."
+
+[[course.phrases]]
+fromFloor = 19
+name = "finish"
+purpose = "Fixture phrase."
+toFloor = 23

@@ -1,0 +1,8 @@
+# Fifty floors: the same climb carried on for thirty more (D-O1). One lap.
+id = "floors-50"
+displayName = "50 floors"
+course = "finite"
+laps = [1]
+
+[tuning]
+COURSE_FLOOR_COUNT = 50

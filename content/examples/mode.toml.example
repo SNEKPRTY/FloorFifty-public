@@ -1,0 +1,20 @@
+# A mode file, for reference. The shipped ones are in `content/modes/`.
+#
+# A mode is a race option the host picks in the ready room (race-options spec §3).
+
+id = "timed-climb"
+displayName = "Timed Climb"
+
+# "finite" ends at the top floor; "endless" grows without end and ends on its
+# clock, so it needs a positive RACE_TIME_LIMIT_TICKS below.
+course = "endless"
+
+# The lap counts the ready room offers: each 1 or 3, at least one, none twice.
+laps = [1]
+
+# The last override layer, applied over base tuning and then over the selected
+# stage's `courseTuning`. Partial: name only what the mode changes. Every value
+# is bounds-checked against the shared declarations.
+[tuning]
+COURSE_FLOOR_COUNT = 50
+RACE_TIME_LIMIT_TICKS = 5400

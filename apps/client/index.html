@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en" class="ff-booting">
+  <head>
+    <meta charset="utf-8" />
+    <!-- viewport-fit=cover is what makes the CSS safe-area insets the touch
+         controls rely on resolve to real values on notched devices.
+         interactive-widget=resizes-visual keeps the on-screen keyboard from
+         resizing the layout viewport the form factor is classified from
+         (responsive parity Review focus 1); the screens end above it by
+         --ff-visual-inset-bottom instead. -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, interactive-widget=resizes-visual"
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Floor Fifty - a four-player vertical climbing race." />
+    <title>Floor Fifty</title>
+    <!-- Derived from the supplied icon art; see public/icons/README.md. -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="./icons/icon-180.png" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <meta name="theme-color" content="#2e222f" />
+    <!-- Black from the first paint until the splash is up and covering the
+         screen itself, which takes it from there. Inline, so it holds before
+         the stylesheet has arrived. -->
+    <style>
+      /* Named first, before the stylesheet below, so the boot failure's fallback (the lowest layer)
+         loses to the glass and the green button once that stylesheet has arrived. */
+      @layer ff-fallback, theme, base, components, utilities;
+
+      html.ff-booting,
+      html.ff-booting body {
+        /* Resurrect 64's black, the swatch --ff-outline is bound to. Spelled
+           out because the stylesheet that names it may not have arrived. */
+        background: #2e222f;
+      }
+
+      /* The canvas paints its letterboxed frame as soon as the renderer is
+         up, well before the splash mounts its cover over it; the page's
+         black alone sat under that frame, not over it. */
+      html.ff-booting #app canvas {
+        visibility: hidden;
+      }
+
+      /* The boot loader (`features/boot/boot-loader.ts`): over the boot black and the
+         splash's cover alike, until the splash shows. It is there from the
+         first paint -- no delay, no fade-in -- because inside Ruken the host
+         lifts its own cover the moment the game says hello, and a bare dark
+         frame then is the one thing the player must never see. A boot that is
+         quick shows it briefly, which is fine. Colours spelled out for the
+         same reason as the black above: Aquarian pearl and glow. */
+      #ff-boot-loader {
+        position: fixed;
+        inset: 0;
+        z-index: 55;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: 14px;
+        pointer-events: none;
+        color: #c7dcd0;
+        font: 600 0.75rem/1 system-ui, sans-serif;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        transition: opacity 320ms ease-out;
+      }
+
+      #ff-boot-loader.ff-boot-loader--gone {
+        opacity: 0;
+      }
+
+      /* How far the boot has got, from real steps (`reportBootStep`); hidden
+         until the script has a first one to report. */
+      .ff-boot-loader__bar {
+        width: min(220px, 60vw);
+        height: 4px;
+        overflow: hidden;
+        border-radius: 2px;
+        background: rgba(199, 220, 208, 0.35);
+      }
+
+      .ff-boot-loader__bar[hidden] {
+        display: none;
+      }
+
+      .ff-boot-loader__fill {
+        width: 0;
+        height: 100%;
+        background: #c7dcd0;
+        transition: width 160ms steps(4);
+      }
+
+      /* A quiet line after eight seconds: slow is not failing. Pure CSS, so
+         it comes on while the script is still downloading over a slow link
+         (`SLOW_MS` in `features/boot/load-meter.ts` is the same eight seconds). */
+      .ff-boot-loader__slow {
+        max-width: 28ch;
+        margin: 0;
+        text-align: center;
+        font-weight: 400;
+        line-height: 1.5;
+        letter-spacing: 0.04em;
+        text-transform: none;
+        opacity: 0;
+        animation: ff-boot-slow-in 400ms ease-out 8s forwards;
+      }
+
+      /* A ring turned in eight steps, as the chrome's motion is (the
+         network loader's spinner, larger). */
+      .ff-boot-loader__ring {
+        width: 32px;
+        height: 32px;
+        border: 4px solid #4d9be6;
+        border-right-color: transparent;
+        border-radius: 50%;
+        animation: ff-boot-spin 800ms steps(8) infinite;
+      }
+
+      @layer ff-fallback {
+        /* The boot failure panel (`renderBootFailure` in `main.ts`), inline as
+           well: it must read when the stylesheet itself is what failed to load.
+           The stylesheet's `.ff-boot-error` rules, with their colours spelled
+           out (Aquarian ink, pearl, edge, muted; the pending-floor red). */
+        .ff-boot-error {
+          box-sizing: border-box;
+          width: calc(100% - 32px);
+          max-width: 34rem;
+          /* In the middle of the screen, across and down: fixed on every edge, auto margins. */
+          position: fixed;
+          inset: 0;
+          height: fit-content;
+          max-height: calc(100% - 32px);
+          overflow-y: auto;
+          margin: auto;
+          padding: 1.5rem;
+          color: #ffffff;
+          background: #2e222f;
+          border: 2px solid #ed8099;
+          text-align: center;
+          border-radius: 4px;
+          font-family: system-ui, sans-serif;
+        }
+
+        .ff-boot-error h1 {
+          margin: 0 0 0.5rem;
+          font-size: 1.4rem;
+          font-weight: 800;
+        }
+
+        .ff-boot-error p {
+          margin: 0 0 1rem;
+          color: #c7dcd0;
+          line-height: 1.5;
+        }
+
+        /* The one way forward: green, white and bold, at least 44 px high. */
+        .ff-boot-error button {
+          min-width: 44px;
+          min-height: 48px;
+          padding: 0 1.5rem;
+          color: #ffffff;
+          background: #165a4c;
+          border: 2px solid #313638;
+          border-radius: 4px;
+          box-shadow: inset 0 1px 0 #239063;
+          font: 600 1.125rem/1 system-ui, sans-serif;
+        }
+      }
+
+      @keyframes ff-boot-slow-in {
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes ff-boot-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #ff-boot-loader {
+          transition: none;
+        }
+
+        .ff-boot-loader__ring {
+          animation: none;
+        }
+
+        .ff-boot-loader__fill {
+          transition: none;
+        }
+
+        .ff-boot-loader__slow {
+          animation-duration: 1ms;
+        }
+      }
+    </style>
+    <link rel="stylesheet" href="./src/features/kit/styles.css" />
+  </head>
+  <body>
+    <div id="ff-boot-loader" data-testid="boot-loader" role="status" aria-live="polite">
+      <span class="ff-boot-loader__ring" aria-hidden="true"></span>
+      <span>Loading</span>
+      <div
+        class="ff-boot-loader__bar"
+        role="progressbar"
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-valuenow="0"
+        data-testid="boot-progress"
+        hidden
+      >
+        <div class="ff-boot-loader__fill"></div>
+      </div>
+      <p class="ff-boot-loader__slow" data-testid="boot-slow">
+        Still loading. This can take a moment on a slow connection.
+      </p>
+    </div>
+    <div id="app" data-testid="app"></div>
+    <script type="module" src="./src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+# intake-hash: ee6948a03233445e
+# Measured from the master by pnpm intake:song: tempo and first beat by the
+# method in docs/art/exceptional-race-slice-review.md, -15.46 LUFS integrated.
+# Nothing in the simulation reads these. The whole file loops. The results
+# window, which the song step also previews, is chosen by ear and added by
+# hand; once this file is edited, a re-run needs --force.
+id = "pyramid-scheme"
+displayName = "Pyramid Scheme"
+bpm = 166.10
+beatOffsetTicks = 13
+loopStartMs = 0
+loopEndMs = 91000
+# The owner's splits, by ear (2026-10-03): the song step's preview and the
+# post-game window.
+previewStartMs = 11000
+previewEndMs = 34000
+resultsStartMs = 69000
+resultsEndMs = 91000
+audioAlias = "music.pyramidScheme"
+coverAlias = "cover.pyramidScheme"
+unlock = "games-2"

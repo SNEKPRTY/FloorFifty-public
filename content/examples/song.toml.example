@@ -1,0 +1,29 @@
+# A song file, for reference.
+#
+# Outside the compiler's source glob, so it may describe audio that does not
+# exist yet. Copy it to `content/songs/<id>.toml`, point `audioAlias` at a real
+# manifest entry, and list the ID in a pack in `catalog.toml`.
+
+# Matches `^[a-z0-9-]+$` and is unique across every kind of item.
+id = "dusk-run"
+
+displayName = "Dusk Run"
+
+# Beat and loop metadata are presentation: nothing in the simulation reads
+# them, so editing any of it moves `contentRevision` and never
+# `rulesetRevision`.
+bpm = 128.0
+beatOffsetTicks = 12
+loopStartMs = 0
+loopEndMs = 96000
+
+# An alias `packages/asset-contract/assets/art-manifest.json` carries.
+audioAlias = "music.duskRun"
+
+# The jukebox cover: this alias at 192 px, and the same alias plus `Large` at
+# 640 px. A song in a pack needs one.
+coverAlias = "cover.duskRun"
+
+# Optional: a condition in `unlocks.toml` that earns this song. Absent, the
+# song is open.
+# unlock = "any-match"

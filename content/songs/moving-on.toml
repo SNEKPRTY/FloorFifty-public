@@ -1,0 +1,21 @@
+# intake-hash: ad328cf8cb6ba023
+# Measured from the master by pnpm intake:song: tempo and first beat by the
+# method in docs/art/exceptional-race-slice-review.md, -16.00 LUFS integrated.
+# Nothing in the simulation reads these. The whole file loops. The preview
+# window (the song step and the new-song banner) and the results window
+# are chosen by ear and added by hand; once this file is edited, a re-run
+# needs --force.
+id = "moving-on"
+displayName = "Moving On"
+bpm = 100.75
+beatOffsetTicks = 33
+loopStartMs = 0
+loopEndMs = 238360
+# The owner's splits, by ear (2026-10-03): the song step's preview and the
+# post-game window.
+previewStartMs = 45000
+previewEndMs = 72000
+resultsStartMs = 216000
+resultsEndMs = 233000
+audioAlias = "music.movingOn"
+coverAlias = "cover.movingOn"

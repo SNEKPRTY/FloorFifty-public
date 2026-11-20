@@ -1,0 +1,14 @@
+packages:
+  - apps/*
+  - packages/*
+
+# Vite lists jiti and lightningcss as optional peers. @tailwindcss/vite pulls
+# both into its graph and @sveltejs/vite-plugin-svelte pulls neither, so pnpm
+# resolves a separate Vite instance per plugin. Two copies of Vite means two
+# incompatible `Plugin` types, and apps/client/vite.config.ts stops
+# typechecking even though both plugins are correct.
+#
+# This collapses dependents onto one resolution rather than keeping a copy per
+# peer set. It lives here rather than in .npmrc because npm does not know the
+# setting and warns on every npx invocation.
+dedupePeerDependents: true

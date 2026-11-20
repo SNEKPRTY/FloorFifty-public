@@ -1,0 +1,19 @@
+# Cosmetic only. A character is a body; the seat keeps its colour, so each seat
+# colour has its own recoloured sheet and portrait. Nothing here reaches a race.
+id = "kitsune"
+displayName = "Kitsune"
+unlock = "games-10"
+
+[sheetAliases]
+scarlet = "kitsune.scarlet"
+cyan = "kitsune.cyan"
+gold = "kitsune.gold"
+violet = "kitsune.violet"
+
+# The neutral bust per seat; the win and lose moods are the same alias with
+# `Win` and `Lose` appended.
+[portraitAliases]
+scarlet = "portrait.kitsuneScarlet"
+cyan = "portrait.kitsuneCyan"
+gold = "portrait.kitsuneGold"
+violet = "portrait.kitsuneViolet"

@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Builds a release from a clean checkout (release readiness spec §5.1, D-G6).
+#
+# Usage: build-release <staging|production> <outDir>
+# Writes <outDir>/release.tgz (release.json, server/, client/) and
+# <outDir>/build-id. Run on the rig only: a checkout on the iCloud Desktop
+# can carry "name 2" duplicates, which release:check refuses.
+set -euo pipefail
+
+env_name="${1:?usage: build-release <staging|production> <outDir>}"
+out="${2:?usage: build-release <staging|production> <outDir>}"
+repo="$(git rev-parse --show-toplevel)"
+cd "$repo"
+# shellcheck source=../config.env
+source deploy/config.env
+if [[ -z "${FF_DOMAIN:-}" ]]; then
+  echo "FF_DOMAIN is empty in deploy/config.env" >&2
+  exit 2
+fi
+case "$env_name" in
+  staging) api="https://staging-api.$FF_DOMAIN" ;;
+  production) api="https://api.$FF_DOMAIN" ;;
+  *) echo "unknown environment '$env_name'" >&2; exit 2 ;;
+esac
+if [[ -n "$(git status --porcelain)" ]]; then
+  echo "the checkout is not clean; a release is built from a commit, nothing else" >&2
+  exit 2
+fi
+
+commit="$(git rev-parse --short=7 HEAD)"
+build_id="$(date -u +%Y%m%d%H%M)-$commit"
+rm -rf "$out"
+mkdir -p "$out/stage"
+
+pnpm install --frozen-lockfile
+FLOOR_FIFTY_BUILD_ID="$build_id" VITE_SERVER_URL="$api" pnpm build
+# A production release refuses placeholders and unreviewed strings; staging
+# only warns of them (release readiness §9.1).
+if [[ "$env_name" == "production" ]]; then pnpm release:check --release; else pnpm release:check; fi
+
+pnpm --filter @floor-fifty/server deploy --prod --legacy "$out/stage/server"
+# `pnpm deploy` packs by the package's ignore rules, which can leave out the
+# git-ignored dist/; copy the built bundle in explicitly.
+rm -rf "$out/stage/server/dist"
+cp -R apps/server/dist "$out/stage/server/dist"
+cp -R apps/client/dist "$out/stage/client"
+
+pnpm exec vite-node deploy/tools/release-manifest-cli.ts -- "$out/stage" "$build_id" "$env_name" "$commit"
+tar -czf "$out/release.tgz" -C "$out/stage" .
+echo "$build_id" > "$out/build-id"
+echo "built $build_id for $env_name"

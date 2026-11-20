@@ -1,0 +1,20 @@
+# intake-hash: a3715e3878c7dc87
+# Measured from the master by pnpm intake:song: tempo and first beat by the
+# method in docs/art/exceptional-race-slice-review.md, -16.11 LUFS integrated.
+# Nothing in the simulation reads these. The whole file loops. The results
+# window, which the song step also previews, is chosen by ear and added by
+# hand; once this file is edited, a re-run needs --force.
+id = "farther-from-home"
+displayName = "Farther From Home"
+bpm = 110.10
+beatOffsetTicks = 10
+loopStartMs = 0
+loopEndMs = 243160
+# The owner's splits, by ear (2026-10-03): the song step's preview and the
+# post-game window.
+previewStartMs = 60000
+previewEndMs = 95000
+resultsStartMs = 180000
+resultsEndMs = 215000
+audioAlias = "music.fartherFromHome"
+coverAlias = "cover.fartherFromHome"

@@ -1,0 +1,21 @@
+# intake-hash: 800250a526bc817d
+# Measured from the master by pnpm intake:song: tempo and first beat by the
+# method in docs/art/exceptional-race-slice-review.md, -16.15 LUFS integrated.
+# Nothing in the simulation reads these. The whole file loops. The results
+# window, which the song step also previews, is chosen by ear and added by
+# hand; once this file is edited, a re-run needs --force.
+id = "static-in-the-air"
+displayName = "Static in the Air"
+bpm = 134.25
+beatOffsetTicks = 17
+loopStartMs = 0
+loopEndMs = 251120
+# The owner's splits, by ear (2026-10-03): the song step's preview and the
+# post-game window.
+previewStartMs = 14000
+previewEndMs = 43000
+resultsStartMs = 194000
+resultsEndMs = 220000
+audioAlias = "music.staticInTheAir"
+coverAlias = "cover.staticInTheAir"
+unlock = "games-3"

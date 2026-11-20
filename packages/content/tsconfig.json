@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    // Node types, unlike `packages/shared`: this package exists to read the
+    // filesystem and hash bytes, and it is never bundled to a browser.
+    "lib": ["ES2022"],
+    "types": ["node"]
+  },
+  "include": ["src/**/*.ts", "bin/**/*.ts"]
+}

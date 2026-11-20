@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Installs a release tarball and makes it live, or installs a release build.
+#
+# Usage: deploy <release.tgz>
+#
+# A release tarball is build-release's: release.json, server/, client/. The server
+# goes first (activate), and the static client is switched only once the
+# server behind it is live, so a fresh page never loads against a build that
+# is not serving yet. A release build is build-tag's: build.json and client/,
+# one GitHub release's client for /builds/<id>/. It is listed for the owner's
+# site and never made live. Run as root through sudo; see deploy/sudoers.
+set -euo pipefail
+
+root="${FF_ROOT:-/srv/floor-fifty}"
+activate="${FF_ACTIVATE:-/usr/local/lib/floor-fifty/bin/activate}"
+tarball="${1:?usage: deploy <release.tgz>}"
+
+# The dev build hosts (release readiness D-R6): builds-index.json lists the ten
+# newest release builds for the owner's site, each served at /builds/<id>/.
+write_index() {
+  local base="${FF_BUILDS_BASE:-}"
+  if [[ -z "$base" && -r /etc/floor-fifty/caddy.env ]]; then
+    # shellcheck disable=SC1091
+    base="$(set -a; . /etc/floor-fifty/caddy.env; echo "${FF_BUILDS_BASE:-https://staging.$FF_DOMAIN}")"
+  fi
+  if [[ -n "$base" ]]; then
+    # What the live server speaks, so each build says whether it can still
+    # play there; a server that does not answer leaves that unsaid.
+    local port=3001
+    [[ "$(cat "$root/live" 2>/dev/null)" == green ]] && port=3002
+    curl -fsS --max-time 5 "http://127.0.0.1:$port/health" > "$root/.server-health.json" 2>/dev/null || rm -f "$root/.server-health.json"
+    node "$(dirname "$0")/builds-index.mjs" "$root" "$base" 10 > "$root/.builds-index.json.tmp"
+    mv "$root/.builds-index.json.tmp" "$root/builds-index.json"
+  fi
+}
+
+incoming="$(mktemp -d "$root/releases/.incoming.XXXXXX")"
+trap 'rm -rf "$incoming"' EXIT
+tar -xzf "$tarball" -C "$incoming"
+# mktemp -d makes it 0700, and this runs as root: Caddy, as its own user,
+# could not enter the release and answered every /builds/<id>/ with a 403.
+# After the tar, not before: GNU tar, as root, gives the folder the mode of
+# the archive's ./ entry, which is 0700 too (the Mac's tar leaves it be).
+chmod 755 "$incoming"
+
+if [[ -f "$incoming/build.json" ]]; then
+  read_build='const b = require(process.argv[1]); process.stdout.write(`${b.buildId}\n${b.tag}\n`)'
+  { read -r id; read -r tag; } < <(node -e "$read_build" "$incoming/build.json")
+  if [[ ! "$id" =~ ^[0-9]{12}-[0-9a-f]{7,40}$ || ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+ || ! -d "$incoming/client" ]]; then
+    echo "build.json names '$id' ('$tag'), which is not a release build" >&2
+    exit 2
+  fi
+  mkdir -p "$root/builds"
+  if [[ -d "$root/builds/$id" ]]; then
+    mv "$root/builds/$id" "$incoming.old"
+    trap 'rm -rf "$incoming" "$incoming.old"' EXIT
+  fi
+  mv "$incoming" "$root/builds/$id"
+  write_index
+  echo "build $id ($tag) is at /builds/$id/"
+  exit 0
+fi
+
+id="$(node -e 'process.stdout.write(String(require(process.argv[1]).buildId))' "$incoming/release.json")"
+if [[ ! "$id" =~ ^[0-9]{12}-[0-9a-f]{7,40}$ ]]; then
+  echo "release.json names '$id', which is not a build ID" >&2
+  exit 2
+fi
+if [[ ! -d "$root/releases/$id" ]]; then
+  mv "$incoming" "$root/releases/$id"
+fi
+
+"$activate" "$id"
+ln -sfn "$root/releases/$id/client" "$root/client"
+echo "client for $id is live"
+
+# The ten newest releases stay for rollback. The live release and the one a
+# rollback returns to are never pruned. Release builds live in builds/ and
+# are never pruned.
+keep=10
+live_id="$(cat "$root/current" 2>/dev/null || true)"
+previous_id="$(cat "$root/previous" 2>/dev/null || true)"
+# Plain ls, grep and a counter, so the same script runs under the Mac's bash 3
+# in the tests and on the box.
+seen=0
+for old in $(ls -1 "$root/releases" | grep -E '^[0-9]{12}-[0-9a-f]{7,40}$' | sort -r); do
+  seen=$((seen + 1))
+  if (( seen > keep )) && [[ "$old" != "$live_id" && "$old" != "$previous_id" ]]; then
+    rm -rf "${root:?}/releases/$old"
+  fi
+done
+
+write_index

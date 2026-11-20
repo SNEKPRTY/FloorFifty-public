@@ -1,0 +1,18 @@
+# Cosmetic only. A character is a body; the seat keeps its colour, so each seat
+# colour has its own recoloured sheet and portrait. Nothing here reaches a race.
+id = "oni"
+displayName = "Oni"
+
+[sheetAliases]
+scarlet = "oni.scarlet"
+cyan = "oni.cyan"
+gold = "oni.gold"
+violet = "oni.violet"
+
+# The neutral bust per seat; the win and lose moods are the same alias with
+# `Win` and `Lose` appended.
+[portraitAliases]
+scarlet = "portrait.oniScarlet"
+cyan = "portrait.oniCyan"
+gold = "portrait.oniGold"
+violet = "portrait.oniViolet"

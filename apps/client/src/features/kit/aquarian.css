@@ -1,0 +1,798 @@
+/* The Aquarian component skin.
+   -------------------------------------------------------------------------
+   Shared material for the smooth interface: one wordmark, one panel, one
+   control, one field, one HUD backing. A component composes these instead of
+   restating a radius or a shadow, so the interface reads as one surface seen
+   from several angles rather than as panels that happen to resemble each other.
+
+   Every value resolves through aquarian-tokens.css. No hex is authored here,
+   for the same reason none is authored in a component: the authored colour is
+   audited in one file.
+
+   The rules sit in `@layer components`, not loose at the top level. Unlayered
+   CSS outranks everything in a layer, so a loose `.ff-aq-control` would beat
+   `bg-aq-ice` on the same element and the class would look inert -- the exact
+   failure the note in styles.css records. In the components layer a utility
+   still wins, which is the order callers expect. */
+
+@layer components {
+  /* An image loading (`AsyncImage`).
+     ---------------------------------------------------------------------
+     First in the layer, so every later rule, every utility and a caller's
+     scoped rules size and place the frame. Toned until the image decodes,
+     with the house ring (the boot and network loaders') after a beat. */
+  .ff-async {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: middle;
+    width: var(--ff-async-w, auto);
+    height: var(--ff-async-h, auto);
+  }
+
+  .ff-async[data-tone="fill"]:not([data-load="loaded"]) {
+    background: var(--ff-panel-fill);
+  }
+
+  .ff-async__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: var(--ff-async-fit, fill);
+    opacity: 0;
+    transition: opacity 160ms ease-out;
+  }
+
+  .ff-async[data-load="loaded"] > .ff-async__img {
+    opacity: 1;
+  }
+
+  .ff-async[data-instant] > .ff-async__img {
+    transition: none;
+  }
+
+  .ff-async__ring {
+    position: absolute;
+    inset: 0;
+    width: min(32px, 40%);
+    aspect-ratio: 1;
+    margin: auto;
+    box-sizing: border-box;
+    border: 3px solid var(--ff-glow);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: ff-async-spin 800ms steps(8) infinite;
+  }
+
+  @keyframes ff-async-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ff-async__ring {
+      animation: none;
+    }
+
+    .ff-async__img {
+      transition: none;
+    }
+  }
+
+
+  /* The wordmark.
+     ---------------------------------------------------------------------
+     Fraunces at weight 600, optical size 72, SOFT 20, WONK 0: the axes are what
+     give the wordmark its confident bowls and slightly squared shoulders
+     without the fragile hairlines of a high-contrast didone, which is the whole
+     reason the face was chosen over the delicate serif it replaces. Line-height
+     below 1 lets the two stacked words sit as one mark.
+
+     Size steps down on a narrow screen rather than scaling without limit: at
+     9vw a phone would set the wordmark wider than the viewport. */
+  .ff-wordmark {
+    display: block;
+    font-family: var(--ff-font-wordmark);
+    font-weight: 600;
+    font-variation-settings: "opsz" 72, "SOFT" 20, "WONK" 0;
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+    font-size: clamp(64px, 9vw, 144px);
+    text-wrap: balance;
+  }
+
+  /* Headings: the UI face at the heading weight, never the wordmark's serif.
+     Fusion Pixel has one weight, drawn alike at 400 to 800, so a CJK heading draws at 600
+     rather than a synthesised bold (UI overhaul spec, "Type"). */
+  h1,
+  h2,
+  h3,
+  .ff-dialog-heading__title {
+    font-family: var(--ff-font-ui);
+    font-weight: 800;
+  }
+
+  /* Panels.
+     ---------------------------------------------------------------------
+     One glass rule for a menu panel, a dialog and a race chip (`.ff-aq-hud`).
+     A rounded plate: the panel fill at the opacity token over a backdrop that
+     is blurred, dimmed and saturated, a dark two-pixel outline, and a
+     one-pixel lighter bevel inside it. The Owner chose "More see-through,
+     darker" (2026-11-19 01:08Z, card), after "Rounder, light frost" (2026-11-18
+     15:16Z) read as solid: the game shows through, dark, and white on the
+     fill over the brightest world colour, dimmed by the filter, is held at
+     9:1 by `contrast.test.ts`.
+
+     Two cases get the solid plate, no filter: a software renderer
+     (`data-renderer="software"`, set by `software-renderer.ts`), where a live
+     blur of a canvas that already takes 260 ms a frame is too dear, and a
+     player who asked for less transparency. `backdrop-filter` is set to
+     `none` there, not to `blur(0)`, which would still hold fixed
+     descendants inside the panel. */
+  .ff-aquarian-panel,
+  .ff-aq-hud {
+    background: color-mix(in srgb, var(--ff-panel-fill) var(--ff-panel-opacity), transparent);
+    color: var(--ff-text);
+    border: 2px solid var(--ff-panel-border);
+    border-radius: var(--ff-panel-radius);
+    box-shadow: inset 0 0 0 1px var(--ff-panel-bevel);
+    -webkit-backdrop-filter: blur(var(--ff-panel-blur)) brightness(var(--ff-panel-dim)) saturate(var(--ff-panel-saturate));
+    backdrop-filter: blur(var(--ff-panel-blur)) brightness(var(--ff-panel-dim)) saturate(var(--ff-panel-saturate));
+  }
+
+  /* The panel's rise (`PANEL_IN`: 8 px, 150 ms, eight steps), for every `Panel`, for a
+     panel drawn outside Svelte (the boot error) and for one that must take focus and
+     input from its first frame (the modal). A stagger slot (`--ff-panel-order`) waits
+     `STAGGER` (60 ms) a place. A keyframe, never a GSAP tween on the panel: see `Panel`. */
+  .ff-panel-arrive {
+    animation: ff-panel-rise 150ms steps(8) calc(var(--ff-panel-order, 0) * 60ms) both;
+  }
+
+  /* The results screen keeps a calmer, longer rise. */
+  .ff-panel-arrive--long {
+    animation-duration: 300ms;
+  }
+
+  @keyframes ff-panel-rise {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ff-panel-arrive {
+      animation: none;
+    }
+  }
+
+  :root[data-renderer="software"] .ff-aquarian-panel,
+  :root[data-renderer="software"] .ff-aq-hud {
+    background: var(--ff-panel-fill);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .ff-aquarian-panel,
+    .ff-aq-hud {
+      background: var(--ff-panel-fill);
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  .ff-aq-hud {
+    font-family: var(--ff-font-ui);
+    /* Tabular figures and a fixed-width numeral advance, so a running clock
+       and a floor count do not shift their neighbours as the digits change. */
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Controls.
+     ---------------------------------------------------------------------
+     Three colours, and only three. Green is the one step forward on a screen
+     (at most one, and the biggest); red leaves, gives up or loses something;
+     blue is everything else. Each is a face, a 2 px darker border and a 1 px
+     lit bevel just inside it, with a white bold label. The button is a plate:
+     pressed, its face drops 2 px and the bevel moves from the top edge to the
+     bottom, at once, with no easing and no spring, which is what
+     `ui-motion.ts` leaves to this rule.
+
+     A 48 px minimum height and a 44 px minimum width are the accessibility
+     floor made concrete, not a style preference. */
+  .ff-aq-control {
+    --ff-btn-face: var(--ff-plain);
+    --ff-btn-edge: var(--ff-plain-edge);
+    --ff-btn-bevel: var(--ff-plain-bevel);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: var(--ff-aq-control-height);
+    min-width: var(--ff-aq-target);
+    padding: 0 16px;
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-button);
+    font-weight: 600;
+    line-height: 1;
+    /* A longer translation takes a second, balanced line inside the button
+       rather than being cut or pushing the row (languages spec §6.3). One
+       line, as every English label is, is unchanged. */
+    text-align: center;
+    text-wrap: balance;
+    /* A word too long for the button breaks at a hyphenation point first
+       ("Configura-ción"), and only past that anywhere, so a squeezed row
+       never reads "Silenci / ar" (visual audit, 2026-10-05). */
+    hyphens: auto;
+    overflow-wrap: anywhere;
+    color: var(--ff-text);
+    background: var(--ff-btn-face);
+    border: 2px solid var(--ff-btn-edge);
+    border-radius: var(--ff-panel-radius);
+    box-shadow: inset 0 1px 0 var(--ff-btn-bevel);
+    cursor: var(--ff-cursor-hot);
+    /* No transition: a colour change is a swap, never a fade (`features/kit/motion.ts`). */
+    transition: none;
+  }
+
+  .ff-aq-control--go {
+    --ff-btn-face: var(--ff-go);
+    --ff-btn-edge: var(--ff-go-edge);
+    --ff-btn-bevel: var(--ff-go-bevel);
+  }
+
+  .ff-aq-control--stop {
+    --ff-btn-face: var(--ff-stop);
+    --ff-btn-edge: var(--ff-stop-edge);
+    --ff-btn-bevel: var(--ff-stop-bevel);
+  }
+
+  /* Pressed: the face drops 2 px and the lit edge moves to the bottom. */
+  .ff-aq-control:active:not(:disabled):not([aria-disabled="true"]) {
+    translate: 0 2px;
+    box-shadow: inset 0 -1px 0 var(--ff-btn-bevel);
+  }
+
+  /* A disabled control is flat and dim: panel fill, the quiet border and the
+     one grey that is for disabled things only. */
+  .ff-aq-control:disabled,
+  .ff-aq-control[aria-disabled="true"] {
+    color: var(--ff-text-off);
+    background: var(--ff-panel-fill);
+    border-color: var(--ff-panel-border);
+    box-shadow: inset 0 0 0 1px var(--ff-panel-bevel);
+    /* The bare-button rule dims a disabled control; the flat face already says it. */
+    opacity: 1;
+    cursor: not-allowed;
+  }
+
+  /* A wide action read as label-then-arrow: the words at the left edge, the
+     arrow at the right, and a little more height than the floor. */
+  .ff-aq-control--split {
+    justify-content: space-between;
+    min-height: 52px;
+    padding: 0 20px;
+  }
+
+  /* Toggles.
+     ---------------------------------------------------------------------
+     Drawn, not the browser's: a native radio is empty when chosen in some
+     browsers and filled in others, and the chosen one read as the dark one.
+     Here the one that is on is the filled one, always.
+
+     A checkbox is a switch: an empty track with the knob left is off; a green
+     track with a white knob right is on. A radio is a ring: empty when it is
+     not chosen, white with a dark centre when it is. The control is small, but
+     its row (`label`) is the 44 px hit area, as every row in the menus is. */
+  .ff-aquarian-panel input[type="checkbox"],
+  .ff-aquarian-panel input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: none;
+    position: relative;
+    box-sizing: border-box;
+    margin: 0;
+    background: var(--ff-panel-fill);
+    cursor: var(--ff-cursor-hot);
+  }
+
+  .ff-aquarian-panel input[type="checkbox"] {
+    width: 44px;
+    height: 24px;
+    border: 2px solid var(--ff-panel-bevel);
+    border-radius: 12px;
+  }
+
+  .ff-aquarian-panel input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--ff-text-2);
+  }
+
+  .ff-aquarian-panel input[type="checkbox"]:checked {
+    background: var(--ff-go);
+    border-color: var(--ff-go-edge);
+  }
+
+  .ff-aquarian-panel input[type="checkbox"]:checked::before {
+    left: 22px;
+    background: var(--ff-text);
+  }
+
+  .ff-aquarian-panel input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--ff-text-2);
+    border-radius: 50%;
+  }
+
+  .ff-aquarian-panel input[type="radio"]:checked {
+    background: var(--ff-text);
+    border-color: var(--ff-text);
+  }
+
+  .ff-aquarian-panel input[type="radio"]:checked::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: var(--ff-panel-fill);
+  }
+
+  .ff-aquarian-panel input[type="checkbox"]:disabled,
+  .ff-aquarian-panel input[type="radio"]:disabled {
+    border-color: var(--ff-text-off);
+    cursor: not-allowed;
+  }
+
+  /* Fields and their labels.
+     ---------------------------------------------------------------------
+     The field is white, one step brighter than a panel, so a control the
+     player types into is distinguishable from the surface holding it without
+     relying on its border alone. The label sits above at the 8px field gap and
+     is never replaced by a placeholder, which would vanish once typing starts. */
+  .ff-aq-field {
+    width: 100%;
+    min-height: var(--ff-aq-control-height);
+    padding: 0 12px;
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    color: var(--ff-text);
+    background: var(--ff-panel-border);
+    border: 2px solid var(--ff-panel-bevel);
+    border-radius: var(--ff-panel-radius);
+  }
+
+  .ff-aq-field::placeholder {
+    color: var(--ff-text-2);
+  }
+
+  .ff-aq-label {
+    display: block;
+    margin-bottom: var(--ff-aq-field-gap);
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    font-weight: 600;
+    color: var(--ff-text-2);
+  }
+
+  /* Type scale.
+     ---------------------------------------------------------------------
+     Two sizes carry almost everything: 16px body and a 13px secondary. A
+     gameplay label never drops below 12 CSS px, whatever the world scale,
+     because it is set at CSS resolution and does not answer to the letterbox. */
+  .ff-aq-body {
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    color: var(--ff-text);
+    /* No last line of one word or a lone "吧。" (visual audit, 2026-10-05). */
+    text-wrap: pretty;
+  }
+
+  .ff-aq-secondary {
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    color: var(--ff-text-2);
+  }
+
+  /* No text may be clipped by its own affordance. A value a player has to read
+     exactly -- a room code -- is spaced and tabulated rather than truncated. */
+  .ff-aq-code {
+    margin: 0;
+    font-family: var(--ff-font-ui);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--ff-type-title);
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    color: var(--ff-text);
+  }
+
+  /* A control set as an icon over its word: the title's quick actions, the
+     race's Menu, and the compact mute. The word is what a player reads, the
+     icon what they find it by; 44 px square at least, whatever the word. */
+  .ff-aq-control--stacked {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 2px;
+    min-width: 56px;
+    min-height: 44px;
+    padding: 4px 10px;
+  }
+
+  .ff-aq-control__icon {
+    display: grid;
+    place-items: center;
+    height: 20px;
+    font-size: var(--ff-type-title);
+    line-height: 1;
+  }
+
+  /* The ones that are not chosen are the panel's own face, flat: in a row of
+     options or a pair of tabs the chosen one is the one that is filled, and a
+     row of identical blue buttons told them apart by a ring alone. Scoped to
+     options and tabs, so the green and red kinds are untouched. A kind sets
+     the three face properties, so this is the same lever. */
+  .ff-option:not(.ff-option--selected),
+  .ff-aq-control[role="tab"][aria-selected="false"] {
+    --ff-btn-face: var(--ff-panel-fill);
+    --ff-btn-edge: var(--ff-panel-border);
+    --ff-btn-bevel: var(--ff-panel-bevel);
+  }
+
+  /* A chosen option in a group of buttons: the blue face with a white 2 px
+     ring just inside its border, and the underline, so it reads without the
+     hue (race-options spec §3.4). */
+  .ff-aq-control--selected {
+    box-shadow: inset 0 0 0 2px var(--ff-text);
+    text-decoration: underline 2px;
+    text-underline-offset: 4px;
+  }
+
+  /* A chosen option in an OptionGroup (UI layout system §5, audit m1): the
+     blue face with a white 2 px ring just inside its border and the strong
+     weight. An option that is not chosen is the panel's face, so the chosen
+     one is the one that is filled. `aria-checked` carries the same state for
+     assistive technology. */
+  .ff-option--selected {
+    color: var(--ff-text);
+    font-weight: 600;
+    background: var(--ff-plain);
+    border-color: var(--ff-plain-edge);
+    box-shadow: inset 0 0 0 2px var(--ff-text);
+  }
+
+  /* Seat rows.
+     ---------------------------------------------------------------------
+     Four seats, always, so a player can see how many are free. The row is a
+     four-column grid -- number, portrait, name, readiness -- with the scarf as
+     an absolutely positioned bar, which keeps identity in three independent
+     channels: number, image and text. */
+  .ff-seat {
+    position: relative;
+    overflow: hidden;
+    background: var(--ff-panel-fill);
+    border: 2px solid var(--ff-panel-border);
+    border-radius: var(--ff-panel-radius);
+    box-shadow: inset 0 0 0 1px var(--ff-panel-bevel);
+  }
+
+  .ff-seat__number {
+    min-width: 1.5em;
+    font-family: var(--ff-font-ui);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--ff-type-hint);
+    font-weight: 600;
+  }
+
+  .ff-seat__badge {
+    display: block;
+    width: var(--ff-row-portrait);
+    height: var(--ff-row-portrait);
+    border-radius: 6px;
+    background: var(--ff-panel-fill);
+  }
+
+  /* An empty seat shows its shape rather than a silhouette, so it reads as a
+     place waiting for someone and not as a player with no colour. */
+  .ff-seat__badge--open {
+    background: transparent;
+    border: 1px dashed var(--ff-panel-border);
+  }
+
+  /* The one place text is allowed to be cut off, and only horizontally. The
+     full name stays in the DOM for assistive technology and in `title` for a
+     pointer, so the ellipsis costs a sighted reader nothing. */
+  .ff-seat__name {
+    min-width: 0;
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    color: var(--ff-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ff-seat__tag {
+    flex: none;
+    padding: 2px 6px;
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-tag);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ff-text-2);
+    border: 1px solid var(--ff-panel-border);
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  .ff-seat__status {
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    white-space: nowrap;
+  }
+
+  .ff-seat__bar {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 4px;
+  }
+
+  /* A seat's colour as one custom property, for its frames, flags and bars.
+     By seat number where nothing else is known; by the player's own colour
+     wherever the player is (select spec §6.7). Shared by the tile grids and
+     the select screen's seat bar. */
+  .ff-seat-0 { --ff-seat-colour: var(--ff-player-scarlet); }
+  .ff-seat-1 { --ff-seat-colour: var(--ff-player-cyan); }
+  .ff-seat-2 { --ff-seat-colour: var(--ff-player-gold); }
+  .ff-seat-3 { --ff-seat-colour: var(--ff-player-violet); }
+  .ff-colour-scarlet { --ff-seat-colour: var(--ff-player-scarlet); }
+  .ff-colour-cyan { --ff-seat-colour: var(--ff-player-cyan); }
+  .ff-colour-gold { --ff-seat-colour: var(--ff-player-gold); }
+  .ff-colour-violet { --ff-seat-colour: var(--ff-player-violet); }
+
+  /* Badges under a racer's name (UI layout system §5, audit M12). Every one
+     is a rounded square at 6 px, as the name pill is: the controls' 10 px on a
+     box this short reads as a pill. A status badge is quiet; an action badge
+     (Change) is drawn as a small ghost button edged in the action blue,
+     whether it is one or rides on a row that is, so it reads as the one that
+     does something. */
+  .ff-badge {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--ff-badge-h);
+    padding: 0;
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-tag);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ff-text-2);
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+
+  /* You and Host are labels, not chips. Only the action badge is drawn. */
+  .ff-badge--action {
+    min-width: 0;
+    padding: 0 10px;
+    color: var(--ff-text);
+    background: var(--ff-plain);
+    border: 1px solid var(--ff-plain-edge);
+  }
+
+  /* A badge that is its own button meets the touch floor under a finger. */
+  @media (pointer: coarse) {
+    button.ff-badge--action {
+      min-height: var(--ff-aq-target);
+    }
+  }
+
+  /* A racer's name pill (UI layout system §5): the colour as a dot, so
+     identity never rests on the name alone. The local racer's is edged in ink. */
+  .ff-namepill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .ff-namepill__dot {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--ff-seat-colour);
+  }
+
+  .ff-namepill__name {
+    min-width: 0;
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    color: var(--ff-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  /* A seat's name is never cut: it breaks at a hyphen or a space and the
+     seat grows a line. */
+  .ff-namepill[data-whole="true"] .ff-namepill__name {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: normal;
+  }
+
+  /* A rounded square, not a pill. 6 px, as the seat's portrait and the key
+     caps are: the controls' 10 px on a box this short still reads as a pill. */
+  .ff-namepill[data-self="true"] {
+    padding: var(--ff-namepill-self-pad);
+    border: 2px solid var(--ff-text);
+    border-radius: 6px;
+  }
+
+  /* The four portraits, in the menu's social ensemble and beside a seat. Drawn
+     with the same nearest-neighbour rule as the canvas, or a pixel portrait
+     would be the one soft thing on the page. */
+  /* The menu wordmark set light on the sky (spec §2.8 item 3), as the board
+     sets it: each word filled white to ice inside a soft pale-blue glow, with
+     a gentle slate drop for lift and a thin ink edge. The drops are filters
+     rather than text shadows, because a text shadow paints over a clipped
+     background fill.
+
+     The fill is clipped to each word's own box, and the wordmark's line-height
+     is under 1, so the glyphs overhang their boxes. The padding grows each box
+     to cover its ink, and the matching negative margin leaves the stacking as
+     it was. */
+  .ff-wordmark--light {
+    color: var(--ff-text);
+    /* The splash's heat first, when it is on (`wordmark-heat`), so the glow
+       and the shadows follow the bent letters. */
+    filter: var(--ff-wordmark-heat,) drop-shadow(0 4px 10px color-mix(in srgb, var(--ff-panel-border) 25%, transparent))
+      drop-shadow(0 0 8px color-mix(in srgb, var(--ff-glow) 70%, transparent))
+      drop-shadow(0 0 26px color-mix(in srgb, var(--ff-glow) 75%, transparent))
+      drop-shadow(0 1px 0 color-mix(in srgb, var(--ff-panel-border) 45%, transparent));
+  }
+
+  .ff-wordmark--light > span {
+    padding-block: 0.1em 0.25em;
+    margin-block: -0.1em -0.25em;
+    color: transparent;
+    background: var(--ff-text);
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  /* A key, drawn as a key. Not interactive, so the 44px target floor does not
+     apply; the primary text on the panel fill clears AA (accessibility.test.ts). */
+  .ff-keycap {
+    display: inline-grid;
+    place-items: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    border: var(--ff-aq-hairline) solid var(--ff-panel-border);
+    border-radius: 6px;
+    background: var(--ff-panel-fill);
+    color: var(--ff-text);
+    font: 600 var(--ff-type-hint)/1 var(--ff-font-ui);
+    box-shadow: 0 1px 0 var(--ff-panel-border);
+  }
+
+  .ff-portrait {
+    image-rendering: pixelated;
+  }
+
+  /* Results rows. The winner's row carries its own marker rather than relying on
+     the heading above it, so a name is never the only thing saying who won. */
+  .ff-result {
+    position: relative;
+    /* A flat row on the panel, not a chip inside a chip: the local racer is
+       marked by a 2 px white left edge. */
+    border-inline-start: 2px solid transparent;
+  }
+
+  .ff-result[data-self="true"] {
+    border-inline-start-color: var(--ff-text);
+  }
+
+  .ff-result--winner .ff-result__place {
+    color: var(--ff-text);
+  }
+
+  .ff-result__place {
+    font-family: var(--ff-font-ui);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+    color: var(--ff-text-2);
+  }
+
+  .ff-result__name {
+    min-width: 0;
+    font-family: var(--ff-font-ui);
+    font-size: var(--ff-type-hint);
+    color: var(--ff-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ff-result__time {
+    font-family: var(--ff-font-ui);
+    font-variant-numeric: tabular-nums;
+    color: var(--ff-text);
+  }
+
+  /* A result wraps only between its parts; each part is whole. */
+  .ff-result__time--best {
+    line-height: 1.1;
+  }
+
+  /* A finish shared to the tick, after the time: the roulette's LOCKED type. */
+  .ff-result__tie {
+    margin-inline-start: 8px;
+    font: 600 var(--ff-type-hint) / 1 var(--ff-font-ui);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ff-text-2);
+  }
+}
+
+/* Languages (phase 5, languages spec §6.3). Outside the layer on purpose: a
+   component's scoped style is unlayered, and an unlayered rule beats any
+   layered one, so these could not reach `.ff-hud__label` from inside it.
+   `:root:lang()` gives them the specificity to outrank `.x.svelte-hash`. */
+
+/* Tracked capitals are a Latin device: CJK has no case, and tracking only
+   pulls its characters apart. */
+:root:is(:lang(ja), :lang(ko), :lang(zh-Hans))
+  :is(
+    .ff-aq-label,
+    .ff-seat__tag,
+    .ff-hud__label,
+    .ff-hud__status,
+    .ff-rows__lock,
+    .ff-net-loader__badge,
+    .ff-boot-error h1,
+    [data-testid="connection-state"]
+  ) {
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+/* No synthetic italic: a CJK face has none, and a slanted ideograph reads as a mistake. */
+:root:is(:lang(ja), :lang(ko), :lang(zh-Hans)) :is(em, i) {
+  font-style: normal;
+}
+
+/* Japanese and Chinese break between any two characters, so the strict rules
+   keep small kana and closing punctuation off the start of a line. Korean
+   breaks at spaces, as Latin does. */
+:root:lang(ja),
+:root:lang(zh-Hans) {
+  line-break: strict;
+}
+
+:root:lang(ko) {
+  word-break: keep-all;
+}
+
+/* Japanese also keeps its phrases (bunsetsu) whole where the browser can
+   find them: "はじめてです / か？" broke mid-phrase on the tutorial offer
+   (visual audit, 2026-10-05). Where it cannot, the strict rules above stand. */
+:root:lang(ja) {
+  word-break: auto-phrase;
+}

@@ -1,0 +1,266 @@
+/* Tailwind, bound to the palette contract.
+   -------------------------------------------------------------------------
+   This file is the client's Tailwind entry. It exists to make the palette rule
+   hold for DOM chrome the same way the palette-lock shader makes it hold for
+   pixels: the 64 Resurrect swatches are the only colours in the build, and
+   there is no way to write a utility that leaves them.
+
+   `--color-*: initial` clears Tailwind's entire default palette before any
+   role is bound. That deletion is the point of the file -- without it
+   `bg-red-500` still resolves, and the first off-palette colour in the client
+   arrives as a class nobody reviews rather than as a hex literal somebody
+   would have caught.
+
+   Every value below is `var()` into `palette.css`, which is GENERATED from
+   `packages/asset-contract/palettes/resurrect64.hex`. No hex is authored here.
+   One consequence is deliberate: Tailwind cannot statically resolve a `var()`,
+   so opacity modifiers like `bg-chip/50` do not work on these colours. They
+   should not -- a half-transparent swatch composites to a colour that is not
+   in the palette, which is the one thing this whole initiative forbids. */
+
+@import "tailwindcss";
+@import "@floor-fifty/asset-contract/palette.css";
+/* The Aquarian UI palette. Imported here so a utility class and a hand-written
+   rule resolve through the same values; the tokens themselves live in one file
+   so the interface's authored colour can be audited in one place. */
+@import "./aquarian-tokens.css";
+
+/* Typefaces.
+   -------------------------------------------------------------------------
+   Self-hosted, all SIL OFL 1.1. See public/fonts/README.md for the licences,
+   the pinned revisions and the hashes, and for why they are vendored rather
+   than linked.
+
+   `swap` rather than `block`: the menu should render immediately in the system
+   fallback and re-set itself, rather than hold an empty screen. A blank menu
+   reads as a hung game. */
+/* Fraunces is variable, so one file covers the wordmark's whole range: the
+   display weights and its `opsz`/`SOFT`/`WONK` axes. */
+@font-face {
+  font-family: "Fraunces";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/fraunces-latin-var.woff2") format("woff2");
+}
+
+/* The menus are set in Fusion Pixel (Owner, 2026-11-18): 12 px proportional,
+   one weight. Each file declares 400 to 800, so the browser never smears a
+   bold out of it and `font-weight: 600` draws the same pixels. English,
+   Spanish and Portuguese share the Latin file. Japanese, Korean and Simplified
+   Chinese each add their own cut after it (languages spec §6.1), because the
+   regional forms of the han characters differ; each is cut by `pnpm fonts:subset`
+   to its locale's characters. The three Endonym files hold each language's own
+   name for the language picker. */
+@font-face {
+  font-family: "FF Pixel";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ff-pixel-latin.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "FF Pixel JP";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ff-pixel-jp-subset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "FF Pixel KR";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ff-pixel-kr-subset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "FF Pixel SC";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ff-pixel-sc-subset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "FF Pixel JP Endonym";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ff-pixel-jp-endonym.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "FF Pixel KR Endonym";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ff-pixel-kr-endonym.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "FF Pixel SC Endonym";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("/fonts/ff-pixel-sc-endonym.woff2") format("woff2");
+}
+
+/* Components and the store hold the classes Tailwind must emit. Stated rather
+   than left to auto-detection, so moving this file cannot silently empty the
+   stylesheet. */
+@source "../";
+@source "../../screens/";
+
+/* The four form factors (responsive parity spec §3.1).
+   -------------------------------------------------------------------------
+   Keyed on `data-form-factor`, which `features/platform/viewport-tracking.svelte.ts` sets on
+   <html> from the one classifier. An unprefixed utility is the phone-portrait
+   design; each variant states only what its form factor changes. They are
+   exclusive, so unlike min-width breakpoints there is no cascade order to
+   remember. `wide:` is the two landscape form factors together, which share
+   more than either shares with portrait. */
+@custom-variant phone-l (&:where([data-form-factor="phone-landscape"], [data-form-factor="phone-landscape"] *));
+@custom-variant desktop (&:where([data-form-factor="desktop"], [data-form-factor="desktop"] *));
+@custom-variant tablet-p (&:where([data-form-factor="tablet-portrait"], [data-form-factor="tablet-portrait"] *));
+@custom-variant wide (&:where([data-form-factor="phone-landscape"], [data-form-factor="phone-landscape"] *, [data-form-factor="desktop"], [data-form-factor="desktop"] *));
+
+/* The height tiers (UI layout system spec §3.2), for screen roots only. A
+   component below the roots never names a tier: it reads the tokens the tier
+   tightens (aquarian-tokens.css) and answers to its own container
+   (tests/client/features/platform/form-factor-boundary.test.ts, Task 11, fails a `short:`,
+   `compact:` or `data-height` outside the roots). `short:` covers compact
+   too, because a compact screen is also short. */
+@custom-variant short (&:where([data-height="short"], [data-height="short"] *, [data-height="compact"], [data-height="compact"] *));
+@custom-variant compact (&:where([data-height="compact"], [data-height="compact"] *));
+
+@theme {
+  --color-*: initial;
+  /* Nothing a player reads is under the hint size: Tailwind's 12 px `text-xs` is the hint. */
+  --text-xs: var(--ff-type-hint);
+  --text-xs--line-height: 1.4;
+
+  /* World roles. Chrome drawn over the race borrows from these so a panel
+     sits in the same light as the city behind it. */
+  --color-sky-high: var(--ff-sky-high);
+  --color-sky-low: var(--ff-sky-low);
+  --color-cloud: var(--ff-cloud);
+  --color-city-far: var(--ff-city-far);
+  --color-city-near: var(--ff-city-near);
+  --color-city-window: var(--ff-city-window);
+
+  /* Platforms and the floor indicator. */
+  --color-platform-body: var(--ff-platform-body);
+  --color-platform-top: var(--ff-platform-top);
+  --color-platform-outline: var(--ff-platform-outline);
+  --color-floor-taken: var(--ff-floor-taken);
+  --color-floor-pending: var(--ff-floor-pending);
+
+  /* UI chrome. `ink` and `muted` are the only two text colours. */
+  --color-outline: var(--ff-outline);
+  --color-chip: var(--ff-ui-chip-fill);
+  --color-chip-edge: var(--ff-ui-chip-edge);
+  --color-ink: var(--ff-ui-text);
+  --color-muted: var(--ff-ui-muted);
+  --color-panel: var(--ff-panel-fill);
+  --color-text-2: var(--ff-text-2);
+  --color-go: var(--ff-go);
+  --color-stop: var(--ff-stop);
+  --color-plain: var(--ff-plain);
+
+  /* The four seats, in seat order. `SEAT_SCARVES` in lib/constants.ts lists
+     the same four names, and a seat's chip is coloured by this pair agreeing. */
+  --color-scarlet: var(--ff-player-scarlet);
+  --color-cyan: var(--ff-player-cyan);
+  --color-gold: var(--ff-player-gold);
+  --color-violet: var(--ff-player-violet);
+
+  /* The Aquarian UI. The only colour utilities that leave the 64 swatches, and
+     they resolve into aquarian-tokens.css rather than into the generated
+     palette. Each is bound to a UI role there, so a utility class and a
+     hand-written rule cannot drift to different values. The reset above still
+     holds: these are declared roles, not a reopened default palette. */
+  --color-aq-white: var(--ff-aq-white);
+  --color-aq-pearl: var(--ff-panel-fill);
+  --color-aq-ice: var(--ff-panel-fill);
+  --color-aq-edge: var(--ff-panel-border);
+  --color-aq-ink: var(--ff-text);
+  --color-aq-muted: var(--ff-text-2);
+  --color-aq-action: var(--ff-plain);
+  --color-aq-action-hover: var(--ff-plain);
+
+  /* One spacing step is one logical pixel, not the usual 0.25rem.
+     The world is a fixed 960x540 grid that the letterbox scales by `--ff-scale`
+     on its way to the screen, so chrome that measures in logical pixels lines
+     up with drawn chrome by construction -- `p-8` is eight pixels in the same
+     space the sprites are eight pixels in. A rem-based step would land DOM
+     controls on fractional world coordinates at most viewport sizes. */
+  --spacing: 1px;
+
+  /* Two faces, and only two: Fraunces for the wordmark, Fusion Pixel for
+     everything else (tests/client/features/i18n/typography.test.ts). Defined as tokens below
+     and merely bound here, the same way colours are, so hand-written CSS and a
+     utility class cannot drift into different stacks. Canvas text reads the
+     same stacks from `features/i18n/fonts.ts`. */
+  --font-wordmark: var(--ff-font-wordmark);
+  --font-ui: var(--ff-font-ui);
+
+  /* Sizes that vary by form factor (responsive parity spec §3.2). Bound, not
+     valued: the values live in aquarian-tokens.css, per form factor. */
+  --spacing-gutter: var(--ff-gutter);
+  --spacing-touch: var(--ff-touch-size);
+  --spacing-racer: var(--ff-racer-cell);
+  --spacing-row-portrait: var(--ff-row-portrait);
+  --spacing-row-pad: var(--ff-row-pad-y);
+  --spacing-row-h: var(--ff-row-h);
+  --container-panel-min: var(--ff-panel-min);
+  --container-panel-max: var(--ff-panel-max);
+  --container-form: var(--ff-form-width);
+  --container-content: var(--ff-content-max);
+  --text-wordmark: var(--ff-type-wordmark);
+  --text-hud-numeral: var(--ff-hud-numeral);
+  --text-hud-timer: var(--ff-hud-timer);
+  --text-hud-value: var(--ff-hud-value);
+  --text-hud-label: var(--ff-hud-label);
+}
+
+:root {
+  /* The editorial faces. `wordmark` is the Fraunces display stack -- Georgia is
+     the named fallback the spec calls for, a serif that keeps the wordmark's
+     character when Fraunces is blocked. `ui` is the Fusion Pixel stack every
+     control, name and numeral is set in; its fallback is the system UI face,
+     so a blocked request still sets immediately in something clean. */
+  --ff-font-wordmark: "Fraunces", Georgia, "Times New Roman", serif;
+  --ff-font-ui: "FF Pixel", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  /* The language picker's endonyms, each drawn in its own script from a
+     few-KB file holding only its name (languages spec §6.1). Fusion Pixel first
+     for the Latin ones; each endonym file has only its own characters, so each
+     name falls through to the one that holds it. */
+  --ff-font-endonym: "FF Pixel", "FF Pixel JP Endonym", "FF Pixel KR Endonym", "FF Pixel SC Endonym", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Each CJK locale adds its own Fusion Pixel cut after the Latin one, so Latin letters,
+   digits and typed names keep the game's face (languages spec §6.2). Headings
+   do the same after Fraunces, so a translated title is not left to the
+   system's serif CJK face. A browser downloads a face only when text uses
+   it: an EN, ES or PT player never fetches a CJK byte, and a JA player
+   fetches only the JP subset. */
+:root:lang(ja) {
+  --ff-wordmark-step: 12px; /* The pixel cut sets the wordmark: whole 12 px steps. */
+  --ff-font-ui: "FF Pixel", "FF Pixel JP", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ff-font-wordmark: "Fraunces", "FF Pixel JP", Georgia, "Times New Roman", serif;
+}
+
+:root:lang(ko) {
+  --ff-wordmark-step: 12px; /* The pixel cut sets the wordmark: whole 12 px steps. */
+  --ff-font-ui: "FF Pixel", "FF Pixel KR", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ff-font-wordmark: "Fraunces", "FF Pixel KR", Georgia, "Times New Roman", serif;
+}
+
+:root:lang(zh-Hans) {
+  --ff-wordmark-step: 12px; /* The pixel cut sets the wordmark: whole 12 px steps. */
+  --ff-font-ui: "FF Pixel", "FF Pixel SC", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --ff-font-wordmark: "Fraunces", "FF Pixel SC", Georgia, "Times New Roman", serif;
+}

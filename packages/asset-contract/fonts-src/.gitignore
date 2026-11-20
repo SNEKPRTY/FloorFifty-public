@@ -1,0 +1,5 @@
+# The Fusion Pixel sources are 0.6 MB each and are pinned by URL and SHA-256 in
+# sources.json; `pnpm fonts:subset` fetches a missing one and refuses a hash
+# that does not match. Only the subsets it cuts are committed (apps/client/public/fonts).
+*.woff2
+*.ttf

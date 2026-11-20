@@ -1,0 +1,63 @@
+id = "rooftops"
+displayName = "Rooftops"
+platformAlias = "world.platform"
+
+[courseTuning]
+COURSE_FLOOR_COUNT = 24
+
+[theme]
+backdropAlias = "menu.backdrop"
+previewAlias = "still.rooftopsPreview"
+
+[[theme.layers]]
+alias = "world.clouds"
+plate = "sky"
+depth = 0.06
+sink = 0
+extend = "none"
+drift = 1.5
+
+[[theme.layers]]
+alias = "world.cityFar"
+plate = "city"
+depth = 0.15
+sink = 240
+haze = 0.25
+extend = "skirt"
+
+[[theme.layers]]
+alias = "world.cityMid"
+plate = "city"
+depth = 0.24
+sink = 270
+haze = 0.125
+extend = "skirt"
+
+[[theme.layers]]
+alias = "world.cityNear"
+plate = "city"
+depth = 0.35
+sink = 290
+haze = 0
+extend = "skirt"
+
+[[theme.layers]]
+alias = "world.lanterns"
+plate = "city"
+depth = 0.35
+sink = 290
+extend = "tile"
+
+[[theme.layers]]
+alias = "world.rooftopDetails"
+plate = "city"
+depth = 0.42
+sink = 180
+extend = "none"
+
+[[theme.layers]]
+alias = "world.rooftopProps"
+plate = "city"
+depth = 0.42
+sink = 180
+extend = "none"

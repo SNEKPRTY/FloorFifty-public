@@ -1,0 +1,20 @@
+{
+  "fps": 30,
+  "duration": 13.32,
+  "shotWidth": 608,
+  "gameplayEnd": 12.5,
+  "shots": [
+    { "at": 0.40,  "take": "rooftops-moving-on-ninja",           "frac": 0.25, "fromEnd": null, "for": 0.75, "x0": 656, "x1": 656, "match": "jump" },
+    { "at": 1.15,  "take": "snow-shrine-crash-mode-frog",        "frac": 0.35, "fromEnd": null, "for": 0.70, "x0": 700, "x1": 620, "match": "landing" },
+    { "at": 1.85,  "take": "sunken-dome-we-outside-diver",       "frac": 0.45, "fromEnd": null, "for": 0.75, "x0": 620, "x1": 720, "match": "landing" },
+    { "at": 5.00,  "take": "rooftops-chrome-in-the-rain-kitsune", "frac": 0.30, "fromEnd": null, "for": 0.85, "x0": 656, "x1": 656, "match": "streak" },
+    { "at": 5.85,  "take": "snow-shrine-whats-next-diver",       "frac": 0.55, "fromEnd": null, "for": 0.85, "x0": 640, "x1": 700, "match": "slam" },
+    { "at": 6.70,  "take": "rooftops-moving-on-frog",            "frac": 0.50, "fromEnd": null, "for": 0.85, "x0": 700, "x1": 640, "match": "jump" },
+    { "at": 7.55,  "take": "sunken-dome-we-outside-robo",        "frac": 0.60, "fromEnd": null, "for": 0.85, "x0": 700, "x1": 700, "match": "streak" },
+    { "at": 8.40,  "take": "snow-shrine-crash-mode-kitsune",     "frac": 0.40, "fromEnd": null, "for": 0.85, "x0": 620, "x1": 680, "match": "slam" },
+    { "at": 9.25,  "take": "rooftops-chrome-in-the-rain-ninja",  "frac": 0.55, "fromEnd": null, "for": 0.85, "x0": 656, "x1": 656, "match": "jump" },
+    { "at": 10.10, "take": "sunken-dome-we-outside-frog",        "frac": 0.65, "fromEnd": null, "for": 0.85, "x0": 660, "x1": 660, "match": "landing" },
+    { "at": 10.95, "take": "rooftops-moving-on-diver",           "frac": 0.70, "fromEnd": null, "for": 0.85, "x0": 640, "x1": 700, "match": "streak" },
+    { "at": 11.80, "take": "rooftops-chrome-in-the-rain-frog",  "frac": null, "fromEnd": 1.00, "for": 0.70, "x0": 656, "x1": 656, "match": "finish-burst" }
+  ]
+}

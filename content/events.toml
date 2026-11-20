@@ -1,0 +1,85 @@
+# Presentation event routing.
+#
+# Each route connects a code-owned presentation event to a code-owned
+# presentation action. Routes for one source run in ascending `order`, so the
+# sequence below carries no meaning of its own.
+
+[[routes]]
+source = "app.splash-ready"
+order = 10
+action = "flow.splash-complete"
+
+[[routes]]
+source = "room.racing"
+order = 10
+action = "flow.room-racing"
+
+[[routes]]
+source = "room.finished"
+order = 10
+action = "flow.race-finished"
+
+[[routes]]
+source = "room.recovery-required"
+order = 10
+action = "flow.recover-to-menu"
+
+[[routes]]
+source = "ui.race-again-settled"
+order = 10
+action = "flow.race-again"
+
+[[routes]]
+source = "ui.return-to-menu-settled"
+order = 10
+action = "flow.return-to-menu"
+
+[[routes]]
+source = "app.room-resumed"
+order = 10
+action = "flow.resume-room"
+
+[[routes]]
+source = "ui.play-requested"
+order = 10
+action = "flow.play"
+
+[[routes]]
+source = "ui.back-requested"
+order = 10
+action = "flow.back"
+
+[[routes]]
+source = "ui.leave-race-settled"
+order = 10
+action = "flow.leave-race"
+
+[[routes]]
+source = "ui.tutorial-requested"
+order = 10
+action = "flow.tutorial"
+
+[[routes]]
+source = "ui.tutorial-closed-to-title"
+order = 10
+action = "flow.tutorial-to-title"
+
+[[routes]]
+source = "ui.tutorial-closed-to-lobby"
+order = 10
+action = "flow.tutorial-to-lobby"
+
+[[routes]]
+source = "ui.watch-replay"
+order = 10
+action = "flow.watch-replay"
+
+[[routes]]
+source = "ui.replay-exit"
+order = 10
+action = "flow.replay-exit"
+
+[[routes]]
+source = "ui.replay-exit-to-room"
+order = 10
+action = "flow.replay-exit-to-room"

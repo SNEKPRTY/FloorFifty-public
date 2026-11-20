@@ -1,0 +1,34 @@
+# The public set, in packs.
+#
+# Grids show one pack per page, in this order, under the pack's title. An item
+# belongs to exactly one pack. A pack with `dlc = true` is owned only through an
+# entitlement; its items still ship in the build, so a non-owner can race a DLC
+# stage the roulette chose. An item file in no pack is a draft: still parsed
+# and validated, absent from the artifact.
+#
+# Everything outside a DLC pack is earned by playing on one device, alone if
+# need be (`unlocks.toml`); After Hours is the only paid pack.
+
+# The race options, in the order the ready room offers them. A new room starts
+# on the first (race-options spec §3.1).
+modes = ["infinite", "floors-20", "floors-50"]
+
+
+[[packs]]
+id = "base"
+title = "Base"
+stages = ["rooftops", "snow-shrine", "sunken-dome"]
+songs = ["moving-on", "farther-from-home", "whats-next", "chrome-in-the-rain", "we-outside",
+         "la-reina-del-mambo", "crash-mode", "pyramid-scheme", "static-in-the-air", "unseen"]
+characters = ["ninja", "frog", "diver"]
+
+[[packs]]
+id = "friends"
+title = "Friends"
+characters = ["robo", "kitsune"]
+
+[[packs]]
+id = "after-hours"
+title = "After Hours"
+dlc = true
+characters = ["penguin", "oni", "witch", "knight"]

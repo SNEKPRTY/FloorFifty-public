@@ -1,0 +1,1575 @@
+{
+  "content": {
+    "baseTuning": {
+      "BOUNCE_VELOCITY": 268.2,
+      "COURSE_FLOOR_COUNT": 20,
+      "DEATH_LINE_MARGIN": 265,
+      "DEMAND_RAMP_BAND_FLOORS": 10,
+      "DEMAND_RAMP_FROM_FLOOR": 50,
+      "FAST_FALL_VELOCITY": -1341,
+      "FLOOR_GAP_MAX": 128.57142857142856,
+      "FLOOR_GAP_MIN": 128.57142857142856,
+      "FLOOR_HEIGHT": 20,
+      "FLOOR_WIDTH": 120,
+      "GRAVITY": -275,
+      "LAP_HOLD_TICKS": 48,
+      "MAX_MOVE_SPEED": 356,
+      "MOVING_FLOOR_CARRY": 1,
+      "MOVING_FLOOR_SPEED_CAP": 300,
+      "MOVING_FLOOR_SPEED_MAX": 200,
+      "MOVING_FLOOR_SPEED_MIN": 100,
+      "MOVING_SHARE_MAX": 0.8,
+      "MOVING_SHARE_STEP": 0.05,
+      "MOVING_SPEED_STEP": 10,
+      "PLAYER_HEIGHT": 59,
+      "PLAYER_WIDTH": 59,
+      "RACE_TIME_LIMIT_TICKS": 0,
+      "SURVIVAL_BAND_AHEAD_MAX": 1.5,
+      "SURVIVAL_BAND_AHEAD_STEP": 0.1,
+      "SURVIVAL_BAND_BEHIND_MIN": 0.7,
+      "SURVIVAL_BAND_BEHIND_STEP": 0.05,
+      "SURVIVAL_GRACE_TICKS": 180,
+      "SURVIVAL_PUSH_AT": 0.55,
+      "SURVIVAL_PUSH_SPEED": 300,
+      "SURVIVAL_RISE_CAP": 150,
+      "SURVIVAL_RISE_START": 55,
+      "SURVIVAL_RISE_STEP": 20,
+      "SURVIVAL_RISE_STEP_TICKS": 1800,
+      "SURVIVAL_START_WAIT_TICKS": 600,
+      "SURVIVAL_VIEW_HEIGHT": 480,
+      "TUTORIAL_EDGE_RISE": 30,
+      "TUTORIAL_EDGE_START_BELOW": 240
+    },
+    "blockedNames": [
+      "bastard",
+      "bitch",
+      "bollocks",
+      "faggot",
+      "fuck",
+      "nigger",
+      "retard",
+      "slut",
+      "wanker",
+      "whore"
+    ],
+    "characters": [
+      {
+        "displayName": "Ninja",
+        "id": "ninja",
+        "portraitAliases": {
+          "cyan": "portrait.cyan",
+          "gold": "portrait.gold",
+          "scarlet": "portrait.scarlet",
+          "violet": "portrait.violet"
+        },
+        "sheetAliases": {
+          "cyan": "ninja.cyan",
+          "gold": "ninja.gold",
+          "scarlet": "ninja.scarlet",
+          "violet": "ninja.violet"
+        }
+      },
+      {
+        "displayName": "Frog",
+        "id": "frog",
+        "portraitAliases": {
+          "cyan": "portrait.frogCyan",
+          "gold": "portrait.frogGold",
+          "scarlet": "portrait.frogScarlet",
+          "violet": "portrait.frogViolet"
+        },
+        "sheetAliases": {
+          "cyan": "frog.cyan",
+          "gold": "frog.gold",
+          "scarlet": "frog.scarlet",
+          "violet": "frog.violet"
+        },
+        "unlock": "games-5"
+      },
+      {
+        "displayName": "Diver",
+        "id": "diver",
+        "portraitAliases": {
+          "cyan": "portrait.diverCyan",
+          "gold": "portrait.diverGold",
+          "scarlet": "portrait.diverScarlet",
+          "violet": "portrait.diverViolet"
+        },
+        "sheetAliases": {
+          "cyan": "diver.cyan",
+          "gold": "diver.gold",
+          "scarlet": "diver.scarlet",
+          "violet": "diver.violet"
+        },
+        "unlock": "games-8"
+      },
+      {
+        "displayName": "Robo",
+        "id": "robo",
+        "portraitAliases": {
+          "cyan": "portrait.roboCyan",
+          "gold": "portrait.roboGold",
+          "scarlet": "portrait.roboScarlet",
+          "violet": "portrait.roboViolet"
+        },
+        "sheetAliases": {
+          "cyan": "robo.cyan",
+          "gold": "robo.gold",
+          "scarlet": "robo.scarlet",
+          "violet": "robo.violet"
+        },
+        "unlock": "games-7"
+      },
+      {
+        "displayName": "Kitsune",
+        "id": "kitsune",
+        "portraitAliases": {
+          "cyan": "portrait.kitsuneCyan",
+          "gold": "portrait.kitsuneGold",
+          "scarlet": "portrait.kitsuneScarlet",
+          "violet": "portrait.kitsuneViolet"
+        },
+        "sheetAliases": {
+          "cyan": "kitsune.cyan",
+          "gold": "kitsune.gold",
+          "scarlet": "kitsune.scarlet",
+          "violet": "kitsune.violet"
+        },
+        "unlock": "games-10"
+      },
+      {
+        "displayName": "Penguin",
+        "id": "penguin",
+        "portraitAliases": {
+          "cyan": "portrait.penguinCyan",
+          "gold": "portrait.penguinGold",
+          "scarlet": "portrait.penguinScarlet",
+          "violet": "portrait.penguinViolet"
+        },
+        "sheetAliases": {
+          "cyan": "penguin.cyan",
+          "gold": "penguin.gold",
+          "scarlet": "penguin.scarlet",
+          "violet": "penguin.violet"
+        }
+      },
+      {
+        "displayName": "Oni",
+        "id": "oni",
+        "portraitAliases": {
+          "cyan": "portrait.oniCyan",
+          "gold": "portrait.oniGold",
+          "scarlet": "portrait.oniScarlet",
+          "violet": "portrait.oniViolet"
+        },
+        "sheetAliases": {
+          "cyan": "oni.cyan",
+          "gold": "oni.gold",
+          "scarlet": "oni.scarlet",
+          "violet": "oni.violet"
+        }
+      },
+      {
+        "displayName": "Witch",
+        "id": "witch",
+        "portraitAliases": {
+          "cyan": "portrait.witchCyan",
+          "gold": "portrait.witchGold",
+          "scarlet": "portrait.witchScarlet",
+          "violet": "portrait.witchViolet"
+        },
+        "sheetAliases": {
+          "cyan": "witch.cyan",
+          "gold": "witch.gold",
+          "scarlet": "witch.scarlet",
+          "violet": "witch.violet"
+        }
+      },
+      {
+        "displayName": "Knight",
+        "id": "knight",
+        "portraitAliases": {
+          "cyan": "portrait.knightCyan",
+          "gold": "portrait.knightGold",
+          "scarlet": "portrait.knightScarlet",
+          "violet": "portrait.knightViolet"
+        },
+        "sheetAliases": {
+          "cyan": "knight.cyan",
+          "gold": "knight.gold",
+          "scarlet": "knight.scarlet",
+          "violet": "knight.violet"
+        }
+      }
+    ],
+    "juice": {
+      "bounce": {
+        "dust": {
+          "count": 8,
+          "lifeMs": 350,
+          "rise": 6,
+          "spread": 18
+        },
+        "squash": {
+          "amount": 0.25
+        }
+      },
+      "burst": {
+        "finish": {
+          "dust": {
+            "count": 40,
+            "lifeMs": 1000,
+            "rise": 46,
+            "sparks": 12,
+            "spread": 70
+          }
+        },
+        "spawn": {
+          "dust": {
+            "count": 12,
+            "lifeMs": 360,
+            "rise": 12,
+            "spread": 24
+          }
+        }
+      },
+      "collect": {
+        "dust": {
+          "count": 8,
+          "lifeMs": 300,
+          "rise": 8,
+          "spread": 16
+        },
+        "hudPop": {
+          "scale": 1.08
+        }
+      },
+      "feel": {
+        "aberration": {
+          "ms": 140,
+          "peak": 1.2
+        },
+        "fall": {
+          "afterimageAlpha": 0.35,
+          "afterimages": 3,
+          "alpha": 0.5,
+          "from": 0.75,
+          "lines": 14
+        },
+        "impact": {
+          "alpha": 0.45,
+          "gapMs": 400,
+          "ms": 50,
+          "slam": 0.2
+        },
+        "lookAhead": {
+          "maxUnits": 80,
+          "seconds": 0.12
+        },
+        "punch": {
+          "finish": 0.045,
+          "slam": 0.02,
+          "spring": {
+            "f": 3,
+            "r": 0,
+            "zeta": 0.55
+          }
+        },
+        "shake": {
+          "decayPerSecond": 1.6,
+          "fall": 0.5,
+          "finish": 0.6,
+          "hz": 18,
+          "maxUnits": 6,
+          "rivalSlam": 0.12,
+          "slam": 0.35
+        }
+      },
+      "lean": {
+        "fullSpeed": 356,
+        "maxDeg": 12,
+        "stepDeg": 3
+      },
+      "limits": {
+        "particles": 160
+      },
+      "palette": {
+        "stages": {}
+      },
+      "slam": {
+        "cameraKick": {
+          "ms": 200,
+          "units": 10
+        },
+        "dust": {
+          "count": 24,
+          "lifeMs": 420,
+          "ring": true,
+          "rise": 10,
+          "sparks": 6,
+          "spread": 36
+        },
+        "hitStopMs": 50,
+        "squash": {
+          "amount": 0.5
+        },
+        "threshold": 0.6
+      },
+      "springs": {
+        "hudPop": {
+          "f": 5,
+          "r": 0,
+          "zeta": 0.4
+        },
+        "jolt": {
+          "f": 5,
+          "r": 0,
+          "zeta": 0.3
+        },
+        "kick": {
+          "f": 6,
+          "r": 0,
+          "zeta": 0.4
+        },
+        "lean": {
+          "f": 3,
+          "r": 0,
+          "zeta": 0.6
+        },
+        "squash": {
+          "f": 4,
+          "r": 0,
+          "zeta": 0.35
+        },
+        "word": {
+          "f": 5,
+          "r": 0,
+          "zeta": 0.45
+        }
+      },
+      "words": {
+        "backWithinMs": 3000,
+        "beatCap": 1,
+        "beatSize": 44,
+        "greatFrom": 10,
+        "lifeMs": 800,
+        "localCap": 2,
+        "niceFrom": 5,
+        "outline": 4,
+        "popScale": 1.4,
+        "repeatGapMs": 1500,
+        "riseUnits": 40,
+        "rivalAlpha": 0.7,
+        "rivalScale": 0.6,
+        "size": 22,
+        "skewDeg": 12,
+        "streakFrom": 3
+      },
+      "wrap": {
+        "sparks": 4,
+        "streak": {
+          "frames": 6
+        }
+      }
+    },
+    "modes": [
+      {
+        "clocks": [
+          60,
+          180,
+          300
+        ],
+        "course": "endless",
+        "displayName": "Survival",
+        "id": "infinite",
+        "laps": [
+          1
+        ],
+        "tuning": {
+          "COURSE_FLOOR_COUNT": 50,
+          "RACE_TIME_LIMIT_TICKS": 10800
+        }
+      },
+      {
+        "course": "finite",
+        "displayName": "20 floors",
+        "id": "floors-20",
+        "laps": [
+          1,
+          3
+        ],
+        "tuning": {
+          "COURSE_FLOOR_COUNT": 20
+        }
+      },
+      {
+        "course": "finite",
+        "displayName": "50 floors",
+        "id": "floors-50",
+        "laps": [
+          1
+        ],
+        "tuning": {
+          "COURSE_FLOOR_COUNT": 50
+        }
+      }
+    ],
+    "packs": [
+      {
+        "characters": [
+          "ninja",
+          "frog",
+          "diver"
+        ],
+        "dlc": false,
+        "id": "base",
+        "songs": [
+          "moving-on",
+          "farther-from-home",
+          "whats-next",
+          "chrome-in-the-rain",
+          "we-outside",
+          "la-reina-del-mambo",
+          "crash-mode",
+          "pyramid-scheme",
+          "static-in-the-air",
+          "unseen"
+        ],
+        "stages": [
+          "rooftops",
+          "snow-shrine",
+          "sunken-dome"
+        ],
+        "title": "Base"
+      },
+      {
+        "characters": [
+          "robo",
+          "kitsune"
+        ],
+        "dlc": false,
+        "id": "friends",
+        "songs": [],
+        "stages": [],
+        "title": "Friends"
+      },
+      {
+        "characters": [
+          "penguin",
+          "oni",
+          "witch",
+          "knight"
+        ],
+        "dlc": true,
+        "id": "after-hours",
+        "songs": [],
+        "stages": [],
+        "title": "After Hours"
+      }
+    ],
+    "presentation": {
+      "flow": {
+        "entry": "Splash",
+        "transitions": [
+          {
+            "event": "raceAgain",
+            "from": "GameEnd",
+            "to": "Lobby",
+            "transition": "liquid"
+          },
+          {
+            "event": "returnToMenu",
+            "from": "GameEnd",
+            "to": "MainMenu",
+            "transition": "liquid"
+          },
+          {
+            "event": "roomRacing",
+            "from": "GameEnd",
+            "to": "Gameplay",
+            "transition": "liquid"
+          },
+          {
+            "event": "watchReplay",
+            "from": "GameEnd",
+            "to": "Replay",
+            "transition": "liquid"
+          },
+          {
+            "event": "leaveRace",
+            "from": "Gameplay",
+            "to": "MainMenu",
+            "transition": "liquid"
+          },
+          {
+            "event": "raceFinished",
+            "from": "Gameplay",
+            "to": "GameEnd",
+            "transition": "liquid"
+          },
+          {
+            "event": "recoverToMenu",
+            "from": "Gameplay",
+            "to": "MainMenu",
+            "transition": "fade"
+          },
+          {
+            "event": "back",
+            "from": "Lobby",
+            "to": "MainMenu",
+            "transition": "fade"
+          },
+          {
+            "event": "raceFinished",
+            "from": "Lobby",
+            "to": "GameEnd",
+            "transition": "fade"
+          },
+          {
+            "event": "roomRacing",
+            "from": "Lobby",
+            "to": "Gameplay",
+            "transition": "liquid"
+          },
+          {
+            "event": "tutorial",
+            "from": "Lobby",
+            "to": "Tutorial",
+            "transition": "liquid"
+          },
+          {
+            "event": "play",
+            "from": "MainMenu",
+            "to": "Lobby",
+            "transition": "fade"
+          },
+          {
+            "event": "tutorial",
+            "from": "MainMenu",
+            "to": "Tutorial",
+            "transition": "liquid"
+          },
+          {
+            "event": "replayExit",
+            "from": "Replay",
+            "to": "GameEnd",
+            "transition": "liquid"
+          },
+          {
+            "event": "replayExitToRoom",
+            "from": "Replay",
+            "to": "Lobby",
+            "transition": "liquid"
+          },
+          {
+            "event": "resumeRoom",
+            "from": "Splash",
+            "to": "Lobby",
+            "transition": "fade"
+          },
+          {
+            "event": "splashComplete",
+            "from": "Splash",
+            "to": "MainMenu",
+            "transition": "fade"
+          },
+          {
+            "event": "tutorialToLobby",
+            "from": "Tutorial",
+            "to": "Lobby",
+            "transition": "liquid"
+          },
+          {
+            "event": "tutorialToTitle",
+            "from": "Tutorial",
+            "to": "MainMenu",
+            "transition": "liquid"
+          }
+        ]
+      },
+      "routing": {
+        "routes": [
+          {
+            "action": "flow.resume-room",
+            "order": 10,
+            "source": "app.room-resumed"
+          },
+          {
+            "action": "flow.splash-complete",
+            "order": 10,
+            "source": "app.splash-ready"
+          },
+          {
+            "action": "flow.race-finished",
+            "order": 10,
+            "source": "room.finished"
+          },
+          {
+            "action": "flow.room-racing",
+            "order": 10,
+            "source": "room.racing"
+          },
+          {
+            "action": "flow.recover-to-menu",
+            "order": 10,
+            "source": "room.recovery-required"
+          },
+          {
+            "action": "flow.back",
+            "order": 10,
+            "source": "ui.back-requested"
+          },
+          {
+            "action": "flow.leave-race",
+            "order": 10,
+            "source": "ui.leave-race-settled"
+          },
+          {
+            "action": "flow.play",
+            "order": 10,
+            "source": "ui.play-requested"
+          },
+          {
+            "action": "flow.race-again",
+            "order": 10,
+            "source": "ui.race-again-settled"
+          },
+          {
+            "action": "flow.replay-exit",
+            "order": 10,
+            "source": "ui.replay-exit"
+          },
+          {
+            "action": "flow.replay-exit-to-room",
+            "order": 10,
+            "source": "ui.replay-exit-to-room"
+          },
+          {
+            "action": "flow.return-to-menu",
+            "order": 10,
+            "source": "ui.return-to-menu-settled"
+          },
+          {
+            "action": "flow.tutorial-to-lobby",
+            "order": 10,
+            "source": "ui.tutorial-closed-to-lobby"
+          },
+          {
+            "action": "flow.tutorial-to-title",
+            "order": 10,
+            "source": "ui.tutorial-closed-to-title"
+          },
+          {
+            "action": "flow.tutorial",
+            "order": 10,
+            "source": "ui.tutorial-requested"
+          },
+          {
+            "action": "flow.watch-replay",
+            "order": 10,
+            "source": "ui.watch-replay"
+          }
+        ]
+      }
+    },
+    "songs": [
+      {
+        "audioAlias": "music.movingOn",
+        "beatOffsetTicks": 33,
+        "bpm": 100.75,
+        "coverAlias": "cover.movingOn",
+        "displayName": "Moving On",
+        "id": "moving-on",
+        "loopEndMs": 238360,
+        "loopStartMs": 0,
+        "previewEndMs": 72000,
+        "previewStartMs": 45000,
+        "resultsEndMs": 233000,
+        "resultsStartMs": 216000
+      },
+      {
+        "audioAlias": "music.fartherFromHome",
+        "beatOffsetTicks": 10,
+        "bpm": 110.1,
+        "coverAlias": "cover.fartherFromHome",
+        "displayName": "Farther From Home",
+        "id": "farther-from-home",
+        "loopEndMs": 243160,
+        "loopStartMs": 0,
+        "previewEndMs": 95000,
+        "previewStartMs": 60000,
+        "resultsEndMs": 215000,
+        "resultsStartMs": 180000
+      },
+      {
+        "audioAlias": "music.whatsNext",
+        "beatOffsetTicks": 9,
+        "bpm": 160.05,
+        "coverAlias": "cover.whatsNext",
+        "displayName": "What's Next",
+        "id": "whats-next",
+        "loopEndMs": 133360,
+        "loopStartMs": 0,
+        "previewEndMs": 59000,
+        "previewStartMs": 35000,
+        "resultsEndMs": 83000,
+        "resultsStartMs": 72000
+      },
+      {
+        "audioAlias": "music.chromeInTheRain",
+        "beatOffsetTicks": 24,
+        "bpm": 146,
+        "coverAlias": "cover.chromeInTheRain",
+        "displayName": "Chrome in the Rain",
+        "id": "chrome-in-the-rain",
+        "loopEndMs": 121240,
+        "loopStartMs": 0,
+        "previewEndMs": 66000,
+        "previewStartMs": 40000,
+        "resultsEndMs": 96000,
+        "resultsStartMs": 79000
+      },
+      {
+        "audioAlias": "music.weOutside",
+        "beatOffsetTicks": 14,
+        "bpm": 131.5,
+        "coverAlias": "cover.weOutside",
+        "displayName": "We Outside",
+        "id": "we-outside",
+        "loopEndMs": 74200,
+        "loopStartMs": 0,
+        "previewEndMs": 14000,
+        "previewStartMs": 0,
+        "resultsEndMs": 50000,
+        "resultsStartMs": 28000
+      },
+      {
+        "audioAlias": "music.laReinaDelMambo",
+        "beatOffsetTicks": 2,
+        "bpm": 184.1,
+        "coverAlias": "cover.laReinaDelMambo",
+        "displayName": "La Reina del Mambo",
+        "id": "la-reina-del-mambo",
+        "loopEndMs": 178800,
+        "loopStartMs": 0,
+        "previewEndMs": 52000,
+        "previewStartMs": 30000,
+        "resultsEndMs": 125000,
+        "resultsStartMs": 93000
+      },
+      {
+        "audioAlias": "music.crashMode",
+        "beatOffsetTicks": 23,
+        "bpm": 143.05,
+        "coverAlias": "cover.crashMode",
+        "displayName": "Crash Mode",
+        "id": "crash-mode",
+        "loopEndMs": 143520,
+        "loopStartMs": 0,
+        "previewEndMs": 71000,
+        "previewStartMs": 51000,
+        "resultsEndMs": 143000,
+        "resultsStartMs": 115000,
+        "unlock": "any-match"
+      },
+      {
+        "audioAlias": "music.pyramidScheme",
+        "beatOffsetTicks": 13,
+        "bpm": 166.1,
+        "coverAlias": "cover.pyramidScheme",
+        "displayName": "Pyramid Scheme",
+        "id": "pyramid-scheme",
+        "loopEndMs": 91000,
+        "loopStartMs": 0,
+        "previewEndMs": 34000,
+        "previewStartMs": 11000,
+        "resultsEndMs": 91000,
+        "resultsStartMs": 69000,
+        "unlock": "games-2"
+      },
+      {
+        "audioAlias": "music.staticInTheAir",
+        "beatOffsetTicks": 17,
+        "bpm": 134.25,
+        "coverAlias": "cover.staticInTheAir",
+        "displayName": "Static in the Air",
+        "id": "static-in-the-air",
+        "loopEndMs": 251120,
+        "loopStartMs": 0,
+        "previewEndMs": 43000,
+        "previewStartMs": 14000,
+        "resultsEndMs": 220000,
+        "resultsStartMs": 194000,
+        "unlock": "games-3"
+      },
+      {
+        "audioAlias": "music.unseen",
+        "beatOffsetTicks": 26,
+        "bpm": 137.15,
+        "coverAlias": "cover.unseen",
+        "displayName": "Unseen",
+        "id": "unseen",
+        "loopEndMs": 99440,
+        "loopStartMs": 0,
+        "previewEndMs": 54000,
+        "previewStartMs": 27000,
+        "resultsEndMs": 82000,
+        "resultsStartMs": 55000,
+        "unlock": "share-replay"
+      }
+    ],
+    "stages": [
+      {
+        "course": {
+          "extension": [
+            {
+              "fromFloor": 20,
+              "purpose": "A second wind past the old finish. Floor 20 and the moving 22 sit nearly overhead, then 23, 24 and 27 ask for long crossings again.",
+              "toFloor": 29
+            },
+            {
+              "fromFloor": 30,
+              "purpose": "The hardest ten. Floors 31, 33, 34 and 36 each ask for almost a full bounce across, with only 32 and 35, both overhead, to breathe between them.",
+              "toFloor": 39
+            },
+            {
+              "fromFloor": 40,
+              "purpose": "The run home eases onto moving floors and short hops, with one long reach at 44 and 46 before a near-stacked finish at 48 and 49.",
+              "toFloor": 49
+            }
+          ],
+          "phrases": [
+            {
+              "fromFloor": 1,
+              "name": "teach",
+              "purpose": "Short, nearly stacked hops. Steering barely matters, so the automatic bounce and the first contact with a floor's underside are learned before anything is asked of them.",
+              "toFloor": 5
+            },
+            {
+              "fromFloor": 6,
+              "name": "combine",
+              "purpose": "Four of the six steps need most of one bounce of travel. Committing horizontally early, and holding it, is the only way across; a late correction lands short.",
+              "toFloor": 11
+            },
+            {
+              "fromFloor": 12,
+              "name": "recover",
+              "purpose": "A wide step, then a stacked pair directly overhead. A player who misses here falls to easy ground rather than out of the race, and the stack offers the side route back.",
+              "toFloor": 15
+            },
+            {
+              "fromFloor": 16,
+              "name": "finish",
+              "purpose": "One easy step to breathe, then three consecutive moving floors at near-maximum reach. The climax is legible: the floors are visibly far apart and visibly in motion.",
+              "toFloor": 19
+            }
+          ],
+          "seed": 35229
+        },
+        "courseTuning": {},
+        "displayName": "Rooftops",
+        "id": "rooftops",
+        "platformAlias": "world.platform",
+        "theme": {
+          "ambienceAlias": "ambience.rooftop",
+          "backdropAlias": "menu.backdrop",
+          "layers": [
+            {
+              "alias": "world.rooftopsSky",
+              "depth": 0.06,
+              "extend": "plate",
+              "plate": "sky",
+              "sink": 200
+            },
+            {
+              "alias": "world.cloudsHigh",
+              "depth": 0.06,
+              "drift": 0.8,
+              "extend": "none",
+              "plate": "sky",
+              "sink": -330
+            },
+            {
+              "alias": "world.clouds",
+              "depth": 0.06,
+              "drift": 1.5,
+              "extend": "none",
+              "plate": "sky",
+              "sink": -140
+            },
+            {
+              "alias": "world.cloudsLow",
+              "depth": 0.065,
+              "drift": 2.2,
+              "extend": "none",
+              "plate": "sky",
+              "sink": 40
+            },
+            {
+              "alias": "world.birds",
+              "depth": 0.07,
+              "drift": 0.9,
+              "extend": "none",
+              "plate": "sky",
+              "sink": 60
+            },
+            {
+              "alias": "world.rooftopsHorizon",
+              "arc": 0.05,
+              "depth": 0.1,
+              "extend": "skirt",
+              "haze": 0.35,
+              "plate": "city",
+              "sink": 150
+            },
+            {
+              "alias": "world.cityFar",
+              "depth": 0.15,
+              "extend": "skirt",
+              "haze": 0.25,
+              "plate": "city",
+              "sink": 240
+            },
+            {
+              "alias": "world.cityMid",
+              "depth": 0.24,
+              "extend": "skirt",
+              "haze": 0.125,
+              "plate": "city",
+              "sink": 270
+            },
+            {
+              "alias": "world.cityNear",
+              "depth": 0.35,
+              "extend": "skirt",
+              "haze": 0,
+              "plate": "city",
+              "sink": 290
+            },
+            {
+              "alias": "world.lanterns",
+              "depth": 0.35,
+              "extend": "tile",
+              "plate": "city",
+              "sink": 290
+            },
+            {
+              "alias": "world.rooftopDetails",
+              "depth": 0.42,
+              "extend": "none",
+              "plate": "city",
+              "sink": 180
+            },
+            {
+              "alias": "world.rooftopProps",
+              "depth": 0.42,
+              "extend": "none",
+              "plate": "city",
+              "sink": 180
+            }
+          ],
+          "lightAlias": "world.sun",
+          "presentation": {
+            "citySink": {
+              "combine": 40,
+              "finish": 560,
+              "recover": 120,
+              "teach": 0
+            },
+            "horizonLift": 24,
+            "lightHeight": 60,
+            "profile": "aquarian",
+            "refractionIntensity": 0.65
+          },
+          "previewAlias": "still.rooftopsPreview",
+          "setPieces": [
+            {
+              "floor": 10,
+              "holdMs": 5000,
+              "kind": "swarm",
+              "layers": [
+                "world.clouds",
+                "world.cloudsHigh",
+                "world.birds"
+              ],
+              "speed": 8
+            },
+            {
+              "floor": 22,
+              "holdMs": 6000,
+              "kind": "lightsOut"
+            },
+            {
+              "floor": 34,
+              "holdMs": 12000,
+              "kind": "paletteShift",
+              "mood": "sunset"
+            },
+            {
+              "flashes": 2,
+              "floor": 45,
+              "holdMs": 6000,
+              "kick": 3,
+              "kind": "skyFlash",
+              "tone": "lightning"
+            },
+            {
+              "density": 0.7,
+              "floor": 45,
+              "holdMs": 6000,
+              "kind": "weatherBurst",
+              "particle": "rain"
+            },
+            {
+              "floor": 50,
+              "holdMs": 4000,
+              "invert": true,
+              "kind": "lightsOut"
+            }
+          ]
+        }
+      },
+      {
+        "course": {
+          "extension": [
+            {
+              "fromFloor": 20,
+              "purpose": "Opens hard straight after the old finish: 20 and 21 are long crossings, then 23 and 25 settle into short hops before 27 and 29 reach out again.",
+              "toFloor": 29
+            },
+            {
+              "fromFloor": 30,
+              "purpose": "Floor 34 asks for a full bounce across; 31 and 33 lead into it on moving and still floors, and 35, 36 and 38 hand the breath back around one more long reach at 37.",
+              "toFloor": 39
+            },
+            {
+              "fromFloor": 40,
+              "purpose": "Quiet at 40 and 41, then 43 to 45 build, and the finish is the sharpest of the fifty: the moving 48 is a full-width crossing into a long 49.",
+              "toFloor": 49
+            }
+          ],
+          "phrases": [
+            {
+              "fromFloor": 1,
+              "name": "teach",
+              "purpose": "Short steps up the shrine stairs; the bounce carries a first-time player.",
+              "toFloor": 5
+            },
+            {
+              "fromFloor": 6,
+              "name": "combine",
+              "purpose": "Long crossings between lantern posts; the first steps that need a committed line.",
+              "toFloor": 11
+            },
+            {
+              "fromFloor": 12,
+              "name": "recover",
+              "purpose": "A breath under the torii before the climb to the moon.",
+              "toFloor": 15
+            },
+            {
+              "fromFloor": 16,
+              "name": "finish",
+              "purpose": "Sustained, demanding steps to the top; the last is makeable, not a coin flip.",
+              "toFloor": 19
+            }
+          ],
+          "seed": 34528
+        },
+        "courseTuning": {},
+        "displayName": "Snow Shrine",
+        "id": "snow-shrine",
+        "platformAlias": "world.snowShrinePlatform",
+        "theme": {
+          "ambienceAlias": "ambience.snowShrine",
+          "backdropAlias": "world.snowShrineSky",
+          "layers": [
+            {
+              "alias": "world.snowShrineSky",
+              "depth": 0.06,
+              "extend": "plate",
+              "plate": "sky",
+              "sink": 200
+            },
+            {
+              "alias": "world.snowfall",
+              "depth": 0.06,
+              "drift": 0.6,
+              "extend": "none",
+              "plate": "sky",
+              "sink": 0
+            },
+            {
+              "alias": "world.snowShrineFar",
+              "depth": 0.15,
+              "extend": "skirt",
+              "haze": 0.3,
+              "plate": "city",
+              "sink": 240
+            },
+            {
+              "alias": "world.snowShrineMid",
+              "depth": 0.24,
+              "extend": "skirt",
+              "haze": 0.15,
+              "plate": "city",
+              "sink": 270
+            },
+            {
+              "alias": "world.snowShrineNear",
+              "depth": 0.35,
+              "extend": "skirt",
+              "haze": 0,
+              "plate": "city",
+              "sink": 290
+            },
+            {
+              "alias": "world.snowShrineDetails",
+              "depth": 0.42,
+              "extend": "none",
+              "plate": "city",
+              "sink": 180
+            },
+            {
+              "alias": "world.snowfallNear",
+              "arc": 0,
+              "depth": 0.5,
+              "drift": 1.6,
+              "extend": "none",
+              "plate": "city",
+              "sink": 140
+            }
+          ],
+          "lightAlias": "world.moon",
+          "presentation": {
+            "citySink": {
+              "combine": 40,
+              "finish": 560,
+              "recover": 120,
+              "teach": 0
+            },
+            "horizonLift": 12,
+            "lightHeight": 220,
+            "lightShimmer": false,
+            "profile": "aquarian",
+            "refractionIntensity": 0.45
+          },
+          "previewAlias": "still.snowShrinePreview",
+          "setPieces": [
+            {
+              "floor": 10,
+              "holdMs": 8000,
+              "kind": "paletteShift",
+              "mood": "bright"
+            },
+            {
+              "density": 0.6,
+              "floor": 22,
+              "holdMs": 7000,
+              "kind": "weatherBurst",
+              "layers": [
+                "world.snowfall",
+                "world.snowfallNear"
+              ],
+              "particle": "snow"
+            },
+            {
+              "density": 0.8,
+              "floor": 34,
+              "holdMs": 5000,
+              "kind": "weatherBurst",
+              "particle": "snow"
+            },
+            {
+              "floor": 34,
+              "holdMs": 5000,
+              "kind": "swarm",
+              "layers": [
+                "world.snowfall",
+                "world.snowfallNear"
+              ],
+              "speed": 10
+            },
+            {
+              "density": 1,
+              "floor": 45,
+              "holdMs": 6000,
+              "kind": "weatherBurst",
+              "particle": "snow"
+            },
+            {
+              "flashes": 1,
+              "floor": 45,
+              "holdMs": 6000,
+              "kind": "skyFlash",
+              "tone": "aurora"
+            },
+            {
+              "floor": 50,
+              "holdMs": 6000,
+              "kind": "paletteShift",
+              "mood": "aurora"
+            },
+            {
+              "flashes": 1,
+              "floor": 50,
+              "holdMs": 6000,
+              "kind": "skyFlash",
+              "tone": "aurora"
+            }
+          ]
+        }
+      },
+      {
+        "course": {
+          "extension": [
+            {
+              "fromFloor": 20,
+              "purpose": "Alternates long and short: 21, 23 and 29 are long crossings, each followed by a floor that sits nearly overhead.",
+              "toFloor": 29
+            },
+            {
+              "fromFloor": 30,
+              "purpose": "Floor 32 is the one step past a single bounce's reach; it moves, so it is taken by riding the floor below until it comes round. 34 and 36 then sit overhead between long reaches.",
+              "toFloor": 39
+            },
+            {
+              "fromFloor": 40,
+              "purpose": "The densest finish: 40 to 44 each ask for most of a bounce, then 45 sits overhead and 46 to 49 ease into a moderate last pair.",
+              "toFloor": 49
+            }
+          ],
+          "phrases": [
+            {
+              "fromFloor": 1,
+              "name": "teach",
+              "purpose": "Gentle steps up the dome's floor; the bounce carries a first-time player.",
+              "toFloor": 5
+            },
+            {
+              "fromFloor": 6,
+              "name": "combine",
+              "purpose": "Wide crossings along the glass ribs; the first steps that need a committed line.",
+              "toFloor": 11
+            },
+            {
+              "fromFloor": 12,
+              "name": "recover",
+              "purpose": "A drift among the coral while the mantas pass overhead.",
+              "toFloor": 15
+            },
+            {
+              "fromFloor": 16,
+              "name": "finish",
+              "purpose": "A hard climb to the crown of the dome; the last step is makeable, not a coin flip.",
+              "toFloor": 19
+            }
+          ],
+          "seed": 107255
+        },
+        "courseTuning": {},
+        "displayName": "Sunken Dome",
+        "id": "sunken-dome",
+        "platformAlias": "world.sunkenDomePlatform",
+        "theme": {
+          "ambienceAlias": "ambience.sunkenDome",
+          "backdropAlias": "world.sunkenDomeSky",
+          "layers": [
+            {
+              "alias": "world.sunkenDomeSky",
+              "depth": 0.06,
+              "extend": "plate",
+              "plate": "sky",
+              "sink": 440
+            },
+            {
+              "alias": "world.sunkenDomeMantas",
+              "depth": 0.06,
+              "drift": 0.3,
+              "extend": "none",
+              "plate": "sky",
+              "sink": 40
+            },
+            {
+              "alias": "world.sunkenDomeFish",
+              "depth": 0.08,
+              "drift": 1.2,
+              "extend": "none",
+              "plate": "sky",
+              "sink": 0
+            },
+            {
+              "alias": "world.sunkenDomeFar",
+              "depth": 0.15,
+              "extend": "skirt",
+              "haze": 0.35,
+              "plate": "city",
+              "sink": 240
+            },
+            {
+              "alias": "world.sunkenDomeMid",
+              "depth": 0.24,
+              "extend": "skirt",
+              "haze": 0.15,
+              "plate": "city",
+              "sink": 270
+            },
+            {
+              "alias": "world.sunkenDomeNear",
+              "depth": 0.35,
+              "extend": "skirt",
+              "haze": 0,
+              "plate": "city",
+              "sink": 290
+            },
+            {
+              "alias": "world.sunkenDomeDetails",
+              "depth": 0.42,
+              "extend": "none",
+              "plate": "city",
+              "sink": 180
+            }
+          ],
+          "presentation": {
+            "citySink": {
+              "combine": 40,
+              "finish": 560,
+              "recover": 120,
+              "teach": 0
+            },
+            "horizonLift": 16,
+            "profile": "aquarian",
+            "refractionIntensity": 0.6
+          },
+          "previewAlias": "still.sunkenDomePreview",
+          "setPieces": [
+            {
+              "floor": 10,
+              "holdMs": 6000,
+              "kind": "swarm",
+              "layers": [
+                "world.sunkenDomeMantas"
+              ],
+              "speed": 6
+            },
+            {
+              "floor": 22,
+              "holdMs": 10000,
+              "kind": "paletteShift",
+              "mood": "bright"
+            },
+            {
+              "floor": 34,
+              "holdMs": 6000,
+              "kind": "swarm",
+              "layers": [
+                "world.sunkenDomeFish"
+              ],
+              "speed": 12
+            },
+            {
+              "density": 0.5,
+              "floor": 34,
+              "holdMs": 6000,
+              "kind": "weatherBurst",
+              "particle": "bubble"
+            },
+            {
+              "floor": 45,
+              "holdMs": 3000,
+              "kind": "lightsOut"
+            },
+            {
+              "floor": 45,
+              "holdMs": 6000,
+              "kind": "paletteShift",
+              "mood": "deepWater"
+            },
+            {
+              "floor": 50,
+              "holdMs": 5000,
+              "kind": "swarm",
+              "layers": [
+                "world.sunkenDomeMantas",
+                "world.sunkenDomeFish"
+              ],
+              "speed": 14
+            }
+          ]
+        }
+      }
+    ],
+    "tutorial": {
+      "seed": 4,
+      "song": {
+        "audioAlias": "music.tutorial",
+        "beatOffsetTicks": 9,
+        "bpm": 186,
+        "displayName": "Jersey Triplets",
+        "id": "dawn-tutorial",
+        "loopEndMs": 160760,
+        "loopStartMs": 0
+      },
+      "stage": {
+        "courseTuning": {},
+        "displayName": "Dawn",
+        "id": "dawn",
+        "platformAlias": "world.platform",
+        "theme": {
+          "ambienceAlias": "ambience.dawn",
+          "backdropAlias": "world.dawnSky",
+          "layers": [
+            {
+              "alias": "world.dawnSky",
+              "depth": 0.06,
+              "extend": "plate",
+              "plate": "sky",
+              "sink": 440
+            },
+            {
+              "alias": "world.dawnMist",
+              "depth": 0.15,
+              "extend": "skirt",
+              "haze": 0.3,
+              "plate": "city",
+              "sink": 240
+            },
+            {
+              "alias": "world.dawnNear",
+              "depth": 0.35,
+              "extend": "skirt",
+              "haze": 0,
+              "plate": "city",
+              "sink": 290
+            }
+          ],
+          "presentation": {
+            "horizonLift": 12,
+            "profile": "aquarian",
+            "refractionIntensity": 0.45,
+            "silhouette": true
+          },
+          "setPieces": [
+            {
+              "floor": 15,
+              "holdMs": 15000,
+              "kind": "paletteShift",
+              "mood": "night",
+              "stay": true
+            },
+            {
+              "floor": 30,
+              "holdMs": 15000,
+              "kind": "paletteShift",
+              "mood": "dawn",
+              "stay": true
+            },
+            {
+              "floor": 45,
+              "holdMs": 20000,
+              "kind": "paletteShift",
+              "mood": "day",
+              "stay": true
+            }
+          ]
+        }
+      },
+      "steps": [
+        {
+          "kind": "move",
+          "prompt": {
+            "buttons": "Hold the left arrow, then the right, to steer.",
+            "gamepad": "Steer left, then right, with {glyph}.",
+            "keyboard": "Steer left, then right, with A and D or the arrow keys.",
+            "touch": "Drag left, then right, in the lower half to steer."
+          }
+        },
+        {
+          "kind": "land",
+          "prompt": {
+            "gamepad": "You bounce on your own. Follow the dots onto the next floor. Press into a side for a boost; land on top for floor credit.",
+            "keyboard": "You bounce on your own. Follow the dots onto the next floor. Press into a side for a boost; land on top for floor credit.",
+            "touch": "You bounce on your own. Follow the dots onto the next floor. Press into a side for a boost; land on top for floor credit."
+          }
+        },
+        {
+          "kind": "fastFall",
+          "prompt": {
+            "buttons": "In the air, hold the down arrow to fast fall.",
+            "gamepad": "In the air, press {glyph} or push down to fast fall.",
+            "keyboard": "In the air, hold S or the down arrow to fast fall.",
+            "touch": "In the air, flick down anywhere to fast fall."
+          }
+        },
+        {
+          "kind": "landMoving",
+          "prompt": {
+            "buttons": "Land on a moving floor. Time your steer.",
+            "gamepad": "Land on a moving floor. Time your steer.",
+            "keyboard": "Land on a moving floor. Time your steer.",
+            "touch": "Land on a moving floor. Time your drag."
+          }
+        },
+        {
+          "kind": "survive",
+          "prompt": {
+            "gamepad": "Stay above the lava.",
+            "keyboard": "Stay above the lava.",
+            "touch": "Stay above the lava."
+          }
+        }
+      ],
+      "targetFloor": 8
+    },
+    "unlocks": [
+      {
+        "goal": 1,
+        "hint": "Finish any race",
+        "id": "any-match"
+      },
+      {
+        "goal": 2,
+        "hint": "Finish 2 races",
+        "id": "games-2"
+      },
+      {
+        "goal": 1,
+        "hint": "Save or share a video",
+        "id": "share-replay"
+      },
+      {
+        "goal": 3,
+        "hint": "Finish 3 races",
+        "id": "games-3"
+      },
+      {
+        "goal": 5,
+        "hint": "Finish 5 races",
+        "id": "games-5"
+      },
+      {
+        "goal": 7,
+        "hint": "Finish 7 races",
+        "id": "games-7"
+      },
+      {
+        "goal": 8,
+        "hint": "Finish 8 races",
+        "id": "games-8"
+      },
+      {
+        "goal": 10,
+        "hint": "Finish 10 races",
+        "id": "games-10"
+      }
+    ]
+  },
+  "contentRevision": "88ea0fbd0aa1b8ba6e4f3312829d5cc35112e57f0ee1c3f71d6ea22d2d4e1301",
+  "courseRevisions": {
+    "rooftops": "0cc54db1d003613f3542354171140be03cfdc23dbbd509bb58fd7590d96f8d62",
+    "snow-shrine": "e01585a3b37864e5a08b343fc32c97320cf8bfc12619d904ca53c16a180c3db1",
+    "sunken-dome": "9412db6ac9192f35553b913b69d619d79a9697fab4850f36299aaf550f1ce82d"
+  },
+  "rulesetRevision": "eefdb2dacef2e38036ad31b966ea4a79cecf980d9be3de88895e8e571eb51655",
+  "schemaVersion": 1
+}

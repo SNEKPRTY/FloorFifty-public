@@ -1,0 +1,97 @@
+# Declared back to front, and with `to` before `from`.
+entry = "Splash"
+
+[[transitions]]
+to = "Gameplay"
+event = "roomRacing"
+from = "GameEnd"
+
+[[transitions]]
+to = "MainMenu"
+event = "returnToMenu"
+from = "GameEnd"
+
+[[transitions]]
+to = "Lobby"
+event = "raceAgain"
+from = "GameEnd"
+
+[[transitions]]
+to = "MainMenu"
+event = "leaveRace"
+from = "Gameplay"
+
+[[transitions]]
+to = "MainMenu"
+event = "recoverToMenu"
+from = "Gameplay"
+
+[[transitions]]
+to = "GameEnd"
+event = "raceFinished"
+from = "Gameplay"
+
+[[transitions]]
+to = "GameEnd"
+event = "raceFinished"
+from = "Lobby"
+
+[[transitions]]
+to = "Gameplay"
+event = "roomRacing"
+from = "Lobby"
+
+[[transitions]]
+to = "MainMenu"
+event = "back"
+from = "Lobby"
+
+[[transitions]]
+to = "Lobby"
+event = "play"
+from = "MainMenu"
+
+[[transitions]]
+to = "Lobby"
+event = "resumeRoom"
+from = "Splash"
+
+[[transitions]]
+to = "MainMenu"
+event = "splashComplete"
+from = "Splash"
+
+[[transitions]]
+from = "MainMenu"
+event = "tutorial"
+to = "Tutorial"
+
+[[transitions]]
+from = "Lobby"
+event = "tutorial"
+to = "Tutorial"
+
+[[transitions]]
+from = "Tutorial"
+event = "tutorialToTitle"
+to = "MainMenu"
+
+[[transitions]]
+from = "Tutorial"
+event = "tutorialToLobby"
+to = "Lobby"
+
+[[transitions]]
+from = "GameEnd"
+event = "watchReplay"
+to = "Replay"
+
+[[transitions]]
+from = "Replay"
+event = "replayExit"
+to = "GameEnd"
+
+[[transitions]]
+from = "Replay"
+event = "replayExitToRoom"
+to = "Lobby"

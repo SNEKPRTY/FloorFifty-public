@@ -1,0 +1,140 @@
+#!/usr/bin/env bash
+# Builds the production box (release readiness D-R4 = A) from a fresh Hetzner
+# CAX11 on Ubuntu 24.04, with staging's layout: Caddy, the blue and green
+# colours, the `deploy` user locked to installing a release, and the
+# hardening checklist (docs/release.md). Run once, from a checkout, by someone
+# whose SSH key the box was created with:
+#
+#   deploy/bin/provision-prod <ip> [ruken-prod-id]
+#
+# It makes the production deploy key, installs its public half, and writes
+# the three `production` environment secrets to ./prod-secrets/ (git-ignored;
+# delete it once they are set). It prints the `gh` commands that set them. Root login is closed at the end; the owner's key logs in as
+# `ops`, with sudo.
+#
+# Safe to run again: each step leaves an existing install as it is, and the
+# deploy key is reused when ./prod-secrets/ still holds it.
+set -euo pipefail
+
+host="${1:?usage: provision-prod <ip> [ruken-prod-id]}"
+prod_id="${2:-}"
+cd "$(git rev-parse --show-toplevel)"
+# shellcheck disable=SC1091
+source deploy/config.env
+: "${FF_ACME_EMAIL:?export FF_ACME_EMAIL before provisioning}"
+
+out=prod-secrets
+mkdir -p "$out"
+chmod 700 "$out"
+[[ -f "$out/PROD_SSH_KEY" ]] || ssh-keygen -q -t ed25519 -N "" -C github-production -f "$out/PROD_SSH_KEY"
+printf '%s\n' "$host" > "$out/PROD_HOST"
+ssh-keyscan -t ed25519 "$host" 2>/dev/null > "$out/PROD_KNOWN_HOSTS"
+[[ -s "$out/PROD_KNOWN_HOSTS" ]] || { echo "no ed25519 host key from $host" >&2; exit 1; }
+
+# The first login is root (Hetzner's default), the later ones `ops`.
+login="root@$host"
+ssh -o BatchMode=yes -o UserKnownHostsFile="$out/PROD_KNOWN_HOSTS" "$login" true 2>/dev/null || login="ops@$host"
+ssh_box() { ssh -o UserKnownHostsFile="$out/PROD_KNOWN_HOSTS" "$login" "$@"; }
+
+# Everything the box needs from this checkout, in one tarball.
+bundle="$(mktemp -d)"
+trap 'rm -rf "$bundle"' EXIT
+mkdir -p "$bundle/ff/bin"
+cp deploy/bin/activate deploy/bin/deploy deploy/bin/builds-index.mjs deploy/bin/report deploy/bin/report.mjs "$bundle/ff/bin/"
+cp deploy/caddy/Caddyfile.production deploy/caddy/caddy-env.conf deploy/systemd/floor-fifty@.service deploy/sudoers/floor-fifty "$bundle/ff/"
+cp "$out/PROD_SSH_KEY.pub" "$bundle/ff/deploy.pub"
+tar -czf "$bundle/ff.tgz" -C "$bundle" ff
+
+origins="${prod_id:+https://g-$prod_id.rukengames.com,https://g-$prod_id.rukengames-dev.com}"
+ssh_box "cat > /tmp/ff.tgz" < "$bundle/ff.tgz"
+ssh_box "sudo env FF_DOMAIN='$FF_DOMAIN' FF_ACME_EMAIL='$FF_ACME_EMAIL' FF_ORIGINS='$origins' bash -s" <<'BOX'
+set -euo pipefail
+export DEBIAN_FRONTEND=noninteractive
+cd /tmp && rm -rf ff && tar -xzf ff.tgz && cd ff
+
+# The owner's admin login, so root's can close.
+if ! id ops >/dev/null 2>&1; then
+  useradd -m -s /bin/bash -G sudo ops
+  install -d -m 700 -o ops -g ops /home/ops/.ssh
+  install -m 600 -o ops -g ops /root/.ssh/authorized_keys /home/ops/.ssh/authorized_keys
+  echo 'ops ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/ops && chmod 440 /etc/sudoers.d/ops
+fi
+
+# Packages: Node 24 (NodeSource), Caddy, the firewall, unattended upgrades.
+apt-get update -q
+apt-get install -yq ca-certificates curl gnupg debian-keyring debian-archive-keyring apt-transport-https ufw unattended-upgrades
+if ! command -v node >/dev/null || [[ "$(node -v)" != v24* ]]; then
+  curl -fsSL https://deb.nodesource.com/setup_24.x | bash -
+  apt-get install -yq nodejs
+fi
+if ! command -v caddy >/dev/null; then
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+  curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list
+  apt-get update -q && apt-get install -yq caddy
+fi
+dpkg-reconfigure -f noninteractive unattended-upgrades
+
+# Hardening checklist: keys only, no root, 22/80/443 in, 14 days of journal.
+ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp && ufw --force enable
+install -d /etc/systemd/journald.conf.d
+printf '[Journal]\nMaxRetentionSec=14day\n' > /etc/systemd/journald.conf.d/10-retention.conf
+systemctl restart systemd-journald
+# 4 GiB, and two colours overlap during a drain: a swapfile catches the peak.
+if [[ ! -f /swapfile ]]; then
+  fallocate -l 2G /swapfile && chmod 600 /swapfile && mkswap /swapfile && swapon /swapfile
+  echo '/swapfile none swap sw 0 0' >> /etc/fstab
+fi
+
+# Users: the server's, and CI's, whose one key can only install a release.
+id floorfifty >/dev/null 2>&1 || useradd -r -s /usr/sbin/nologin -d /srv/floor-fifty floorfifty
+id deploy >/dev/null 2>&1 || useradd -m -s /bin/bash deploy
+install -d -m 700 -o deploy -g deploy /home/deploy/.ssh
+printf 'command="cat > /home/deploy/release.tgz && sudo -n /usr/local/lib/floor-fifty/bin/deploy /home/deploy/release.tgz",no-port-forwarding,no-agent-forwarding,no-X11-forwarding,no-pty %s\n' "$(cat deploy.pub)" > /home/deploy/.ssh/authorized_keys
+chown deploy:deploy /home/deploy/.ssh/authorized_keys && chmod 600 /home/deploy/.ssh/authorized_keys
+install -m 440 floor-fifty /etc/sudoers.d/floor-fifty
+visudo -cf /etc/sudoers.d/floor-fifty
+
+# The release scripts run as root from this copy, never a checkout.
+install -d /usr/local/lib/floor-fifty/bin
+install -m 755 bin/* /usr/local/lib/floor-fifty/bin/
+install -d /srv/floor-fifty/releases
+
+# Env: the server refuses production without MAX_ROOMS and the origins.
+# MAX_ROOMS starts at 25 and is resized by the load test (docs/release.md).
+install -d /etc/floor-fifty
+printf 'FF_DOMAIN=%s\nFF_ACME_EMAIL=%s\n' "$FF_DOMAIN" "$FF_ACME_EMAIL" > /etc/floor-fifty/caddy.env
+if [[ ! -f /etc/floor-fifty/env ]]; then
+  printf 'NODE_ENV=production\nFF_HEAP_MB=1536\nMAX_ROOMS=25\nFLOOR_FIFTY_ALLOWED_ORIGINS=%s\n' "$FF_ORIGINS" > /etc/floor-fifty/env
+elif [[ -n "$FF_ORIGINS" ]]; then
+  sed -i "s|^FLOOR_FIFTY_ALLOWED_ORIGINS=.*|FLOOR_FIFTY_ALLOWED_ORIGINS=$FF_ORIGINS|" /etc/floor-fifty/env
+fi
+echo PORT=3001 > /etc/floor-fifty/blue.env
+echo PORT=3002 > /etc/floor-fifty/green.env
+
+# Caddy (API only) and the colours.
+install -m 644 Caddyfile.production /etc/caddy/Caddyfile
+install -d /etc/systemd/system/caddy.service.d && install -m 644 caddy-env.conf /etc/systemd/system/caddy.service.d/
+[[ -f /etc/caddy/upstream.caddy ]] || printf 'reverse_proxy 127.0.0.1:3001 {\n\tstream_close_delay 6m\n}\n' > /etc/caddy/upstream.caddy
+install -m 644 floor-fifty@.service /etc/systemd/system/
+install -d /etc/systemd/system/floor-fifty@.service.d
+printf '[Service]\nMemoryMax=1800M\n' > /etc/systemd/system/floor-fifty@.service.d/10-memory.conf
+systemctl daemon-reload
+set -a; . /etc/floor-fifty/caddy.env; set +a
+caddy validate --adapter caddyfile --config /etc/caddy/Caddyfile
+systemctl restart caddy
+
+# Last: close root's login and passwords, now that `ops` has the keys.
+printf 'PermitRootLogin no\nPasswordAuthentication no\n' > /etc/ssh/sshd_config.d/10-floor-fifty.conf
+sshd -t && systemctl reload ssh
+rm -rf /tmp/ff /tmp/ff.tgz
+echo "box ready; log in as ops@"
+BOX
+
+cat <<EOF
+
+The box is built. Set the production secrets (then delete ./$out):
+  gh secret set PROD_HOST --env production < $out/PROD_HOST
+  gh secret set PROD_SSH_KEY --env production < $out/PROD_SSH_KEY
+  gh secret set PROD_KNOWN_HOSTS --env production < $out/PROD_KNOWN_HOSTS
+EOF
+[[ -n "$prod_id" ]] || echo "No Ruken PROD id given: FLOOR_FIFTY_ALLOWED_ORIGINS is empty, so the server will not start. Run again with it once Ruken PROD exists."

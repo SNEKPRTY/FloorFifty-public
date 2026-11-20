@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": { "correctness": "error" },
+  "rules": {
+    // Copying a list before looping over it is deliberate here: a listener may
+    // unsubscribe while the loop runs, so the copy is not a useless spread.
+    "unicorn/no-useless-spread": "off",
+    // Svelte's mount() takes a props object whose getters need the view, and a
+    // getter's own `this` is that props object, so the view is named first.
+    "typescript/no-this-alias": "off",
+    // A sized `new Array(n)` is the cheap preallocation the replay recorder and
+    // the asset tools want, not the single-element array the rule guards against.
+    "unicorn/no-new-array": "off",
+    // Playwright reads a hook's fixtures from its first argument, which has to
+    // be an object pattern even when the hook uses none of them: `({}, testInfo)`.
+    "eslint/no-empty-pattern": "off"
+  }
+}

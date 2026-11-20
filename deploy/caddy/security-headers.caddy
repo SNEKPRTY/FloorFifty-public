@@ -1,0 +1,16 @@
+# The standalone client's security headers (release readiness §6.3,
+# Amendment R). Imported by the client site in the Caddyfile, and installed
+# beside it as /etc/caddy/security-headers.caddy. A Ruken-hosted client gets
+# Ruken's headers instead.
+#
+# 'unsafe-inline' covers styles only: index.html's boot <style>, Svelte style
+# attributes and GSAP's inline styles. No script is inline, and there is no
+# 'unsafe-eval'.
+header {
+	Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; worker-src 'self' blob:; connect-src 'self' https://staging-api.{$FF_DOMAIN} wss://staging-api.{$FF_DOMAIN}; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'"
+	Strict-Transport-Security "max-age=31536000; includeSubDomains"
+	X-Content-Type-Options "nosniff"
+	Referrer-Policy "no-referrer"
+	Permissions-Policy "gamepad=(self), fullscreen=(self), web-share=(self), clipboard-write=(self), camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+	Cross-Origin-Opener-Policy "same-origin"
+}

@@ -1,0 +1,260 @@
+/* Tailwind, the palette tokens, the typefaces, and the Aquarian skin. */
+@import "./theme.css";
+@import "./aquarian.css";
+
+/* The shell, and only the shell.
+   -------------------------------------------------------------------------
+   Every panel that used to be styled from this file now carries its own
+   styles in its own component: the menu, the ready room, the results, the
+   error panel, the connection indicator and the touch controls. What is left
+   is what has no component to live in -- the page itself, the canvas, the
+   overlay geometry, and the pre-boot failure panel that exists before any
+   component can.
+
+   The one authored colour source for the page is aquarian-tokens.css. Where a
+   value here is a world role it is because the drawn layer is behind it and
+   the two must agree; nothing here restates an Aquarian value as a literal. */
+
+:root {
+  /* The interface is a light pearl surface, but the page declares itself dark
+     so the browser's own chrome -- the URL bar included -- tints dark rather
+     than white. The head's `color-scheme` meta says the same; this declaration
+     is the one the browser reads, and leaving it at `light`, as it once was,
+     is what made the chrome white. The fields keep their pearl surface because
+     `.ff-aq-field` sets its own colour and background, so this moves the
+     browser's chrome, not the interface. */
+  color-scheme: dark;
+
+  /* The pointer is a dot: ink with a pearl ring, so it reads over both the
+     pale sky and the dark city, and the action blue over anything that acts.
+     The one place this file restates token values as literals -- a cursor is
+     an image URL, and `var()` does not reach inside one. They are
+     `--ff-text`, `--ff-panel-fill` and `--ff-plain`. */
+  --ff-cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14'%3E%3Ccircle cx='7' cy='7' r='5' fill='%232e222f' stroke='%23c7dcd0' stroke-width='1.5'/%3E%3C/svg%3E")
+      7 7,
+    auto;
+  --ff-cursor-hot:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18'%3E%3Ccircle cx='9' cy='9' r='6.5' fill='%234d65b4' stroke='%23c7dcd0' stroke-width='1.5'/%3E%3C/svg%3E")
+      9 9,
+    pointer;
+}
+
+/* These are element-level defaults and must sit in `@layer base`.
+   -------------------------------------------------------------------------
+   Cascade layers, not specificity, decide this: unlayered CSS beats anything
+   in a layer, however specific the layer's selector is. Tailwind puts its
+   utilities in `@layer utilities`, so an unlayered `button { color: ... }`
+   silently overrides `text-aq-ink` on every button in the client -- no
+   warning, no failing test, and a component whose classes are simply inert.
+
+   That is not hypothetical: it is how the selected lap button lost its amber
+   state while still carrying `border-city-window` in its class list. */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    height: 100%;
+    /* The dynamic viewport: the space between the browser's bars as they are
+       now, not as they are when collapsed. Declared after the fallback. */
+    height: 100dvh;
+    background: var(--ff-panel-fill);
+    overflow: hidden;
+    font-family: var(--ff-font-ui);
+    color: var(--ff-text);
+    /* A game canvas must not scroll, bounce, or zoom under a dragged thumb. */
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+    cursor: var(--ff-cursor);
+  }
+
+  /* A region that scrolls keeps its drag: past its edge, nothing is handed to
+     the page, where a pull in tablet fullscreen means "leave fullscreen". */
+  [data-scroll-region] {
+    overscroll-behavior: contain;
+  }
+
+  /* A game, not a document: no text selection, no long-press callout, no
+     dragged-image ghost. A drag or a held thumb that selected a label or lifted
+     a racer off the menu broke the illusion the screen is drawn. */
+  html {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+  img {
+    -webkit-user-drag: none;
+  }
+
+  /* Text fields keep the I-beam: it shows where the caret will land. They
+     also keep selection, so a name can be corrected and a room code pasted. */
+  input,
+  textarea {
+    cursor: text;
+    -webkit-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+
+  /* A bare button gets the quiet tier of the control material, so a control
+     that has not opted into `.ff-aq-control` still sits in the same light.
+     The saturated primary is a deliberate choice per control, never a default. */
+  button {
+    font: inherit;
+    color: var(--ff-text);
+    background: var(--ff-panel-fill);
+    border: 1px solid var(--ff-panel-border);
+    border-radius: var(--ff-control-radius);
+    padding: 0.5rem 1rem;
+    cursor: var(--ff-cursor-hot);
+    /* Suppresses the double-tap zoom and tap highlight a game canvas never wants. */
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  button:hover:not(:disabled) {
+    border-color: var(--ff-plain);
+  }
+
+  button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  /* One focus ring for every control in the client. The menu used to carry its
+     own and nothing else did, which left the results and the touch controls
+     with only the browser default over a dark panel. */
+  /* The ring steps in from 2 px outside where it settles, in three steps
+     (polish spec §5.1). Only the start is keyed, so it lands on whatever
+     offset the control sets; a control with its own offset names it in
+     `--ff-focus-offset` so the start is measured from there. */
+  :focus-visible {
+    /* White, so it shows on the dark panel and on all three button faces. */
+    outline: 2px solid var(--ff-text);
+    outline-offset: 2px;
+    animation: ff-focus-in 120ms steps(3) backwards;
+  }
+}
+
+@keyframes ff-focus-in {
+  from { outline-offset: calc(var(--ff-focus-offset, 2px) + 2px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :focus-visible { animation: none; }
+}
+
+#app {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  /* Less a bar the browser draws over the page without reporting it
+     (`--ff-hidden-bar-bottom`, from the viewport tracker), so the canvas and
+     everything anchored to it end above that bar. Zero everywhere else. */
+  height: calc(100dvh - var(--ff-hidden-bar-bottom, 0px));
+  /* The overlay tracks the 16:9 letterbox, which on a screen wider than 16:9
+     overhangs the viewport above and below (42 px each way at 844x390). That
+     overhang gave the document something to scroll to: `overflow: hidden` on
+     the body hides it from a wheel, but a touch drag on a phone still panned
+     the page. Clipped here so the page is never taller or wider than the
+     screen. `clip` rather than `hidden` where supported, since it is no scroll
+     container and so nothing -- a focus, a find-in-page -- can scroll it. */
+  overflow: hidden;
+  overflow: clip;
+}
+
+#app canvas {
+  display: block;
+  /* Nearest-neighbour on the way to the screen as well as inside the renderer. */
+  image-rendering: pixelated;
+}
+
+/* A screen that covers the whole viewport: the menu, the ready room and the
+   results. It ends where the visible area ends, above the keyboard or a bar
+   the browser lays over the page (`--ff-visual-inset-bottom`, from the
+   viewport tracker), and pads by the gutter or the safe area, whichever is
+   larger: `viewport-fit=cover` lets Chrome on Android draw the page under its
+   gesture bar and a camera cutout, and a screen padded by the gutter alone
+   put its last buttons under them (responsive parity spec §5.7, gate round 3).
+   On desktop both are zero, so it is `fixed inset-0 p-gutter` exactly. Plain
+   CSS in a layer, because the four `max()` paddings are no utility, and a
+   component's own utilities and scoped rules still override it. */
+@layer components {
+  .ff-screen {
+    position: fixed;
+    inset: 0 0 var(--ff-visual-inset-bottom, 0px);
+    padding: max(var(--ff-gutter), env(safe-area-inset-top)) max(var(--ff-gutter), env(safe-area-inset-right), var(--ff-host-reserved-right, 0px))
+      max(var(--ff-gutter), env(safe-area-inset-bottom)) max(var(--ff-gutter), env(safe-area-inset-left), var(--ff-host-reserved-left, 0px));
+  }
+}
+
+/* Tracks the letterbox exactly, so HTML controls line up with drawn ones. */
+.ff-overlay {
+  position: absolute;
+  pointer-events: none;
+  /* Safe-area padding so controls clear a notch or a home indicator. */
+  padding: env(safe-area-inset-top) max(env(safe-area-inset-right), var(--ff-host-reserved-right, 0px)) env(safe-area-inset-bottom)
+    max(env(safe-area-inset-left), var(--ff-host-reserved-left, 0px));
+}
+
+/* Layered, so a child's own `pointer-events-none` utility wins. Unlayered,
+   it beat every Tailwind utility: the tutorial's veil took the pointer and
+   swallowed the swipes under it on a tablet. */
+@layer components {
+  .ff-overlay > * {
+    pointer-events: auto;
+  }
+}
+
+/* The one panel that cannot be a component: it reports a failure to boot, so
+   it has to render when nothing else has. It wears the kit's glass and rise by class
+   (`dom-classes.ts`), so this rule only places it, in the UI stack, for the same
+   reason: the stack names the system face straight after Fusion Pixel, so a webfont
+   that never loaded still sets it immediately in something clean. */
+.ff-boot-error {
+  box-sizing: border-box;
+  width: calc(100% - 32px);
+  max-width: 34rem;
+  /* In the middle of the screen, across and down: fixed on every edge, auto margins. */
+  position: fixed;
+  inset: 0;
+  height: fit-content;
+  max-height: calc(100% - 32px);
+  overflow-y: auto;
+  margin: auto;
+  padding: 1.5rem;
+  /* A rose edge all round, so the box shows over any world and its centred words read centred
+     across as well as down (review R37). */
+  border: 2px solid var(--ff-danger);
+  text-align: center;
+  font-family: var(--ff-font-ui);
+}
+
+.ff-boot-error h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.4rem;
+}
+
+.ff-boot-error p {
+  margin: 0 0 1rem;
+  color: var(--ff-text-2);
+  line-height: 1.5;
+}
+
+/* The one way forward is the kit's green button; here it keeps its 44 px floor and the title
+   size it always had: the kit's button size shrinks to 12 px on a phone held sideways, where this
+   panel's heading is still 24 px. */
+.ff-boot-error button {
+  min-width: 44px;
+  min-height: 48px;
+  font-size: var(--ff-type-title);
+}
+
+.ff-boot-error .ff-detail {
+  font-size: var(--ff-type-hint);
+  word-break: break-word;
+}

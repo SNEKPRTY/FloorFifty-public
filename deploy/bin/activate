@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+# Puts a release in front of players without dropping a race.
+#
+# Usage: activate <buildId>
+#
+# Blue/green on one box (release readiness spec §5.3). The idle colour starts
+# on the new release; only once it answers /ready does Caddy send new
+# connections to it. The old colour is then stopped, which sends SIGTERM:
+# it drains its rooms and exits by itself (apps/server/src/drain.ts), within
+# systemd's TimeoutStopSec. If the new colour never becomes ready, or Caddy
+# refuses the switch, the live colour was never touched and keeps serving.
+#
+# Rolling back is the same command with the build ID in `previous`.
+set -euo pipefail
+
+root="${FF_ROOT:-/srv/floor-fifty}"
+upstream="${FF_CADDY_UPSTREAM:-/etc/caddy/upstream.caddy}"
+caddyfile="${FF_CADDYFILE:-/etc/caddy/Caddyfile}"
+caddy_env="${FF_CADDY_ENV:-/etc/floor-fifty/caddy.env}"
+ready_timeout="${FF_READY_TIMEOUT:-30}"
+poll="${FF_POLL_SECONDS:-1}"
+
+id="${1:-}"
+if [[ ! "$id" =~ ^[0-9]{12}-[0-9a-f]{7,40}$ ]]; then
+  echo "usage: activate <buildId>; '$id' is not a build ID" >&2
+  exit 2
+fi
+release="$root/releases/$id"
+if [[ ! -d "$release" ]]; then
+  echo "build $id is not on this box ($release)" >&2
+  exit 2
+fi
+
+live="$(cat "$root/live" 2>/dev/null || echo none)"
+case "$live" in
+  blue) idle=green ;;
+  green | none) idle=blue ;;
+  *) echo "unreadable live colour '$live' in $root/live" >&2; exit 2 ;;
+esac
+port_of() { if [[ "$1" == blue ]]; then echo 3001; else echo 3002; fi; }
+idle_port="$(port_of "$idle")"
+
+ln -sfn "$release" "$root/$idle"
+systemctl restart "floor-fifty@$idle"
+
+deadline=$(( SECONDS + ready_timeout ))
+until curl -fsS -o /dev/null "http://127.0.0.1:$idle_port/ready"; do
+  if (( SECONDS >= deadline )); then
+    systemctl stop "floor-fifty@$idle"
+    echo "build $id never became ready; $live is still serving" >&2
+    exit 1
+  fi
+  sleep "$poll"
+done
+
+# The old upstream is kept so a refused reload can be undone exactly.
+backup="$(mktemp)"
+trap 'rm -f "$backup"' EXIT
+if [[ -f "$upstream" ]]; then cp "$upstream" "$backup"; fi
+printf 'reverse_proxy 127.0.0.1:%s {\n\tstream_close_delay 6m\n}\n' "$idle_port" > "$upstream"
+# `caddy reload` adapts the Caddyfile in this process, so its {$FF_DOMAIN} and
+# {$FF_ACME_EMAIL} come from this process's environment. caddy.service has
+# them from caddy.env (deploy/caddy/caddy-env.conf); a sudo from the deploy
+# user does not, and the first real staging deploy was refused over an empty
+# `email`.
+if [[ -f "$caddy_env" ]]; then
+  set -a
+  # shellcheck source=/dev/null
+  source "$caddy_env"
+  set +a
+fi
+if ! caddy reload --config "$caddyfile"; then
+  cp "$backup" "$upstream"
+  systemctl stop "floor-fifty@$idle"
+  echo "caddy refused the reload; $live is still serving" >&2
+  exit 1
+fi
+
+if [[ "$live" != none ]]; then
+  basename "$(readlink "$root/$live")" > "$root/previous"
+fi
+echo "$idle" > "$root/live"
+echo "$id" > "$root/current"
+# The live colour is the one a reboot starts, and only it. `restart` above
+# starts it for now; without `enable` a rebooted box came back with Caddy up
+# and no server behind it (502 on staging, 2026-10-17). The switch is already
+# made, so a refused enable is a warning, not a failed deploy.
+systemctl enable "floor-fifty@$idle" || echo "warning: floor-fifty@$idle will not start at boot" >&2
+if [[ "$live" != none ]]; then
+  systemctl disable "floor-fifty@$live" || echo "warning: floor-fifty@$live may still start at boot" >&2
+  # --no-block: the drain can take minutes and this deploy is done.
+  systemctl stop --no-block "floor-fifty@$live"
+fi
+echo "build $id is live on $idle"

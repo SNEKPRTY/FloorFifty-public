@@ -1,0 +1,33 @@
+{
+  // Hidden from the explorer: dependencies, build and test output, regenerable
+  // caches, and local tool state. None of it is edited by hand.
+  "files.exclude": {
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/*.tsbuildinfo": true,
+    "coverage": true,
+    "test-results": true,
+    "playwright-report": true,
+    "blob-report": true,
+    ".playwright": true,
+    "References": true,
+    ".superpowers": true,
+    ".commandcode": true,
+    ".claude/worktrees": true,
+    "packages/asset-contract/.pixellab-cache": true,
+    // Derived from packages/asset-contract by `pnpm assets:sync`.
+    "apps/client/public/assets": true
+  },
+  // Visible, but kept out of search results.
+  "search.exclude": {
+    "pnpm-lock.yaml": true,
+    "docs/art/screenshots": true
+  },
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "test-results/**": true,
+    "packages/asset-contract/.pixellab-cache/**": true
+  }
+}

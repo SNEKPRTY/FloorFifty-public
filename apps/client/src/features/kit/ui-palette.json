@@ -1,0 +1,15 @@
+[
+  {"name": "Plum Black", "hex": "#2e222f", "role": "panel fill and border, green and blue border"},
+  {"name": "Dusk Violet", "hex": "#484a77", "role": "panel bevel"},
+  {"name": "Pale Mint Grey", "hex": "#c7dcd0", "role": "secondary text"},
+  {"name": "Muted Lilac", "hex": "#7f708a", "role": "disabled"},
+  {"name": "Deep Pine", "hex": "#165a4c", "role": "green face"},
+  {"name": "Jade", "hex": "#239063", "role": "green lit edge"},
+  {"name": "Cranberry", "hex": "#ae2334", "role": "red face"},
+  {"name": "Oxblood", "hex": "#6e2727", "role": "red border"},
+  {"name": "Signal Red", "hex": "#e83b3b", "role": "red lit edge"},
+  {"name": "Cornflower Blue", "hex": "#4d65b4", "role": "blue face"},
+  {"name": "Sky Blue", "hex": "#4d9be6", "role": "blue lit edge"},
+  {"name": "Ice Blue", "hex": "#8fd3ff", "role": "glow"},
+  {"name": "Rose Pink", "hex": "#ed8099", "role": "danger mark"}
+]

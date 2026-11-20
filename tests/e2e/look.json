@@ -1,0 +1,13 @@
+{
+  "for": "Upright iPad ready room and Character page fill their screens; character tiles on an upright phone sit under the name row",
+  "views": {
+    "es-419": [
+      "ipad-portrait",
+      "iphone-se-portrait"
+    ]
+  },
+  "screens": [
+    "11",
+    "16-17"
+  ]
+}

@@ -1,0 +1,14 @@
+# Survival: the fifty-floor course and then on without end, harder in bands
+# above floor 50 (D-O2). Each racer's screen rises; below it, they are out
+# (survival spec §3). The host picks the clock; the last one standing wins,
+# else the best floor when it runs out. The id stays "infinite".
+# COURSE_FLOOR_COUNT is the height the course starts at, not a limit.
+id = "infinite"
+displayName = "Survival"
+course = "endless"
+laps = [1]
+clocks = [60, 180, 300]
+
+[tuning]
+COURSE_FLOOR_COUNT = 50
+RACE_TIME_LIMIT_TICKS = 10800

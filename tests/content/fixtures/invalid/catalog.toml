@@ -1,0 +1,8 @@
+modes = []
+
+[[packs]]
+id = "base"
+title = "Base"
+stages = ["rooftops"]
+songs = ["dusk-run"]
+characters = ["scarlet", "scarlet", "nowhere"]

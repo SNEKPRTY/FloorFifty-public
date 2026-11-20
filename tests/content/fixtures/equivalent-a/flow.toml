@@ -1,0 +1,96 @@
+entry = "Splash"
+
+[[transitions]]
+from = "Splash"
+event = "splashComplete"
+to = "MainMenu"
+
+[[transitions]]
+from = "Splash"
+event = "resumeRoom"
+to = "Lobby"
+
+[[transitions]]
+from = "MainMenu"
+event = "play"
+to = "Lobby"
+
+[[transitions]]
+from = "Lobby"
+event = "back"
+to = "MainMenu"
+
+[[transitions]]
+from = "Lobby"
+event = "roomRacing"
+to = "Gameplay"
+
+[[transitions]]
+from = "Lobby"
+event = "raceFinished"
+to = "GameEnd"
+
+[[transitions]]
+from = "Gameplay"
+event = "raceFinished"
+to = "GameEnd"
+
+[[transitions]]
+from = "Gameplay"
+event = "recoverToMenu"
+to = "MainMenu"
+
+[[transitions]]
+from = "Gameplay"
+event = "leaveRace"
+to = "MainMenu"
+
+[[transitions]]
+from = "GameEnd"
+event = "raceAgain"
+to = "Lobby"
+
+[[transitions]]
+from = "GameEnd"
+event = "returnToMenu"
+to = "MainMenu"
+
+[[transitions]]
+from = "GameEnd"
+event = "roomRacing"
+to = "Gameplay"
+
+[[transitions]]
+from = "MainMenu"
+event = "tutorial"
+to = "Tutorial"
+
+[[transitions]]
+from = "Lobby"
+event = "tutorial"
+to = "Tutorial"
+
+[[transitions]]
+from = "Tutorial"
+event = "tutorialToTitle"
+to = "MainMenu"
+
+[[transitions]]
+from = "Tutorial"
+event = "tutorialToLobby"
+to = "Lobby"
+
+[[transitions]]
+from = "GameEnd"
+event = "watchReplay"
+to = "Replay"
+
+[[transitions]]
+from = "Replay"
+event = "replayExit"
+to = "GameEnd"
+
+[[transitions]]
+from = "Replay"
+event = "replayExitToRoom"
+to = "Lobby"

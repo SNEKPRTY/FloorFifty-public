@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# Builds one GitHub release's client for the dev build hosts (release
+# readiness D-R6): /builds/<id>/ on staging, listed on the owner's site.
+#
+# Usage: build-tag <tag> <release name> <outDir>
+#
+# Writes <outDir>/build.tgz (build.json, client/) and <outDir>/build-id. deploy
+# installs the tarball at builds/<id>/ and never makes it live. The client is
+# the tag's own, built from a clean worktree of the tag against today's
+# staging API; this script, from main, does the building, since tags before
+# v0.3.0 have no release tooling. The build ID is the tagged commit's time, so
+# the builds sort as the releases do.
+set -euo pipefail
+
+usage="usage: build-tag <tag> <release name> <outDir>"
+tag="${1:?$usage}"
+name="${2?$usage}"
+out="${3:?$usage}"
+repo="$(git rev-parse --show-toplevel)"
+cd "$repo"
+# shellcheck source=../config.env
+source deploy/config.env
+if [[ -z "${FF_DOMAIN:-}" ]]; then
+  echo "FF_DOMAIN is empty in deploy/config.env" >&2
+  exit 2
+fi
+if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-rc\.[0-9]+)?$ ]]; then
+  echo "'$tag' is not a release tag" >&2
+  exit 2
+fi
+
+commit="$(git rev-parse --short=7 "$tag^{commit}")"
+build_id="$(TZ=UTC git log -1 --format=%cd --date=format-local:%Y%m%d%H%M "$tag^{commit}")-$commit"
+# GitHub names each release "FloorFifty <tag>: <title>"; the site shows the title.
+title="${name#FloorFifty "$tag": }"
+
+rm -rf "$out"
+mkdir -p "$out/stage"
+src="$out/src"
+git worktree add --detach "$src" "$tag"
+trap 'git -C "$repo" worktree remove --force "$src" 2>/dev/null || true' EXIT
+(
+  cd "$src"
+  pnpm install --frozen-lockfile
+  FLOOR_FIFTY_BUILD_ID="$build_id" VITE_SERVER_URL="https://staging-api.$FF_DOMAIN" pnpm -r build
+)
+cp -R "$src/apps/client/dist" "$out/stage/client"
+
+# What the tag's client needs of a server to join: the protocol it speaks and
+# the ruleset it was built with. The index marks a build playable when the
+# live server says the same. A tag that predates either leaves it out.
+protocol="$(git show "$tag:packages/shared/src/common/constants.ts" 2>/dev/null | sed -nE 's/^export const PROTOCOL_VERSION = ([0-9]+);.*/\1/p' | head -1)"
+# From a file: a pipe of the whole content artifact read short on the Mac.
+ruleset=""
+if git show "$tag:content/generated/content.json" > "$out/content.json" 2>/dev/null; then
+  ruleset="$(node -e 'const r = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).rulesetRevision; if (typeof r === "string") process.stdout.write(r);' "$out/content.json")"
+fi
+
+BUILD_ID="$build_id" TAG="$tag" TITLE="$title" COMMIT="$commit" PROTOCOL="$protocol" RULESET="$ruleset" node -e '
+  const { BUILD_ID: buildId, TAG: tag, TITLE: title, COMMIT: commit, PROTOCOL: protocol, RULESET: ruleset } = process.env;
+  const needs = { ...(protocol ? { protocolVersion: Number(protocol) } : {}), ...(ruleset ? { rulesetRevision: ruleset } : {}) };
+  process.stdout.write(`${JSON.stringify({ buildId, tag, title, commit, ...needs }, null, 2)}\n`);
+' > "$out/stage/build.json"
+tar -czf "$out/build.tgz" -C "$out/stage" build.json client
+echo "$build_id" > "$out/build-id"
+echo "built $build_id ($tag: $title)"
