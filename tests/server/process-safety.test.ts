@@ -63,8 +63,32 @@ describe("the production guard (release readiness §6.6)", () => {
     ]);
   });
 
-  it("allows anything outside production", () => {
+  it("allows a test-driven server anything outside production, as the browser suite runs one", () => {
     expect(forbiddenInProduction({ FLOOR_FIFTY_TEST_DRIVER_TOKEN: "x", FLOOR_FIFTY_TELEMETRY: "1" })).toEqual([]);
+  });
+
+  // Audit S5: every guard above hung on NODE_ENV=production, so a server started
+  // without it was open to every origin, whatever else it was given. A server
+  // that is not driven by the browser suite is a public one, so it needs its
+  // origin list whatever NODE_ENV says. (A rule changed: the old test here was
+  // "allows anything outside production", which pinned the open start.)
+  describe("a server that is not in production and not test-driven", () => {
+    it("refuses to start without an origin list, whatever NODE_ENV says", () => {
+      expect(forbiddenInProduction({})).toEqual(["FLOOR_FIFTY_ALLOWED_ORIGINS (unset)"]);
+      expect(forbiddenInProduction({ NODE_ENV: "development" })).toEqual(["FLOOR_FIFTY_ALLOWED_ORIGINS (unset)"]);
+      expect(forbiddenInProduction({ NODE_ENV: "staging", FLOOR_FIFTY_ALLOWED_ORIGINS: "  " })).toEqual([
+        "FLOOR_FIFTY_ALLOWED_ORIGINS (unset)",
+      ]);
+    });
+
+    it("starts with one, as staging does", () => {
+      expect(forbiddenInProduction({ FLOOR_FIFTY_ALLOWED_ORIGINS: "https://staging.test" })).toEqual([]);
+    });
+
+    it("starts without one only when the test driver is on, as the browser suite runs it", () => {
+      expect(forbiddenInProduction({ FLOOR_FIFTY_TEST_DRIVER_TOKEN: "e2e-driver-token" })).toEqual([]);
+      expect(forbiddenInProduction({ FLOOR_FIFTY_TEST_DRIVER_TOKEN: "" })).toEqual(["FLOOR_FIFTY_ALLOWED_ORIGINS (unset)"]);
+    });
   });
 });
 

@@ -791,7 +791,7 @@
 }
 
 /* Japanese also keeps its phrases (bunsetsu) whole where the browser can
-   find them: "はじめてです / か？" broke mid-phrase on the tutorial offer
+   find them: "はじめてです / か？" broke mid-phrase on the story offer
    (visual audit, 2026-10-05). Where it cannot, the strict rules above stand. */
 :root:lang(ja) {
   word-break: auto-phrase;

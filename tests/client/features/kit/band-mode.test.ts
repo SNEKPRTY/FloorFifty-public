@@ -2,11 +2,11 @@
  * The band is the whole window in the menus and the 16:9 field in a race, a
  * replay and the tutorial, which share one race scene (features/platform/band.ts).
  */
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { deflateReplaySync } from "../../../../apps/server/src/rooms/replay-compression";
 import { resolveTuning } from "@floor-fifty/shared/common/tuning";
 import { runRoomLike } from "../../../server/support/room-like";
-import { gameplayWithFakeNetwork, replayWithFakes, tutorialWithFakes } from "../../support/fakes/screens";
+import { gameplayWithFakeNetwork, replayWithFakes, storyWithFakes } from "../../support/fakes/screens";
 import { contentFor } from "../replay/replay-content";
 
 afterEach(() => {
@@ -29,8 +29,12 @@ describe("the band mode of a race scene", () => {
     expect(viewer.stage.bandModes).toEqual(["field", "menu"]);
   });
 
-  it("puts the band in field mode for the tutorial, and back to menu on leave", async () => {
-    const tutorial = await tutorialWithFakes();
+  it("puts the band in field mode for the story's climb, and back to menu on leave", async () => {
+    const tutorial = await storyWithFakes();
+    // The hub and the cutscene are menus over the window; the climb is the field.
+    expect(tutorial.stage.bandModes).toEqual([]);
+    tutorial.click("story-cutscene-skip");
+    await vi.waitFor(() => expect(tutorial.screen.chapterIndex()).not.toBeUndefined());
     expect(tutorial.stage.bandModes).toEqual(["field"]);
     tutorial.screen.exit();
     expect(tutorial.stage.bandModes).toEqual(["field", "menu"]);

@@ -395,6 +395,8 @@ describe("the letterbox bars", () => {
     // The hide is a property of the current canvas, never a latch: a rotation
     // is a plain resize and has to restore both the bars and their geometry.
     const frame = new LetterboxFrame();
+    // A menu's canvas: a race's is barred from the start.
+    frame.setCutLine(false);
     frame.layout(PORTRAIT.width, PORTRAIT.height);
 
     const box = frame.layout(WIDE_BARRED.width, WIDE_BARRED.height);
@@ -556,6 +558,7 @@ describe("the bars' black", () => {
     // Landscape strips show the scenery; the splash asks for true black over
     // them and fades it, as it did when the bars were always drawn.
     const frame = new LetterboxFrame();
+    frame.setCutLine(false);
     const box = frame.layout(DESKTOP.width, DESKTOP.height);
     expect(frame.bars.visible).toBe(false);
     frame.setBarBlack(1);
@@ -598,12 +601,42 @@ describe("the play field's own clip in landscape (the bars show the city)", () =
     frame.destroy();
   });
 
-  it("shows no bars in landscape: the scenery fills them", () => {
+  it("shows no bars on a menu in landscape: the scenery fills them", () => {
     const frame = new LetterboxFrame();
+    frame.setCutLine(false);
     for (const view of [DESKTOP, WIDE_BARRED, FOUR_THREE, SIXTEEN_TEN]) {
       frame.layout(view.width, view.height);
       expect(frame.bars.visible).toBe(false);
     }
+    frame.destroy();
+  });
+
+  it("frames a race in landscape with solid bars in the palette's black (Owner, 2026-11-20)", () => {
+    const frame = new LetterboxFrame();
+    frame.setCutLine(true);
+    for (const view of [DESKTOP, WIDE_BARRED, FOUR_THREE, SIXTEEN_TEN]) {
+      const box = frame.layout(view.width, view.height);
+      expect(frame.bars.visible, `${view.width}x${view.height}`).toBe(true);
+      expect(frame.topBar.visible).toBe(true);
+      expect([frame.topBar.alpha, frame.bottomBar.alpha]).toEqual([1, 1]);
+      // White tint: the bars' own fill, the palette's plum-tinted black, unchanged.
+      expect([frame.topBar.tint, frame.bottomBar.tint]).toEqual([0xffffff, 0xffffff]);
+      // They cover the strips and stop at the field the player sees.
+      const top = frame.topBar.getLocalBounds();
+      const bottom = frame.bottomBar.getLocalBounds();
+      expect(top.y + top.height).toBeCloseTo(box.gameplay.y, 3);
+      expect(bottom.y).toBeCloseTo(box.gameplay.y + box.gameplay.height, 3);
+    }
+    frame.destroy();
+  });
+
+  it("keeps a race's bars when a menu takes the canvas back off them", () => {
+    const frame = new LetterboxFrame();
+    frame.setCutLine(true);
+    frame.layout(DESKTOP.width, DESKTOP.height);
+    frame.setCutLine(false);
+    frame.layout(DESKTOP.width, DESKTOP.height);
+    expect(frame.bars.visible).toBe(false);
     frame.destroy();
   });
 

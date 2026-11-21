@@ -84,25 +84,25 @@ transition = "liquid"
 
 [[transitions]]
 from = "MainMenu"
-event = "tutorial"
-to = "Tutorial"
+event = "story"
+to = "Story"
 transition = "liquid"
 
 [[transitions]]
 from = "Lobby"
-event = "tutorial"
-to = "Tutorial"
+event = "story"
+to = "Story"
 transition = "liquid"
 
 [[transitions]]
-from = "Tutorial"
-event = "tutorialToTitle"
+from = "Story"
+event = "storyToTitle"
 to = "MainMenu"
 transition = "liquid"
 
 [[transitions]]
-from = "Tutorial"
-event = "tutorialToLobby"
+from = "Story"
+event = "storyToLobby"
 to = "Lobby"
 transition = "liquid"
 

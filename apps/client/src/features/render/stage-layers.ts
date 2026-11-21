@@ -181,7 +181,7 @@ export class StageLayers {
    * The sun, or the moon, behind every skyline.
    *
    * A stage's own sky plate is the furthest thing of all, so this follows it.
-   * A plate that carries its own sun names no light (the Dawn tutorial's does
+   * A plate that carries its own sun names no light (the Dawn story chapter's does
    * not). The light comes before the skylines so it rises behind the city
    * rather than glowing in front of it.
    */

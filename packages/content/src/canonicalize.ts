@@ -17,6 +17,7 @@ import {
   type ModeContent,
   type SongContent,
   type StageContent,
+  type StoryContent,
 } from "@floor-fifty/shared/content/game-content";
 import type {
   FlowTransition,
@@ -72,9 +73,9 @@ function inCatalogOrder<T extends { readonly id: string }>(
  * Assembles the payload the artifact carries.
  *
  * Only catalogued items are emitted, so a draft file is validated and then
- * forgotten. The one exception is the tutorial's stage and its song, which
- * `tutorial.toml` names: they ride inside `tutorial`, never in `stages` or
- * `songs`, so no room can race them. Flow transitions and presentation routes are sorted here rather
+ * forgotten. The one exception is the story's stage and its song, which
+ * `story.toml` names: they ride inside `story`'s chapters, never in `stages`
+ * or `songs` unless the catalog lists them too. Flow transitions and presentation routes are sorted here rather
  * than at read time, because that is the point at which declaration order
  * stops being available to mean anything.
  *
@@ -94,10 +95,19 @@ export function buildPayload(parsed: ParsedContent): GameContentPayload {
   const modes: readonly ModeContent[] = inCatalogOrder(catalog.modes, parsed.modes);
   const songs: readonly SongContent[] = inCatalogOrder(catalog.songs, parsed.songs);
 
-  // Validation has already refused a tutorial whose stage or song is missing.
-  const tutorialStage = parsed.stages.find((stage) => stage.value.id === parsed.tutorial.value.stageId)!.value;
-  const tutorialSong = parsed.songs.find((song) => song.value.id === parsed.tutorial.value.songId)!.value;
-  const { stageId: _stageId, songId: _songId, ...tutorial } = parsed.tutorial.value;
+  // Validation has already refused a chapter whose stage or song is missing.
+  const { prompts, actors, cutscenes, ending } = parsed.story.value;
+  const story: StoryContent = {
+    prompts,
+    actors,
+    cutscenes,
+    ending,
+    chapters: parsed.story.value.chapters.map(({ stageId, songId, ...chapter }) => ({
+      ...chapter,
+      stage: parsed.stages.find((stage) => stage.value.id === stageId)!.value,
+      song: parsed.songs.find((song) => song.value.id === songId)!.value,
+    })),
+  };
 
   return {
     baseTuning: resolveTuning(parsed.tuning.value as Partial<ResolvedTuning>),
@@ -123,9 +133,9 @@ export function buildPayload(parsed: ParsedContent): GameContentPayload {
     stages,
     songs,
     modes,
-    // The tutorial's stage and song ride inside it, never in `stages` or
-    // `songs`, so no room can race them and the ruleset does not see them.
-    tutorial: { ...tutorial, stage: tutorialStage, song: tutorialSong },
+    // A chapter's stage and song ride inside it, so a stage or song the catalog
+    // does not list is never raced and the ruleset does not see it.
+    story,
     // Stage overrides are keyed by ID, sorted so two equivalent files hash alike.
     juice: {
       ...parsed.juice.value,

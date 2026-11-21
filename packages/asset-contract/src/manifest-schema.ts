@@ -27,9 +27,13 @@ import { PLAYER_COLORS, ROLES } from "./roles";
  * spec §6.5), so boot time does not grow as packs are added. `reveal` is the
  * song covers at the reveal's full-frame size: never loaded as a bundle, only
  * fetched by URL for the one song a reveal lands on, so ten large covers
- * never sit in texture memory.
+ * never sit in texture memory. `demos` is the Instructions carousel's looping
+ * clips and their stills, fetched by URL when the carousel opens and in no
+ * boot, menu or gameplay bundle. `story` is the story's cutscene panels and
+ * chapter-card pictures (`story.*` images), fetched by URL when the story
+ * opens, never loaded as a bundle.
  */
-export const CORE_BUNDLES = ["splash", "menu", "shell", "gameplay", "audio", "reveal"] as const;
+export const CORE_BUNDLES = ["splash", "menu", "shell", "gameplay", "audio", "reveal", "demos", "story"] as const;
 export type CoreBundle = (typeof CORE_BUNDLES)[number];
 /** A core bundle, one stage's layer art, or one song's audio. */
 export type BundleName = CoreBundle | `stage-${string}` | `song-${string}`;
@@ -247,6 +251,23 @@ const coverAssetSchema = z
   })
   .strict();
 
+/**
+ * One of the Instructions carousel's demos: a looping animated WebP (`clip`)
+ * or the still frame shown under reduced motion and while the clip fails
+ * (`still`). Recordings of the game, not drawn art, so no palette applies; the
+ * gate checks the size from the header and the bytes against a budget
+ * (`validate-assets.ts`).
+ */
+const demoAssetSchema = z
+  .object({
+    ...assetIdentity,
+    role: z.literal("demo"),
+    kind: z.enum(["clip", "still"]),
+    width: z.number().int().positive(),
+    height: z.number().int().positive(),
+  })
+  .strict();
+
 export const assetSchema = z.discriminatedUnion("role", [
   characterAssetSchema,
   sheetAssetSchema,
@@ -254,6 +275,7 @@ export const assetSchema = z.discriminatedUnion("role", [
   gridAssetSchema,
   audioAssetSchema,
   coverAssetSchema,
+  demoAssetSchema,
 ]);
 
 export const artManifestSchema = z
@@ -265,7 +287,7 @@ export const artManifestSchema = z
         z
           .string()
           .regex(
-            /^(splash|menu|shell|gameplay|audio|reveal|stage-[a-z0-9-]+|song-[a-z0-9-]+)$/,
+            /^(splash|menu|shell|gameplay|audio|reveal|demos|story|stage-[a-z0-9-]+|song-[a-z0-9-]+)$/,
             "a bundle is a core bundle, stage-<id> or song-<id>",
           ),
         z.array(assetSchema),
@@ -277,6 +299,32 @@ export const artManifestSchema = z
       })
       // Every core bundle is present once the refinement passes, so readers
       // may index them without a check; a stage's or song's may be absent.
+      // A demo is fetched by URL, so it is in the `demos` bundle and no other,
+      // and `demos` holds nothing else.
+      .superRefine((bundles, context) => {
+        for (const [name, assets] of Object.entries(bundles))
+          for (const asset of assets)
+            if ((asset.role === "demo") !== (name === "demos"))
+              context.addIssue({
+                code: "custom",
+                path: [name],
+                message: asset.role === "demo" ? `demo ${asset.alias} is in ${name}; demos are fetched by URL, in the demos bundle only` : `${asset.alias} is in the demos bundle, which holds demo rows only`,
+              });
+      })
+      // The story's pictures are fetched by URL, so a `story.*` alias lives in
+      // the `story` bundle and nowhere else, and that bundle holds only them.
+      .superRefine((bundles, context) => {
+        for (const [name, assets] of Object.entries(bundles))
+          for (const asset of assets) {
+            const panel = asset.alias.startsWith("story.");
+            if (panel !== (name === "story") || (panel && asset.role !== "image"))
+              context.addIssue({
+                code: "custom",
+                path: [name],
+                message: panel ? `${asset.alias} is in ${name}; story pictures are images in the story bundle only` : `${asset.alias} is in the story bundle, which holds story.* images only`,
+              });
+          }
+      })
       .transform(
         (bundles) =>
           bundles as Record<CoreBundle, ArtAssetRow[]> &
@@ -312,6 +360,9 @@ export type AudioAsset = Extract<ArtAsset, { role: "audio" }>;
 /** A song's cover. It has pixels, but no palette and no grain budget. */
 export type CoverAsset = Extract<ArtAsset, { role: "cover" }>;
 
+/** A demo clip or its still: a recording of the game, a WebP outside the palette. */
+export type DemoAsset = Extract<ArtAsset, { role: "demo" }>;
+
 /**
  * An asset that renders as palette-locked PNG art.
  *
@@ -321,11 +372,12 @@ export type CoverAsset = Extract<ArtAsset, { role: "cover" }>;
  * cover renders too, but as a WebP outside the palette, so it is left out
  * with audio and checked on its own.
  */
-export type VisualAsset = Exclude<ArtAsset, AudioAsset | CoverAsset>;
+export type VisualAsset = Exclude<ArtAsset, AudioAsset | CoverAsset | DemoAsset>;
 
 export const isAudioAsset = (asset: ArtAsset): asset is AudioAsset => asset.role === "audio";
 export const isCoverAsset = (asset: ArtAsset): asset is CoverAsset => asset.role === "cover";
-export const isVisualAsset = (asset: ArtAsset): asset is VisualAsset => asset.role !== "audio" && asset.role !== "cover";
+export const isDemoAsset = (asset: ArtAsset): asset is DemoAsset => asset.role === "demo";
+export const isVisualAsset = (asset: ArtAsset): asset is VisualAsset => asset.role !== "audio" && asset.role !== "cover" && asset.role !== "demo";
 
 /** Raised when a manifest does not describe a loadable asset set. */
 export class ArtManifestError extends Error {

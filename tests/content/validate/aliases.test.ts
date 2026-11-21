@@ -38,9 +38,21 @@ const EVERY_ALIAS = [
   "world.dawnMist",
   "world.dawnNear",
   "music.tutorial",
+  // The story's one panel and its bed.
+  "story.lowtown",
+  "ambience.dawn",
 ];
 
 describe("validateAliases", () => {
+  it("checks the story's pictures and cutscene beds", () => {
+    const missing = validateAliases(validParsed(), manifestWithAliases(EVERY_ALIAS.filter((alias) => !alias.startsWith("story.") && alias !== "ambience.dawn")));
+    expect(missing).toEqual([
+      expect.objectContaining({ code: "unknownAssetAlias", file: "content/story.toml", keyPath: "cutscenes.0.bed" }),
+      expect.objectContaining({ code: "unknownAssetAlias", file: "content/story.toml", keyPath: "cutscenes.0.panels.0.art" }),
+    ]);
+  });
+
+
   it("accepts a tree whose every alias the manifest carries", () => {
     expect(validateAliases(validParsed(), manifestWithAliases(EVERY_ALIAS))).toEqual([]);
   });

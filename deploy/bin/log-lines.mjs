@@ -16,6 +16,9 @@ export const emptyCounts = () => ({
   buildSkew: 0,
   refusedByLimit: {},
   peakRooms: 0,
+  peakSockets: 0,
+  peakRssMb: 0,
+  peakLoopP99Ms: 0,
   ticks: [],
 });
 
@@ -57,6 +60,12 @@ export const countLine = (counts, raw) => {
     case "refused":
       // A flood is written as one line carrying its count (`n`).
       bump(counts.refusedByLimit, String(record.limit), Number.isInteger(record.n) && record.n > 0 ? record.n : 1);
+      break;
+    case "vitals":
+      // The process's vital signs, once a minute (audit S25): the peaks.
+      if (finite(record.sockets)) counts.peakSockets = Math.max(counts.peakSockets, record.sockets);
+      if (finite(record.rssMb)) counts.peakRssMb = Math.max(counts.peakRssMb, record.rssMb);
+      if (finite(record.loopP99Ms)) counts.peakLoopP99Ms = Math.max(counts.peakLoopP99Ms, record.loopP99Ms);
       break;
     case "rooms":
       if (typeof record.live === "number") counts.peakRooms = Math.max(counts.peakRooms, record.live);

@@ -55,19 +55,19 @@ order = 10
 action = "flow.leave-race"
 
 [[routes]]
-source = "ui.tutorial-requested"
+source = "ui.story-requested"
 order = 10
-action = "flow.tutorial"
+action = "flow.story"
 
 [[routes]]
-source = "ui.tutorial-closed-to-title"
+source = "ui.story-closed-to-title"
 order = 10
-action = "flow.tutorial-to-title"
+action = "flow.story-to-title"
 
 [[routes]]
-source = "ui.tutorial-closed-to-lobby"
+source = "ui.story-closed-to-lobby"
 order = 10
-action = "flow.tutorial-to-lobby"
+action = "flow.story-to-lobby"
 
 [[routes]]
 source = "ui.watch-replay"

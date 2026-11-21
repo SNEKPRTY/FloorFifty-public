@@ -2,6 +2,8 @@ import { Graphics, Sprite, Text, type Container } from "pixi.js";
 import { describe, expect, it } from "vitest";
 import { resolveTuning } from "@floor-fifty/shared/common/tuning";
 import { asContentId, type StageContent } from "@floor-fifty/shared/content/game-content";
+import { playerColorTint, roleTint } from "@floor-fifty/asset-contract/roles";
+import { STORY_SILHOUETTE_SHADE } from "../../../../apps/client/src/features/race/player-view";
 import { GameplayView } from "../../../../apps/client/src/features/race/gameplay-view";
 import { ticksPerBeat, type SongTiming } from "../../../../apps/client/src/lib/beat-clock";
 import { emptyTextures } from "../../../../apps/client/src/features/render/textures";
@@ -203,6 +205,44 @@ describe("a silhouetted stage", () => {
     expect(plates.length).toBeGreaterThan(0);
     expect(plates.every((text) => text.tint === 0xffffff)).toBe(true);
     view.destroy();
+  });
+
+  it("in the story, rims each silhouetted racer in its own colour, so the three are told apart", () => {
+    const rimOf = (sprite: Sprite): Float32Array =>
+      (sprite.filters as unknown as { resources: { outlineUniforms: { uniforms: { uRimColor: Float32Array } } } }[])[0]!.resources.outlineUniforms.uniforms.uRimColor;
+    const bodies = (story: boolean): Sprite[] => {
+      const view = viewFor(true);
+      view.setStory(story);
+      view.applySnapshot(snapshot, LOCAL_ID, 16);
+      const found = descendants(view.world.getChildByLabel("players")!).filter((child): child is Sprite => child instanceof Sprite);
+      return found;
+    };
+    const colour = snapshot.players[0]!.colour;
+    const want = playerColorTint(colour);
+    const story = rimOf(bodies(true)[0]!);
+    expect(Math.round(story[0]! * 255)).toBe((want >> 16) & 0xff);
+    expect(Math.round(story[2]! * 255)).toBe(want & 0xff);
+    const race = rimOf(bodies(false)[0]!);
+    expect(Math.round(race[0]! * 255)).toBe((roleTint("skyLow") >> 16) & 0xff);
+    // The body itself is the racer's colour in shadow in the story, not a black blob (review 2, R3); black in a race.
+    const shaded = (shift: number) => Math.round(((want >> shift) & 0xff) * STORY_SILHOUETTE_SHADE) << shift;
+    expect(bodies(true)[0]!.tint).toBe(shaded(16) | shaded(8) | shaded(0));
+    expect(bodies(false)[0]!.tint).toBe(0x000000);
+  });
+
+  it("in the story, racers drawn together keep their own names and never fold into a \"×N\" chip (review 2, R7)", () => {
+    const together = (id: string) => playerSnapshot({ id: id as never, x: 40, y: 0 });
+    const crowd = snapshotAt(1, { players: [together(LOCAL_ID), together(REMOTE_ID), together("p3")] });
+    const chipsShown = (story: boolean): number => {
+      const view = viewFor(true);
+      view.setStory(story);
+      for (let frame = 0; frame < 30; frame += 1) view.applySnapshot({ ...crowd, tick: 1 + frame }, LOCAL_ID, 16);
+      const shown = descendants(view.world).filter((child) => child.label === "nameplate-chip" && child.visible).length;
+      view.destroy();
+      return shown;
+    };
+    expect(chipsShown(false)).toBeGreaterThan(0);
+    expect(chipsShown(true)).toBe(0);
   });
 
   it("tints nothing on a stage without it", () => {

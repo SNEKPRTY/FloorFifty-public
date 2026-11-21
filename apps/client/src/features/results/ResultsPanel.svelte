@@ -172,7 +172,7 @@
   {#snippet hero()}
     <!-- One calm reveal, longer than a menu step: the race is over, and the
          heading is the thing worth reading first. -->
-    <Rise long class="ff-results__column">
+    <Rise long class="ff-results__column" data-joined={formFactor.current === "tablet-portrait" ? "" : undefined}>
       <Chip frame="title" class="ff-results__headline">
         <h1 data-testid="winner" class="ff-results__winner m-0 text-[clamp(1.375rem,6vw,2rem)] text-aq-ink short:text-[1.25rem]">
           {#if winner === undefined}{m.results_race_over()}{:else}{@const [before = "", after = ""] = m.results_winner({ name: "\u0000" }).split("\u0000")}{before}<span class="ff-results__winner-name">{winner}</span>{after}{/if}
@@ -243,6 +243,11 @@
     margin: 0;
     font: 600 var(--ff-type-hint) / 1.2 var(--ff-font-ui);
     color: var(--ff-text-2);
+  }
+  /* An upright iPad draws these rows big; their words take the button step (24 on the glass,
+     divided by the shell's zoom as every step is) so a row is not a large box around 12 px. */
+  :global([data-form-factor="tablet-portrait"]) .ff-result {
+    --ff-type-hint: calc(var(--ff-step-button) / var(--ff-ui-zoom, 1));
   }
   /* Place, portrait, name and result on one line where they fit; on a narrow
      panel the result goes under the name, never a third line. */
@@ -365,6 +370,13 @@
      band of empty sky under it (visual audit, 2026-10-05). */
   :global(.ff-screen-frame[data-arrangement="stack"] .ff-results__column:not(.ff-results__panel-wrap)) {
     align-self: end;
+  }
+
+  /* An upright iPad (the root marks it): the headline and the standings are one block, centred in
+     the screen, not a headline up in the sky and the standings low with a band of sky between. */
+  :global(.ff-screen-frame[data-arrangement="stack"] .ff-screen-frame__content:has(> .ff-screen-frame__hero > [data-joined])) {
+    grid-template-rows: auto auto;
+    align-content: center;
   }
 
   /* A translated line, so the UI face the h1 rule gives it, not the brand's

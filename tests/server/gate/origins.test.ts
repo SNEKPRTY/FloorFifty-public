@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { originPolicy } from "../../../apps/server/src/gate/origins";
+import { allowedOriginsFromEnv, originPolicy } from "../../../apps/server/src/gate/origins";
 
 describe("the origin policy (release readiness §6.5)", () => {
   it("allows everything when no list is set, as in dev", () => {
@@ -40,5 +40,26 @@ describe("the origin policy (release readiness §6.5)", () => {
     expect(policy.allows("http://g-ab12cd34.localhost")).toBe(false);
     expect(policy.allows("http://g-other.localhost:8787")).toBe(false);
     expect(policy.allows("https://g-ab12cd34.localhost:8787")).toBe(false);
+  });
+
+  it("adds FLOOR_FIFTY_EXTRA_ORIGINS (a Fly secret) to the fly.toml list", () => {
+    const list = allowedOriginsFromEnv({
+      FLOOR_FIFTY_ALLOWED_ORIGINS: "https://ruken-games.ruken-beta.workers.dev",
+      FLOOR_FIFTY_EXTRA_ORIGINS: "https://g-abc1234567.ruken.dev",
+    });
+    const policy = originPolicy(list);
+    expect(policy.allows("https://ruken-games.ruken-beta.workers.dev")).toBe(true);
+    expect(policy.allows("https://g-abc1234567.ruken.dev")).toBe(true);
+    expect(policy.allows("https://g-other12345.ruken.dev")).toBe(false);
+  });
+
+  it("uses either list alone, and stays unset (open, dev only) when both are empty", () => {
+    expect(allowedOriginsFromEnv({ FLOOR_FIFTY_ALLOWED_ORIGINS: "https://a.test" })).toBe("https://a.test");
+    expect(allowedOriginsFromEnv({ FLOOR_FIFTY_EXTRA_ORIGINS: "https://b.test" })).toBe("https://b.test");
+    expect(allowedOriginsFromEnv({ FLOOR_FIFTY_EXTRA_ORIGINS: " " })).toBeUndefined();
+  });
+
+  it("ignores a trailing slash on a listed origin, since a browser never sends one", () => {
+    expect(originPolicy("https://g-abc1234567.ruken.dev/").allows("https://g-abc1234567.ruken.dev")).toBe(true);
   });
 });

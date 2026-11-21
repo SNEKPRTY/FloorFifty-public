@@ -54,24 +54,24 @@ describe("the pause overlay with a controller", () => {
   });
 });
 
-describe("the pause overlay of the tutorial", () => {
-  const openWithSkip = async () => {
+describe("the pause overlay of the story", () => {
+  const openWithRestart = async () => {
     component = mount(PauseOverlay, {
       target: document.body,
-      props: { settings: fakeSettings(), onResume: vi.fn(), onLeave: vi.fn(), onSkip: vi.fn(), status: null, confirmLeave: false },
+      props: { settings: fakeSettings(), onResume: vi.fn(), onLeave: vi.fn(), onRestart: vi.fn(), status: null, confirmLeave: false },
     });
     await tick();
   };
 
-  it("groups Skip tutorial and Leave tutorial apart from the rest, Leave red and Skip blue", async () => {
-    await openWithSkip();
+  it("groups Start chapter again and Leave story apart from the rest, Leave red and Start again blue", async () => {
+    await openWithRestart();
     const group = byTestId("pause-exit-group")!;
     expect(group).not.toBeNull();
-    expect(group.contains(byTestId("pause-skip"))).toBe(true);
+    expect(group.contains(byTestId("pause-restart"))).toBe(true);
     expect(group.contains(byTestId("pause-leave"))).toBe(true);
     for (const id of ["pause-resume", "pause-mute", "pause-settings"]) expect(group.contains(byTestId(id))).toBe(false);
     expect(byTestId("pause-leave")!.classList.contains("ff-aq-control--stop")).toBe(true);
-    expect(byTestId("pause-skip")!.className).not.toMatch(/ff-aq-control--(go|stop)/);
+    expect(byTestId("pause-restart")!.className).not.toMatch(/ff-aq-control--(go|stop)/);
     expect(byTestId("pause-resume")!.classList.contains("ff-aq-control--go")).toBe(true);
   });
 

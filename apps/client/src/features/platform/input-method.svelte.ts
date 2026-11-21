@@ -1,7 +1,7 @@
 /**
  * The input method the player last used, app-wide.
  *
- * The Controls tab and the tutorial teach the controls in the player's hand,
+ * The Controls tab and the story teach the controls in the player's hand,
  * and neither lives inside a race, so this cannot be the race's
  * `InputManager`. A mouse moves nothing: it says nothing about which
  * controls to teach.

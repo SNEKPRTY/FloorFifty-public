@@ -1,421 +1,2191 @@
 {
-  "document_title": {"note":"The browser tab's title. The game's name; keep it unless the game is marketed under a local name."},
-  "shell_tap_to_start": {"note":"Splash screen, on a touch device: the player taps anywhere to begin.","maxChars":32},
-  "shell_press_to_start": {"note":"Splash screen, with a mouse or keyboard: any click or key begins.","maxChars":48},
-  "shell_quick_actions": {"note":"Screen-reader name of the small toolbar under the title menu (full screen, tutorial, socials, mute)."},
-  "shell_fullscreen": {"note":"Quick-action button that puts the game in full screen.","maxChars":16},
-  "shell_fullscreen_exit": {"note":"Quick-action button shown while in full screen; leaves it.","maxChars":18},
-  "shell_tutorial": {"note":"Quick-action button that starts the one-minute tutorial.","maxChars":16},
-  "shell_contact": {"note":"Quick-action button that opens the studio's social links (Instagram, X, Discord, website).","maxChars":16},
-  "shell_fullscreen_ios_title": {"note":"Title of the dialog that explains full screen on iPhone and iPad.","maxChars":32},
-  "shell_fullscreen_ios_body": {"note":"Body of that dialog: Safari cannot hide its bars, so add the game to the home screen. Use the names iOS shows in the player's language for Share and Add to Home Screen."},
-  "shell_mute": {"note":"Button that silences all sound (title, pause and quick actions).","maxChars":12},
-  "shell_unmute": {"note":"The same button while sound is off: turns sound back on.","maxChars":12},
-  "shell_close": {"note":"Screen-reader name of a dialog's close (×) button."},
-  "shell_loading": {"note":"Screen-reader name of a loading bar."},
-  "shell_working": {"note":"Small spinner label while the game waits on the network.","maxChars":16},
-  "shell_loading_slow": {"note":"A quiet line under the loader after 8 seconds: the game is still loading on a slow connection, and nothing is wrong. Not an error.","maxChars":72},
-  "shell_loading_race": {"note":"Shown while a race's art and music load.","maxChars":32},
-  "shell_loading_tutorial": {"note":"Shown while the tutorial's art and music load.","maxChars":32},
-  "shell_rotate_hint": {"note":"Toast on a phone held upright: suggests turning it sideways.","maxChars":48},
-  "shell_rotate_dismiss": {"note":"Screen-reader name of the OK button that closes the rotate hint."},
-  "shell_ok": {"note":"Button that dismisses a hint or a coach mark.","maxChars":12},
-  "shell_swipe_coach": {"note":"One-time swipe coach for finite practice/races only. The timer restarts this finite ascent. Survival uses a separate coach.","maxChars":90},
-  "shell_connection_offline": {"note":"Race badge when the connection is lost; shown uppercased in Latin scripts.","maxChars":16},
-  "shell_connection_connecting": {"note":"Race badge while connecting.","maxChars":16},
-  "shell_connection_connected": {"note":"Connection state when healthy (announced, rarely shown).","maxChars":16},
-  "shell_connection_reconnecting": {"note":"Race badge while reconnecting after a drop.","maxChars":16},
-  "shell_privacy_title": {"note":"Settings: heading of the privacy note, the button at the bottom of the Settings tab."},
-  "shell_privacy_name": {"note":"Privacy note: what happens to the player's typed name."},
-  "shell_privacy_device": {"note":"Privacy note: where settings and progress are stored."},
-  "shell_privacy_no_cookies": {"note":"Privacy note: no cookies or analytics in the game itself."},
-  "shell_privacy_errors": {"note":"Privacy note: anonymous error reports kept on the server for 14 days."},
-  "shell_privacy_contact": {"note":"Privacy note: how to ask about data. 'Socials' is the name of the menu's Socials button (Instagram, X, Discord, website)."},
-  "shell_privacy_ruken": {"note":"Privacy note: when the game is played inside the Ruken store. Keep the name Ruken in Latin letters."},
-  "shell_privacy_reset": {"note":"Privacy note: how a player resets everything (there is no reset button)."},
-  "shell_contact_website": {"note":"Socials dialog: screen-reader name of the globe icon that links to the studio's website.","maxChars":32},
-  "shell_boot_failed_title": {"note":"Shown when the game cannot start at all. Keep the game's name, Floor Fifty, in Latin letters."},
-  "shell_boot_failed_body": {"note":"Under the title when the game cannot start at all (no WebGL, no server, a failed load). Says what happened and what to do; never a technical reason. Shown with a Try again button."},
-  "shell_try_again": {"note":"Button on the start failure: reloads the page.","maxChars":16},
-  "title_nav": {"note":"Screen-reader name of the title screen's menu.","screenshot":"docs/i18n/screens/en/tablet-portrait-title.png"},
-  "title_play": {"note":"The title screen's first button: goes to the lobby to find or make a room.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-title.png"},
-  "title_character": {"note":"Title button that opens the character page.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-title.png"},
-  "title_settings": {"note":"Title button, and the Settings dialog's title.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-title.png"},
-  "title_contact": {"note":"The Socials dialog's title.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-title.png"},
-  "title_quit": {"note":"Title button, only in the installed app: closes the game.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-title.png"},
-  "title_tagline": {"note":"Mode-neutral tagline under the wordmark. Do not imply every race requires floor collection or reaching a finite top.","maxChars":48,"screenshot":"docs/i18n/screens/en/tablet-portrait-title.png"},
-  "shell_back": {"note":"Button that goes back one screen (lobby, character page, pause settings). An arrow is drawn beside it separately.","maxChars":12},
-  "lobby_your_name": {"note":"Lobby: label and placeholder of the field where the player types the name others see.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_default_name": {"note":"Lobby: the name a racer gets when the name field is left empty, shown as that field's placeholder; every player in the room sees it as this racer's name. {number} is two digits, 10 to 99, and the whole name fits 16 characters. A neutral word for a racer or player, no gender.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_find_race": {"note":"Lobby: joins the fullest open public room, or opens one. An arrow is drawn after it separately.","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_room_code": {"note":"Label of the six-character code that identifies a room (lobby field, and in the ready room).","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_join_room": {"note":"Lobby button once a code is typed: joins that room.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_create_room": {"note":"Lobby button while the code field is empty: makes a private room for friends.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_up_to_four": {"note":"Lobby: a room holds at most four racers.","maxChars":32,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_room_code_length": {"note":"Lobby error when the typed code is the wrong length. {length} is a number (6).","screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_touch_help_buttons": {"note":"Lobby help on a touch device using the on-screen buttons.","maxChars":90,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_touch_help_swipe": {"note":"Lobby help on a touch device using swipe steering.","maxChars":90,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_tutorial_offer": {"note":"One-time offer in the lobby to a new player. The practice it offers ends on Survival's lava.","maxChars":60,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_tutorial_try": {"note":"Accepts the tutorial offer.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_tutorial_skip": {"note":"Declines the tutorial offer.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "settings_action_move": {"note":"Controls legend: steer left and right (beside its keys).","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_action_fast_fall": {"note":"Controls legend: drop fast through the air onto the floor below.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_action_restart": {"note":"Controls legend: start the climb over from the bottom.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "ready_room_code_copied": {"note":"Ready room status after the room code was copied to the clipboard.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_room_code_copy_failed": {"note":"Ready room status when the clipboard refused.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_copy": {"note":"Button that copies the room code.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_copied": {"note":"The same button just after copying.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_ready": {"note":"A racer's state, and the ready button: ready to start.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_waiting": {"note":"A racer's state: seated but not ready yet.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_not_ready": {"note":"Ready button for a racer who is ready: tap to take it back.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_race_cpus": {"note":"Ready button in a public room nobody else joined: start a race against computer racers who fill the empty seats.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_leave_room": {"note":"Ready room button: leave and go back to the lobby.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_change_character": {"note":"Screen-reader name of the player's seat button; {name} is the character they wear.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_random": {"note":"The character choice that picks one at random.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_laps": {"note":"Label of the lap-count choice in the ready room.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_clock": {"note":"Label of the ready room's choice of Survival's clock length in minutes; the options are the digits 1, 3 and 5. Shown only when Survival is chosen, in the Laps row's place.","maxChars":12},
-  "ready_everyone_ready": {"note":"Ready room status for the host while racers are not ready.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_waiting_room": {"note":"Ready room status for a non-host racer.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_clock_searching": {"note":"Public room status while searching; {clock} is the time left as m:ss.","maxChars":40,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_clock_starting": {"note":"Public room status before the start; {clock} is m:ss.","maxChars":40,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_clock_solo": {"note":"Public room status when the search ended with no one.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_start_announcement": {"note":"Spoken once when the start clock begins; {seconds} is how many are left.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_announce_searching": {"note":"Spoken once when the search for racers begins.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_announce_solo": {"note":"Spoken once when the search ends with no one.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_announce_cpu_added": {"note":"Spoken once when a computer racer takes a seat; {name} is its name (Blaze, Koi, Sunny or Moth).","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_announce_cpu_removed": {"note":"Spoken once when a computer racer's seat is freed; {name} is its name.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_your_character": {"note":"Screen-reader name of the showcase panel of the player's character.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_change_character_button": {"note":"Button on the showcase that opens the character page.","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_character": {"note":"Character page: its heading, its panel's name and its grid's name.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_random_character": {"note":"Screen-reader name of the random tile on the character page.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_colour": {"note":"Character page: name of the four colour swatches.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_colour_scarlet": {"note":"Seat colour name (swatch).","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_colour_cyan": {"note":"Seat colour name (swatch).","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_colour_gold": {"note":"Seat colour name (swatch).","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_colour_violet": {"note":"Seat colour name (swatch).","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_colour_held": {"note":"Screen-reader name of a swatch another player wears; P{seat} is their seat (P1–P4).","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_short": {"note":"A seat's short name, P1 to P4 (player number).","maxChars":4,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_pick": {"note":"Character page button: wear the character being viewed.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_picked": {"note":"Character page button once the viewed character is worn.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_progress": {"note":"Progress toward an unlock, for screen readers (e.g. 3 of 5 games).","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_tile_page": {"note":"Screen-reader name of a page of tiles; {title} is the pack's name.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_tile_dlc": {"note":"Screen-reader name of a tile only in a DLC pack.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_tile_locked": {"note":"Screen-reader name of a locked tile; {details} is the unlock hint and progress.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_players": {"note":"Screen-reader name of the list of players in the select step.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "select_dlc": {"note":"Pill on a tile only in a DLC pack.","maxChars":6,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_dlc_pack": {"note":"Why a tile cannot be picked: it is in the named DLC pack.","maxChars":28,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_locked": {"note":"Tag on a player whose pick is locked in (capitals in English are authored).","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "a11y_previous_page": {"note":"Screen-reader name of the arrow that turns a tile grid back a page."},
-  "a11y_next_page": {"note":"Screen-reader name of the arrow that turns a tile grid forward a page."},
-  "select_stage_kind": {"note":"What the stage picker picks: a stage (the city the race is climbed in). Also the reveal's heading.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_song_kind": {"note":"What the song picker picks. Also the reveal's heading.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_stage_heading": {"note":"Heading of the stage step in a room.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_song_heading": {"note":"Heading of the song step in a room.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_stage_previous": {"note":"Screen-reader name of the stage picker's left arrow.","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_stage_next": {"note":"Screen-reader name of the stage picker's right arrow.","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_stage_group": {"note":"Screen-reader name of the stage picker's row of dots.","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_song_previous": {"note":"Screen-reader name of the song picker's left arrow.","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_song_next": {"note":"Screen-reader name of the song picker's right arrow.","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_song_group": {"note":"Screen-reader name of the song picker's row of dots.","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_random_stage": {"note":"The stage choice that leaves it to chance.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_random_song": {"note":"The song choice that leaves it to chance.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_item_position": {"note":"Screen-reader line for the picker's current slide, e.g. 'Stage, 2 of 3: Snow Shrine'.","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_lock_in": {"note":"Picker button: confirm this choice.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_locked_in": {"note":"Picker button once the choice is confirmed.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seconds": {"note":"Seconds left in the pick step; s is the unit symbol.","maxChars":6,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_reveal_your_pick": {"note":"Under the reveal when the player's own pick won.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seed_random": {"note":"The stage's course seed is drawn fresh for this race. On the seed chip and in the player rows; a short adjective for the course.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seed_classic": {"note":"The stage's original, hand-made course layout rather than a random one. On the seed chip and in the player rows.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seed_label": {"note":"Title of the dialog where a player enters a six-digit course seed (a number that picks the course layout).","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seed_chip_label": {"note":"Screen-reader name of the seed chip button. {choice} is Random, Classic or a code like #048213.","maxChars":60,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seed_enter": {"note":"Button in the seed dialog's options: type a specific seed.","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seed_confirm": {"note":"Primary button in the seed dialog: race on the entered seed.","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_seed_digit": {"note":"Screen-reader name of one digit cell in the seed editor. {position} is 1 to 6.","maxChars":40,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_reveal_pick_of": {"note":"Under the reveal when another player's pick won; {name} is their typed name.","maxChars":32,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_carousel": {"note":"Screen-reader role description of a picker that turns through slides (lowercase, as screen readers say roles).","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "select_slide": {"note":"Screen-reader role description of one slide in a carousel (lowercase).","screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "race_go": {"note":"Spoken by the screen reader when the race starts (not the on-stage GO! word, which stays English).","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_lap_completed": {"note":"Spoken when a racer finishes a lap; {name} is a typed player name.","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_finished_first": {"note":"Spoken when the winner finishes; {name} is a typed player name.","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_player_out": {"note":"Spoken when a racer falls below their rising screen in Survival and is out of the race; {name} is a typed player name. No gender."},
-  "race_did_not_start": {"note":"Spoken when a racer never moved from the start; {name} is a typed player name.","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_a_racer": {"note":"Stands in for a racer's name the game no longer knows (they left).","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_pause_menu": {"note":"Screen-reader name of the HUD's pause button.","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_progress": {"note":"Screen-reader name of the HUD panel with floors, time and lap.","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_floors": {"note":"HUD label over the floor count (shown uppercased in Latin scripts).","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_time": {"note":"HUD label over the race timer.","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_lap": {"note":"HUD label over the lap count (e.g. 2/3).","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_racers": {"note":"Screen-reader name of the HUD's list of racers.","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_restart_at": {"note":"Screen-reader name of the timer, which restarts the climb when tapped; {time} is m:ss.t.","screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_status_dns": {"note":"A racer who never left the start. Spelled out; the stylesheet draws it in capitals in the HUD and results.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_status_out": {"note":"A racer who fell below their rising screen in Survival and is out of the race; said in their HUD row's name.","maxChars":10},
-  "race_out": {"note":"Pop-up over the race when the local racer falls below their rising screen in Survival and is out.","maxChars":10},
-  "race_status_offline": {"note":"A racer whose connection dropped; their seat is held.","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_lap_banner": {"note":"Big banner when the player starts a new lap (capitals are authored in English).","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_final_lap": {"note":"Big banner when the player starts the last lap.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-race.png"},
-  "race_word_slam": {"note":"Pops above a racer who slams onto a floor from a fast fall. Short and loud, a cartoon sound word.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_streak": {"note":"Pops above a racer landing several floors in a row without falling: the count, like a combo counter. Keep the × and the number.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_streak_nice": {"note":"The floor streak at five or more: the count and a short cheer.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_streak_great": {"note":"The floor streak at ten or more: the count and a bigger cheer than NICE.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_skip": {"note":"Pops above a racer who lands two or more floors higher than their last one.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_pass": {"note":"Pops above the player's racer when they overtake a rival.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_lead": {"note":"Pops when the player takes first place, and stamps their finish when they win: 'first!', short.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_lap": {"note":"Stamped big in the middle of the screen when the player starts lap 2 of a three-lap race.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_final_ascent": {"note":"Stamped big in the middle of the screen when the player starts the last lap, as the announcer says 'Final ascent!'.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_last_floor": {"note":"Stamped big in the middle of the screen when the player is one floor from the top.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_whoops": {"note":"Pops above a racer who falls. Friendly and playful, never mocking.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_word_back": {"note":"Pops above a racer who lands on a floor right after falling: they are back in it.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "pause_title": {"note":"The pause overlay's title.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "pause_race_continues": {"note":"Pause overlay: online, the race keeps running while you are paused. Keep the {#strong}…{/strong} around the first phrase.","screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "pause_resume": {"note":"Pause overlay: go back to racing.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "pause_settings": {"note":"Pause overlay: open settings.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "pause_skip_tutorial": {"note":"Pause overlay in the tutorial: end it now.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "pause_leave_race": {"note":"Pause overlay: leave this race.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "pause_leave_confirm": {"note":"Pause overlay: asks before leaving.","screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "pause_cancel": {"note":"Pause overlay: do not leave after all.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-pause.png"},
-  "tutorial_exit": {"note":"Tutorial pause overlay: leave the tutorial.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "results_race_over": {"note":"Results heading when nobody finished.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-results.png"},
-  "results_winner": {"note":"Results heading; {name} is the winner's typed name.","maxChars":32,"screenshot":"docs/i18n/screens/en/tablet-portrait-results.png"},
-  "results_race_again": {"note":"Results button: back to the ready room with the same racers.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-results.png"},
-  "results_return_to_menu": {"note":"Results button: leave the room for the lobby.","maxChars":18,"screenshot":"docs/i18n/screens/en/tablet-portrait-results.png"},
-  "a11y_touch_left": {"note":"Screen-reader name of the on-screen left button."},
-  "a11y_touch_right": {"note":"Screen-reader name of the on-screen right button."},
-  "a11y_touch_fast_fall": {"note":"Screen-reader name of the on-screen fast-fall button."},
-  "a11y_touch_controls": {"note":"Screen-reader name of the touch controls guide (a carousel of four pictures)."},
-  "a11y_slide_position": {"note":"Screen-reader name of one slide in a carousel."},
-  "a11y_show_slide": {"note":"Screen-reader name of a carousel dot that jumps to that slide."},
-  "a11y_previous": {"note":"Screen-reader name of a carousel's back arrow."},
-  "a11y_next": {"note":"Screen-reader name of a carousel's forward arrow."},
-  "tutorial_touch_steer": {"note":"Touch guide (Settings → Controls), first picture's caption: drag a thumb in the lower half of the screen to steer left and right.","maxChars":60,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_touch_fast_fall": {"note":"Touch guide, second caption: flick either thumb downward to drop fast onto the floor below.","maxChars":60,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_touch_restart": {"note":"Touch guide, third caption: tapping the race timer starts the climb over from the bottom.","maxChars":60,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_touch_buttons_hint": {"note":"Touch guide caption: on-screen buttons can replace swiping, in Settings.","maxChars":60,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_ready_title": {"note":"Title of the dialog at the end of the tutorial.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_ready_body": {"note":"Body of the end-of-tutorial dialog. Teaches the default mode, Survival, as the player sees it: lava rises from below, stay above it, and you are out if it reaches you.","screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_race_now": {"note":"End of tutorial: go find a race.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_play_now": {"note":"End of tutorial (reached from the title): go to the lobby.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_back_to_title": {"note":"End of tutorial: return to the title screen.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_step_toast": {"note":"Tutorial step counter, compact (e.g. 2/5).","maxChars":6,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_step_of": {"note":"Tutorial step counter (e.g. 2 of 5).","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_caught": {"note":"Tutorial card while the last step restarts after the lava caught the player. Replaces the step's prompt until they move again. Use the same word for lava as tutorial_ready_body.","maxChars":60,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_your_move": {"note":"After the step counter: it is the player's turn to act (lowercase in English).","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_done": {"note":"Shown when a tutorial step is completed, after a check mark.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "tutorial_skip": {"note":"Button on the tutorial's instruction card: ends the tutorial now and leaves it.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "a11y_glyph_left_stick": {"note":"A controller's left thumbstick."},
-  "a11y_glyph_view": {"note":"The Xbox controller's View button (use the name Xbox uses in your language)."},
-  "a11y_glyph_menu": {"note":"The Xbox controller's Menu button (use the name Xbox uses in your language)."},
-  "a11y_glyph_create": {"note":"The PlayStation controller's Create button (use the name Sony uses in your language)."},
-  "a11y_glyph_options": {"note":"The PlayStation controller's Options button (use the name Sony uses in your language)."},
-  "a11y_glyph_bottom_button": {"note":"An unknown controller's bottom face button."},
-  "a11y_glyph_right_button": {"note":"An unknown controller's right face button."},
-  "a11y_glyph_bottom_or_trigger": {"note":"An unknown controller: either the bottom face button or the right trigger."},
-  "a11y_glyph_select": {"note":"An unknown controller's Select button."},
-  "a11y_glyph_start": {"note":"An unknown controller's Start button."},
-  "error_invalid_room": {"note":"Joining failed: no room has the code the player typed.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_room_full": {"note":"Joining failed: the room already has four racers.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_room_racing": {"note":"Joining failed: the room's race has started; it cannot be joined mid-race.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_version_mismatch": {"note":"The game was updated; this tab runs an older version. Keep the name Floor Fifty in Latin letters.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_room_closed": {"note":"The player's room ended (the server closed it).","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_simulation_failure": {"note":"The server stopped a race it could not run correctly; no result was kept.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_not_host": {"note":"A non-host tried to change a room setting.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_malformed_message": {"note":"The room refused a change it could not apply at this moment.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_rate_limited": {"note":"The player sent requests too quickly.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_server_updating": {"note":"A new version of the game is being deployed, or this tab is newer than the server. Shown with a Reload button.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_server_busy": {"note":"The game server has reached its room limit. Shown with a Try again button.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_unreachable": {"note":"The game server could not be reached: the phone is offline, the server is down or a gateway failed. Shown when Find a race, Create room or Join room fails before any room answers; the player may have typed no code. Shown with a Try again button.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_server_moving": {"note":"A deploy closed the player's lobby; pressing the button below finds a race or creates a room on the new version.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_still_searching": {"note":"A lone racer tried to start before the search for others ended.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_last_room_closed": {"note":"On reopening the game: the room the player was in no longer exists.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_presentation_failed": {"note":"An internal failure sent the player back to the menu.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_seat_lost": {"note":"The connection dropped and did not return before the room gave the seat away.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_room_silent": {"note":"The room went quiet before its race began.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_game_assets": {"note":"The game's art or sound did not download.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_race_assets": {"note":"The race's art or music did not download.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_unknown": {"note":"A failure with no known cause.","screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_try_again": {"note":"Error panel button: retry the failed load.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_reload": {"note":"Error panel button when the game is out of date: reloads the page.","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "error_dismiss": {"note":"Error panel button: close the message.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-error-panel.png"},
-  "content_character_diver_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_frog_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_kitsune_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_knight_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_oni_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_penguin_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_witch_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_ninja_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_character_robo_name": {"note":"A character's name, on its tile and on the character page.","maxChars":24},
-  "content_pack_base_title": {"note":"A content pack's name, over its page of tiles and in 'DLC · … pack'.","maxChars":12},
-  "content_pack_friends_title": {"note":"A content pack's name, over its page of tiles and in 'DLC · … pack'.","maxChars":12},
-  "content_pack_after_hours_title": {"note":"A content pack's name, over its page of tiles and in 'DLC · … pack'.","maxChars":12},
-  "content_stage_dawn_name": {"note":"A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "content_stage_rooftops_name": {"note":"A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "content_stage_snow_shrine_name": {"note":"A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "content_stage_sunken_dome_name": {"note":"A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-select.png"},
-  "content_tutorial_fast_fall_buttons": {"note":"A tutorial step's instruction for a player on a touch screen, with the on-screen buttons. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_fast_fall_gamepad": {"note":"A tutorial step's instruction for a player with a controller. {glyph} is where the controller's button picture goes; keep it exactly once. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_fast_fall_keyboard": {"note":"A tutorial step's instruction for a player with a keyboard. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_fast_fall_touch": {"note":"A tutorial step's instruction for a player on a touch screen, swiping. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_land_gamepad": {"note":"A tutorial step's instruction for a player with a controller. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_land_keyboard": {"note":"A tutorial step's instruction for a player with a keyboard. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_land_moving_buttons": {"note":"A tutorial step's instruction for a player on a touch screen, with the on-screen buttons. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_land_moving_gamepad": {"note":"A tutorial step's instruction for a player with a controller. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_land_moving_keyboard": {"note":"A tutorial step's instruction for a player with a keyboard. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_land_moving_touch": {"note":"A tutorial step's instruction for a player on a touch screen, swiping. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_land_touch": {"note":"A tutorial step's instruction for a player on a touch screen, swiping. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_move_buttons": {"note":"A tutorial step's instruction for a player on a touch screen, with the on-screen buttons. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_move_gamepad": {"note":"A tutorial step's instruction for a player with a controller. {glyph} is where the controller's button picture goes; keep it exactly once. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_move_keyboard": {"note":"A tutorial step's instruction for a player with a keyboard. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_move_touch": {"note":"A tutorial step's instruction for a player on a touch screen, swiping. Words like Floors must match the HUD label's translation.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_survive_gamepad": {"note":"Tutorial, last step: lava rises from below and the player must keep climbing above it. The same words on every input. Use the same word for lava as tutorial_ready_body.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_survive_keyboard": {"note":"Tutorial, last step: lava rises from below and the player must keep climbing above it. The same words on every input. Use the same word for lava as tutorial_ready_body.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_tutorial_survive_touch": {"note":"Tutorial, last step: lava rises from below and the player must keep climbing above it. The same words on every input. Use the same word for lava as tutorial_ready_body.","maxChars":140,"screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "content_unlock_any_match_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "content_unlock_games_5_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "content_unlock_games_2_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "content_unlock_games_3_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "content_unlock_games_7_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "content_unlock_games_8_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "content_unlock_games_10_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "content_unlock_share_replay_hint": {"note":"How to earn a locked item, shown on its tile. Short.","maxChars":32},
-  "tutorial_the_button": {"note":"Stands in for a controller button picture inside a tutorial sentence when no picture can be shown (lowercase, mid-sentence).","screenshot":"docs/i18n/screens/en/tablet-portrait-tutorial-prompt.png"},
-  "settings_sections": {"note":"Screen-reader name of the Settings dialog's two tabs.","screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_tab_settings": {"note":"Tab with audio, display, touch and language options.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_tab_controls": {"note":"Tab listing every control for keyboard, controller and touch.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_language": {"note":"Settings group that chooses the game's language.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_language_automatic": {"note":"Language choice that follows the browser's language. Shown as the word alone, with no flag.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_language_changed": {"note":"Spoken once after the language changes; {language} is the language's own name (日本語, Español…).","screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_audio": {"note":"Settings group for sound.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_mute": {"note":"Checkbox that silences all sound.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_mute_unfocused": {"note":"Checkbox: silence the game while another window or app has focus. \"Background\" means the game window is not the active one.","maxChars":28,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_music": {"note":"Volume slider for the music.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_effects": {"note":"Volume slider for sound effects.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_announcer": {"note":"Volume slider for the announcer's voice.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_rumble": {"note":"Checkbox: controller rumble and phone vibration on slams, falls, laps and the finish.","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_display": {"note":"Settings group for graphics.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_lcd_panel": {"note":"Checkbox: draws the race through a retro LCD-screen filter.","maxChars":28,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_character_effects": {"note":"Checkbox: the racers' squash, dust, camera shake and the pop-up words (SLAM!, LAP 2!). Off hides them; sounds still play.","maxChars":28,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_stage_effects": {"note":"Checkbox: the backgrounds moving and flashing to the music (the splash, the menus and the race), and the race's weather and lighting events. Off keeps every backdrop still.","maxChars":28,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_trajectory_guide": {"note":"Checkbox: draws subtle bounce apex arc and notch showing trajectory.","maxChars":28,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "photosensitivity_title": {"note":"Heading of the photosensitivity (epilepsy) warning shown before the game's first splash screen. Use the wording players know from console games in this language.","maxChars":40,"screenshot":"docs/i18n/screens/en/tablet-portrait-photosensitivity.png"},
-
-  "photosensitivity_body": {"note":"The photosensitivity (epilepsy) warning itself: flashing lights and screen shake may cause seizures; stop and see a doctor if symptoms appear. Follow the customary platform wording in this language.","maxChars":360,"screenshot":"docs/i18n/screens/en/tablet-portrait-photosensitivity.png"},
-  "photosensitivity_choose": {"note":"Small heading over the two effect switches (Character effects, Stage effects) in the warning.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-photosensitivity.png"},
-  "photosensitivity_later": {"note":"Line under the switches: the same switches are in the Settings menu.","maxChars":80,"screenshot":"docs/i18n/screens/en/tablet-portrait-photosensitivity.png"},
-  "photosensitivity_continue": {"note":"Button that closes the warning and goes on to the game.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-photosensitivity.png"},
-  "settings_graphics_quality": {"note":"Choice of High, Medium or Low graphics.","maxChars":24,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_quality_high": {"note":"Graphics quality: best looking.","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_quality_medium": {"note":"Graphics quality: balanced.","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_quality_low": {"note":"Graphics quality: fastest, for slower devices.","maxChars":10,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_touch_controls": {"note":"Settings group: how to steer on a touch screen.","maxChars":20,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_touch_swipe": {"note":"Touch steering by dragging a thumb.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_touch_buttons": {"note":"Touch steering with on-screen buttons.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_method_keyboard": {"note":"Controls tab: heading for keyboard controls.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_method_gamepad": {"note":"Controls tab: heading for game controller controls.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_method_touch": {"note":"Controls tab: heading for touch-screen controls.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_current_input": {"note":"After a controls heading: the way the player is playing right now.","screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_keys_or": {"note":"Between two sets of keys that do the same thing (A D or ← →).","maxChars":6,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_action_mute": {"note":"Controls legend: the key that mutes sound.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_action_pause": {"note":"Controls legend: the key or button that pauses.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_action_choose": {"note":"Controls legend: the controller button that selects in menus.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "settings_action_back": {"note":"Controls legend: the controller button that goes back in menus.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-settings.png"},
-  "lobby_code_letter": {"note":"Screen-reader name of one letter cell in the room code editor a gamepad player uses. {position} is 1 to 6.","maxChars":40,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "lobby_have_code": {"note":"Lobby: introduces the field for joining a friend's room by its code.","maxChars":32,"screenshot":"docs/i18n/screens/en/tablet-portrait-menu.png"},
-  "shell_landscape_title": {"note":"Title of the card shown on a phone held sideways in a browser.","maxChars":32},
-  "shell_landscape_body": {"note":"Why a phone held sideways in a browser must go fullscreen or turn upright."},
-  "shell_landscape_go": {"note":"Button on that card: enter fullscreen.","maxChars":20},
-  "shell_landscape_upright": {"note":"The alternative on that card: hold the phone upright instead.","maxChars":32},
-  "gate_home_lead": {"note":"The turn-upright card on iPhone Safari: the line between the title (turn your phone upright) and the three Home Screen steps, saying the steps are the other way to play sideways. Use the iOS name for Home Screen.","maxChars":56},
-  "gate_home_step_1": {"note":"The turn-upright card on iPhone Safari: step 1 of 3 to play sideways from the Home Screen. Use the names iOS shows in the player's language for Share and Add to Home Screen; keep Floor Fifty in Latin letters.","maxChars":32},
-  "gate_home_step_2": {"note":"The turn-upright card on iPhone Safari: step 2 of 3 to play sideways from the Home Screen. Use the names iOS shows in the player's language for Share and Add to Home Screen; keep Floor Fifty in Latin letters.","maxChars":40},
-  "gate_home_step_3": {"note":"The turn-upright card on iPhone Safari: step 3 of 3 to play sideways from the Home Screen. Use the names iOS shows in the player's language for Share and Add to Home Screen; keep Floor Fifty in Latin letters.","maxChars":48},
-  "shell_more": {"note":"Under a list that scrolls, on a line of its own: how many rows are below. The arrow points down to them.","maxChars":16},
-  "shell_loading_replay": {"note":"Shown while a replay's art and music load.","maxChars":32},
-  "race_floor": {"note":"HUD label over the floor reached, in Survival (one floor, not a count of them).","maxChars":10,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_best_floor": {"note":"Screen-reader prefix before the best floor reached in Survival (an arrow is drawn instead).","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-results-infinite.png"},
-  "race_replay": {"note":"Chip in place of the timer label while watching a replay.","maxChars":10,"screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "race_place": {"note":"A race place as a player says it (1st, 2nd, 3rd, 4th). Use your language's own ordinal form.","maxChars":6,"screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_leads": {"note":"In the standings pill: who is ahead; {name} is a typed player name.","screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_standings_pill": {"note":"Screen-reader name of the standings pill; {standings} is its text (e.g. 2nd / 4 · Sable leads).","screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_row_best": {"note":"Screen-reader name of a racer's HUD row in Survival: seat number, typed name, best floor reached."},
-  "race_row_leads": {"note":"Added to a racer's HUD row name when they hold the best floor (lowercase, after a comma).","screenshot":"docs/i18n/screens/en/desktop-race.png"},
-  "race_restart_left": {"note":"Screen-reader name of the Infinite clock, which restarts the climb when tapped; {clock} is the time left (m:ss)."},
-  "race_time_up": {"note":"Spoken when a Survival race's clock runs out, before the winner is named."},
-  "ready_seats": {"note":"Screen-reader name of the ready room's list of four seats.","screenshot":"docs/i18n/screens/en/desktop-ready-room.png"},
-  "ready_rules_button": {"note":"Ready room: the button that opens the race's rules (what the chosen race means, how walls work), and the title of that sheet. A noun.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-ready-room.png"},
-  "ready_floors": {"note":"Label of the ready room's choice of race length (20 floors, 50 floors, Survival).","maxChars":12,"screenshot":"docs/i18n/screens/en/desktop-ready-room.png"},
-  "ready_mode_survival_tagline": {"note":"Ready-room Survival rules: rising lava eliminates, last standing wins, clock ranks survivors by best reached floor, no restart.","maxChars":220,"screenshot":"docs/i18n/screens/en/desktop-ready-room.png"},
-  "replay_position": {"note":"Screen-reader name of the replay's scrub bar.","screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_room_moved": {"note":"Notice while watching a replay: the room has moved on to its next race."},
-  "replay_play": {"note":"Screen-reader name of the replay's play button.","screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_pause": {"note":"Screen-reader name of the replay's pause button.","screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_speed": {"note":"Screen-reader name of the replay's speed button; {speed} is the current speed (1, 2…), × is the times sign.","screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_previous_racer": {"note":"Screen-reader name: follow the previous racer in the replay.","screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_next_racer": {"note":"Screen-reader name: follow the next racer in the replay.","screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_restart": {"note":"Replay button: play it again from the start.","maxChars":16,"screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_back_to_results": {"note":"Replay button: return to the results screen.","maxChars":18,"screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_watch_again": {"note":"Button at the end of a replay: play it again.","maxChars":18,"screenshot":"docs/i18n/screens/en/desktop-replay-end.png"},
-  "replay_drifted": {"note":"Notice when a replay stopped matching the race it recorded."},
-  "replay_version_mismatch": {"note":"Why a replay cannot be played: it was recorded by another version."},
-  "replay_hint_touch": {"note":"Hint over a replay with its controls hidden, on a touch screen.","maxChars":32},
-  "replay_hint_gamepad": {"note":"The same hint with a controller.","maxChars":40},
-  "replay_hint_pointer": {"note":"The same hint with a mouse or keyboard.","maxChars":48},
-  "results_tie": {"note":"Results tag on racers who share a place.","maxChars":8,"screenshot":"docs/i18n/screens/en/desktop-results.png"},
-  "results_replay_unavailable": {"note":"Results: Watch replay is disabled because the replay has not arrived yet.","maxChars":28},
-  "results_standings": {"note":"Screen-reader name of the results list.","screenshot":"docs/i18n/screens/en/desktop-results.png"},
-  "results_watch_replay": {"note":"Results button: watch the race's replay.","maxChars":18,"screenshot":"docs/i18n/screens/en/desktop-results.png"},
-  "results_best_floor": {"note":"A Survival result: the best floor reached.","maxChars":14,"screenshot":"docs/i18n/screens/en/desktop-results-infinite.png"},
-  "results_out_at": {"note":"A Survival result for a racer who fell below their rising screen: their best floor and when they went out ({time} is m:ss.hh).","maxChars":20},
-  "results_best_floor_at": {"note":"A Survival result: the best floor and when it was reached ({time} is m:ss.hh).","maxChars":14,"screenshot":"docs/i18n/screens/en/desktop-results-infinite.png"},
-  "content_mode_floors_20_name": {"note":"A race length the room picks: a floor count, or Survival (each racer's screen rises; fall below it and you are out; the last one standing wins, else the best floor when the clock runs out).","maxChars":14,"screenshot":"docs/i18n/screens/en/desktop-ready-room.png"},
-  "content_mode_floors_50_name": {"note":"A race length the room picks: a floor count, or Survival (each racer's screen rises; fall below it and you are out; the last one standing wins, else the best floor when the clock runs out).","maxChars":14,"screenshot":"docs/i18n/screens/en/desktop-ready-room.png"},
-  "content_mode_infinite_name": {"note":"A race length the room picks: a floor count, or Survival (each racer's screen rises; fall below it and you are out; the last one standing wins, else the best floor when the clock runs out).","maxChars":14,"screenshot":"docs/i18n/screens/en/desktop-results-infinite.png"},
-  "ready_seat_open": {"note":"An empty seat in the room, waiting for a racer.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_add_cpu": {"note":"Shown to the host in an empty seat's status slot: tap the seat to add a computer racer. 'CPU' is the arcade word for a computer-controlled player; keep it if your language's games use it.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_add_cpu_label": {"note":"Screen-reader name of an empty seat's button, for the host: adds a computer racer.","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_cpu": {"note":"A computer racer's seat, in the status slot where a person's Ready sits.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_remove_cpu_label": {"note":"Screen-reader name of a computer racer's seat button, for the host; {name} is the racer's name (Blaze, Koi, Sunny or Moth).","screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_you": {"note":"Tag on the player's own seat.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_change": {"note":"Tag on the player's own seat: tap to change character.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_seat_host": {"note":"Tag on the seat of the player who made the room.","maxChars":12,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "select_new": {"note":"Select and character pages: a small badge on a stage, song or character tile the player has just unlocked and not yet looked at. Drawn in capitals in Latin scripts; one short word.","maxChars":6},
-  "select_coming_soon": {"note":"A tile from a downloadable pack that is not out yet: its button label, and the line on its pack's sheet.","maxChars":16,"screenshot":"docs/i18n/screens/en/tablet-portrait-coming-soon.png"},
-  "select_coming_soon_label": {"note":"Screen reader name of the button on a not-yet-released pack's slide. {pack} is the pack's description, e.g. \"DLC · Neon pack\".","maxChars":60},
-  "select_item_position_new": {"note":"Screen reader name of a picker slide the player has just unlocked: \"Stage, 3 of 4: Snow Shrine, new\". Same as select_item_position, plus that it is new.","maxChars":80},
-  "ready_tile_new": {"note":"Screen reader name of a character tile the player has just unlocked and not yet looked at. {label} is the character's name.","maxChars":40},
-  "results_unlock_new_song": {"note":"Results: the banner across the top when a race unlocks a song. Drawn in capitals in Latin scripts; a short shout.","maxChars":14,"screenshot":"docs/i18n/screens/en/desktop-unlock-banner.png"},
-  "results_unlock_new_challenger": {"note":"Results: the banner across the top when a race unlocks a character, in the fighting-game tradition of a new challenger appearing. A short shout.","maxChars":18,"screenshot":"docs/i18n/screens/en/desktop-unlock-banner.png"},
-  "results_unlocked_song": {"note":"Said to a screen reader (and shown in the replay window's status line) when a song unlocks. {title} is the song's title, never translated.","maxChars":60},
-  "results_unlocked_character": {"note":"Said to a screen reader (and shown in the replay window's status line) when a character unlocks. {name} is the character's name.","maxChars":60},
-  "replay_save_video": {"note":"Replay window: an icon button that downloads the race as a video file. Its tooltip and screen reader name.","maxChars":20,"screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_share_video": {"note":"Replay window: an icon button that opens the device's share sheet with the race video. Its tooltip and screen reader name.","maxChars":20,"screenshot":"docs/i18n/screens/en/desktop-replay.png"},
-  "replay_video_unavailable": {"note":"Replay window: shown under the two video buttons when this race has no recording to save or share.","maxChars":30},
-  "replay_names_note": {"note":"Replay window: said once, the first time a player shares a video, so they know the other players' names are in it.","maxChars":40},
-  "replay_share_failed": {"note":"Replay window status line: the share sheet failed; the Save button still works.","maxChars":60},
-  "replay_share_unsupported": {"note":"Replay window status line: this browser has no way to share a video file; the Save button still works.","maxChars":60},
-  "replay_share_failed_framed": {"note":"Replay window status line inside a host page's frame, where there is no Save button: the share sheet failed.","maxChars":60},
-  "replay_share_unsupported_framed": {"note":"Replay window status line inside a host page's frame, where there is no Save button: this browser has no way to share a video file.","maxChars":60},
-  "replay_share_text": {"note":"The message sent along with a shared race video when nobody won (e.g. a Survival race). {stage} is the stage's name.","maxChars":50},
-  "replay_share_text_winner": {"note":"The message sent along with a shared race video. {winner} is a player's name; {stage} is the stage's name.","maxChars":50},
-  "race_bark_blaze_cruising": {"note":"Shouted by Blaze, a brash computer racer, as it pulls well ahead. Cocky, playful.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "race_bark_blaze_pushing": {"note":"Shouted by Blaze, a brash computer racer, as it charges to catch up. All-out, reckless.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "race_bark_sunny_cruising": {"note":"Shouted by Sunny, a showboating computer racer, as it pulls well ahead and shows off.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "race_bark_sunny_pushing": {"note":"Shouted by Sunny, a showboating computer racer, as it falls behind: asking the leader to slow down.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "race_bark_moth_cruising": {"note":"Sighed by Moth, a nervous computer racer, relieved to be ahead.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "race_bark_moth_pushing": {"note":"Squeaked by Moth, a nervous computer racer, panicking as it falls behind.","maxChars":14,"screenshot":"docs/i18n/screens/en/tablet-portrait-ready-room.png"},
-  "ready_mode_finite_tagline": {"note": "Ready room, finite 20/50-floor races. Every floor needs credit; a missed floor can be collected by descending. Reset is optional."},
-  "ready_mode_featured": {"note":"A small badge beside the default race mode (Survival) in the ready room's Floors row, marking it as the one to try. One word; drawn in capitals by the stylesheet.","maxChars":14,"screenshot":"docs/i18n/screens/en/desktop-ready-room.png"},
-  "ready_wall_help": {"note": "Practice/ready help. Pushing into the side of a floor makes the racer bounce higher but does not count the floor; landing on top does."},
-  "shell_swipe_coach_survival": {"note": "One-time swipe coach in Survival. No restart exists. Keep the lava reminder and both input instructions."},
-  "tutorial_practice_label": {"note": "Small label on every practice prompt. This tutorial practises the controls on a short climb and ends on Survival's lava; its end card and the ready room explain Survival, the default mode."},
-  "race_missed_floor_help": {"note":"Finite-race HUD recovery reminder, paired with a downward platform arrow. Descent can collect the missed floor; it is not dead or unreachable."},
-  "idle_warning_line": {"note":"A banner, shown a minute before the server closes a room nobody has done anything in for ten minutes. Press the button beside it to keep the room open.","maxChars":96},
-  "idle_warning_keep": {"note":"The button on that banner: keeps the room open for another ten minutes.","maxChars":24},
-  "race_start_press": {"note":"Large words over the player's racer at the start of a Survival race, until their first input. Keyboard and controller. Any key or button starts them.","maxChars":40},
-  "race_start_tap": {"note":"The same, on touch. Any tap starts them.","maxChars":24},
-  "race_out_line": {"note":"One line under OUT! when the lava catches the player in Survival. Says why, and that the race goes on.","maxChars":80},
-  "race_hint_edge": {"note":"One-time toast in a keyboard or controller player's first Survival race. Lava rises from below; use the same word for lava as tutorial_ready_body.","maxChars":48},
-  "race_hint_floors": {"note":"One-time toast at the start of a player's first 20- or 50-floor race: every floor counts.","maxChars":110},
-  "race_hint_restart_keyboard": {"note":"One-time toast in the same race: how to start the climb over. R is a key legend and stays R.","maxChars":60},
-  "race_hint_restart_gamepad": {"note":"One-time toast in the same race: how to start the climb over. {glyph} is the controller's button picture; keep it once.","maxChars":60},
-  "race_hint_restart_touch": {"note":"One-time toast in the same race: how to start the climb over. The timer is the race clock at the top of the screen.","maxChars":60}
+  "content_story_city_title": {
+    "note": "The name of a story chapter: on the chapter list, the chapter card and the results. A place, not a sentence. Short.",
+    "maxChars": 24
+  },
+  "content_story_deep_title": {
+    "note": "The name of a story chapter: on the chapter list, the chapter card and the results. A place, not a sentence. Short.",
+    "maxChars": 24
+  },
+  "content_story_prompt_fast_fall_buttons": {
+    "note": "A short chip over the story's climb that names a control, for a player on a touch screen with the on-screen buttons",
+    "maxChars": 56
+  },
+  "content_story_prompt_fast_fall_gamepad": {
+    "note": "A short chip over the story's climb that names a control, for a player on a controller. {glyph} is where the controller's button picture goes; keep it exactly once.",
+    "maxChars": 56
+  },
+  "content_story_prompt_fast_fall_keyboard": {
+    "note": "A short chip over the story's climb that names a control, for a player on a keyboard",
+    "maxChars": 56
+  },
+  "content_story_prompt_fast_fall_touch": {
+    "note": "A short chip over the story's climb that names a control, for a player on a touch screen, swiping",
+    "maxChars": 56
+  },
+  "content_story_prompt_move_buttons": {
+    "note": "A short chip over the story's climb that names a control, for a player on a touch screen with the on-screen buttons",
+    "maxChars": 56
+  },
+  "content_story_prompt_move_gamepad": {
+    "note": "A short chip over the story's climb that names a control, for a player on a controller. {glyph} is where the controller's button picture goes; keep it exactly once.",
+    "maxChars": 56
+  },
+  "content_story_prompt_move_keyboard": {
+    "note": "A short chip over the story's climb that names a control, for a player on a keyboard",
+    "maxChars": 56
+  },
+  "content_story_prompt_move_touch": {
+    "note": "A short chip over the story's climb that names a control, for a player on a touch screen, swiping",
+    "maxChars": 56
+  },
+  "document_title": {
+    "note": "The browser tab's title. The game's name; keep it unless the game is marketed under a local name."
+  },
+  "shell_tap_to_start": {
+    "note": "Splash screen, on a touch device: the player taps anywhere to begin.",
+    "maxChars": 32
+  },
+  "shell_press_to_start": {
+    "note": "Splash screen, with a mouse or keyboard: any click or key begins.",
+    "maxChars": 48
+  },
+  "shell_quick_actions": {
+    "note": "Screen-reader name of the small toolbar under the title menu (full screen, tutorial, socials, mute)."
+  },
+  "shell_fullscreen": {
+    "note": "Quick-action button that puts the game in full screen.",
+    "maxChars": 16
+  },
+  "shell_fullscreen_exit": {
+    "note": "Quick-action button shown while in full screen; leaves it.",
+    "maxChars": 18
+  },
+  "shell_story": {
+    "note": "Quick-action button on the title that starts the short story.",
+    "maxChars": 16
+  },
+  "shell_contact": {
+    "note": "Quick-action button that opens the studio's social links (Instagram, X, Discord, website).",
+    "maxChars": 16
+  },
+  "shell_fullscreen_ios_title": {
+    "note": "Title of the dialog that explains full screen on iPhone and iPad.",
+    "maxChars": 32
+  },
+  "shell_fullscreen_ios_body": {
+    "note": "Body of that dialog: Safari cannot hide its bars, so add the game to the home screen. Use the names iOS shows in the player's language for Share and Add to Home Screen."
+  },
+  "shell_mute": {
+    "note": "Button that silences all sound (title, pause and quick actions).",
+    "maxChars": 12
+  },
+  "shell_unmute": {
+    "note": "The same button while sound is off: turns sound back on.",
+    "maxChars": 12
+  },
+  "shell_close": {
+    "note": "Screen-reader name of a dialog's close (×) button."
+  },
+  "shell_loading": {
+    "note": "Screen-reader name of a loading bar."
+  },
+  "shell_working": {
+    "note": "Small spinner label while the game waits on the network.",
+    "maxChars": 16
+  },
+  "shell_loading_slow": {
+    "note": "A quiet line under the loader after 8 seconds: the game is still loading on a slow connection, and nothing is wrong. Not an error.",
+    "maxChars": 72
+  },
+  "shell_loading_race": {
+    "note": "Shown while a race's art and music load.",
+    "maxChars": 32
+  },
+  "shell_loading_story": {
+    "note": "Shown while the story's art and music load.",
+    "maxChars": 32
+  },
+  "shell_rotate_hint": {
+    "note": "Toast on a phone held upright: suggests turning it sideways.",
+    "maxChars": 48
+  },
+  "shell_rotate_dismiss": {
+    "note": "Screen-reader name of the OK button that closes the rotate hint."
+  },
+  "shell_ok": {
+    "note": "Button that dismisses a hint or a coach mark.",
+    "maxChars": 12
+  },
+  "shell_swipe_coach": {
+    "note": "One-time swipe coach for finite practice/races only. The timer restarts this finite ascent. Survival uses a separate coach.",
+    "maxChars": 90
+  },
+  "shell_connection_offline": {
+    "note": "Race badge when the connection is lost; shown uppercased in Latin scripts.",
+    "maxChars": 16
+  },
+  "shell_connection_connecting": {
+    "note": "Race badge while connecting.",
+    "maxChars": 16
+  },
+  "shell_connection_connected": {
+    "note": "Connection state when healthy (announced, rarely shown).",
+    "maxChars": 16
+  },
+  "shell_connection_reconnecting": {
+    "note": "Race badge while reconnecting after a drop.",
+    "maxChars": 16
+  },
+  "shell_privacy_title": {
+    "note": "Settings: heading of the privacy note, the button at the bottom of the Settings tab."
+  },
+  "shell_privacy_name": {
+    "note": "Privacy note: what happens to the player's typed name."
+  },
+  "shell_privacy_device": {
+    "note": "Privacy note: where settings and progress are stored."
+  },
+  "shell_privacy_no_cookies": {
+    "note": "Privacy note: no cookies or analytics in the game itself."
+  },
+  "shell_privacy_errors": {
+    "note": "Privacy note: anonymous error reports kept on the server for 14 days."
+  },
+  "shell_privacy_contact": {
+    "note": "Privacy note: how to ask about data. 'Socials' is the name of the menu's Socials button (Instagram, X, Discord, website)."
+  },
+  "shell_privacy_ruken": {
+    "note": "Privacy note: when the game is played inside the Ruken store. Keep the name Ruken in Latin letters."
+  },
+  "shell_privacy_reset": {
+    "note": "Privacy note: how a player resets everything (there is no reset button)."
+  },
+  "shell_contact_website": {
+    "note": "Socials dialog: screen-reader name of the globe icon that links to the studio's website.",
+    "maxChars": 32
+  },
+  "shell_boot_failed_title": {
+    "note": "Shown when the game cannot start at all. Keep the game's name, Floor Fifty, in Latin letters."
+  },
+  "shell_boot_failed_body": {
+    "note": "Under the title when the game cannot start at all (no WebGL, no server, a failed load). Says what happened and what to do; never a technical reason. Shown with a Try again button."
+  },
+  "shell_try_again": {
+    "note": "Button on the start failure: reloads the page.",
+    "maxChars": 16
+  },
+  "title_nav": {
+    "note": "Screen-reader name of the title screen's menu.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-title.png"
+  },
+  "title_play": {
+    "note": "The title screen's first button: goes to the lobby to find or make a room.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-title.png"
+  },
+  "title_character": {
+    "note": "Title button that opens the character page.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-title.png"
+  },
+  "title_settings": {
+    "note": "Title button, and the Settings dialog's title.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-title.png"
+  },
+  "title_contact": {
+    "note": "The Socials dialog's title.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-title.png"
+  },
+  "title_quit": {
+    "note": "Title button, only in the installed app: closes the game.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-title.png"
+  },
+  "title_tagline": {
+    "note": "Mode-neutral tagline under the wordmark. Do not imply every race requires floor collection or reaching a finite top.",
+    "maxChars": 48,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-title.png"
+  },
+  "shell_back": {
+    "note": "Button that goes back one screen (lobby, character page, pause settings). An arrow is drawn beside it separately.",
+    "maxChars": 12
+  },
+  "lobby_your_name": {
+    "note": "Lobby: label and placeholder of the field where the player types the name others see.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_default_name": {
+    "note": "Lobby: the name a racer gets when the name field is left empty, shown as that field's placeholder; every player in the room sees it as this racer's name. {number} is two digits, 10 to 99, and the whole name fits 16 characters. A neutral word for a racer or player, no gender.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_find_race": {
+    "note": "Lobby: joins the fullest open public room, or opens one. An arrow is drawn after it separately.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_room_code": {
+    "note": "Label of the six-character code that identifies a room (lobby field, and in the ready room).",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_join_room": {
+    "note": "Lobby button once a code is typed: joins that room.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_create_room": {
+    "note": "Lobby button while the code field is empty: makes a private room for friends.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_up_to_four": {
+    "note": "Lobby: a room holds at most four racers.",
+    "maxChars": 32,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_room_code_length": {
+    "note": "Lobby error when the typed code is the wrong length. {length} is a number (6).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_touch_help_buttons": {
+    "note": "Lobby help on a touch device using the on-screen buttons.",
+    "maxChars": 90,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_touch_help_swipe": {
+    "note": "Lobby help on a touch device using swipe steering.",
+    "maxChars": 90,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "settings_action_move": {
+    "note": "Controls legend: steer left and right (beside its keys).",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_action_fast_fall": {
+    "note": "Controls legend: drop fast through the air onto the floor below.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_action_restart": {
+    "note": "Controls legend: start the climb over from the bottom.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "ready_room_code_copied": {
+    "note": "Ready room status after the room code was copied to the clipboard.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_room_code_copy_failed": {
+    "note": "Ready room status when the clipboard refused.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_copy": {
+    "note": "Button that copies the room code.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_copied": {
+    "note": "The same button just after copying.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_ready": {
+    "note": "A racer's state, and the ready button: ready to start.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_waiting": {
+    "note": "A racer's state: seated but not ready yet.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_not_ready": {
+    "note": "Ready button for a racer who is ready: tap to take it back.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_race_cpus": {
+    "note": "Ready button in a public room nobody else joined: start a race against computer racers who fill the empty seats.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_leave_room": {
+    "note": "Ready room button: leave and go back to the lobby.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_change_character": {
+    "note": "Screen-reader name of the player's seat button; {name} is the character they wear.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_random": {
+    "note": "The character choice that picks one at random.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_laps": {
+    "note": "Label of the lap-count choice in the ready room.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_clock": {
+    "note": "Label of the ready room's choice of Survival's clock length in minutes; the options are the digits 1, 3 and 5. Shown only when Survival is chosen, in the Laps row's place.",
+    "maxChars": 12
+  },
+  "ready_everyone_ready": {
+    "note": "Ready room status for the host while racers are not ready.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_waiting_room": {
+    "note": "Ready room status for a non-host racer.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_clock_searching": {
+    "note": "Public room status while searching; {clock} is the time left as m:ss.",
+    "maxChars": 40,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_clock_starting": {
+    "note": "Public room status before the start; {clock} is m:ss.",
+    "maxChars": 40,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_clock_solo": {
+    "note": "Public room status when the search ended with no one.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_start_announcement": {
+    "note": "Spoken once when the start clock begins; {seconds} is how many are left.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_announce_searching": {
+    "note": "Spoken once when the search for racers begins.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_announce_solo": {
+    "note": "Spoken once when the search ends with no one.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_announce_cpu_added": {
+    "note": "Spoken once when a computer racer takes a seat; {name} is its name (Blaze, Koi, Sunny or Moth).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_announce_cpu_removed": {
+    "note": "Spoken once when a computer racer's seat is freed; {name} is its name.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_your_character": {
+    "note": "Screen-reader name of the showcase panel of the player's character.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_change_character_button": {
+    "note": "Button on the showcase that opens the character page.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_character": {
+    "note": "Character page: its heading, its panel's name and its grid's name.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_random_character": {
+    "note": "Screen-reader name of the random tile on the character page.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_colour": {
+    "note": "Character page: name of the four colour swatches.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_colour_scarlet": {
+    "note": "Seat colour name (swatch).",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_colour_cyan": {
+    "note": "Seat colour name (swatch).",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_colour_gold": {
+    "note": "Seat colour name (swatch).",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_colour_violet": {
+    "note": "Seat colour name (swatch).",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_colour_held": {
+    "note": "Screen-reader name of a swatch another player wears; P{seat} is their seat (P1–P4).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_short": {
+    "note": "A seat's short name, P1 to P4 (player number).",
+    "maxChars": 4,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_pick": {
+    "note": "Character page button: wear the character being viewed.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_picked": {
+    "note": "Character page button once the viewed character is worn.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_progress": {
+    "note": "Progress toward an unlock, for screen readers (e.g. 3 of 5 games).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_tile_page": {
+    "note": "Screen-reader name of a page of tiles; {title} is the pack's name.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_tile_dlc": {
+    "note": "Screen-reader name of a tile only in a DLC pack.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_tile_locked": {
+    "note": "Screen-reader name of a locked tile; {details} is the unlock hint and progress.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_players": {
+    "note": "Screen-reader name of the list of players in the select step.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "select_dlc": {
+    "note": "Pill on a tile only in a DLC pack.",
+    "maxChars": 6,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_dlc_pack": {
+    "note": "Why a tile cannot be picked: it is in the named DLC pack.",
+    "maxChars": 28,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_locked": {
+    "note": "Tag on a player whose pick is locked in (capitals in English are authored).",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "a11y_previous_page": {
+    "note": "Screen-reader name of the arrow that turns a tile grid back a page."
+  },
+  "a11y_next_page": {
+    "note": "Screen-reader name of the arrow that turns a tile grid forward a page."
+  },
+  "select_stage_kind": {
+    "note": "What the stage picker picks: a stage (the city the race is climbed in). Also the reveal's heading.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_song_kind": {
+    "note": "What the song picker picks. Also the reveal's heading.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_stage_heading": {
+    "note": "Heading of the stage step in a room.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_song_heading": {
+    "note": "Heading of the song step in a room.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_stage_previous": {
+    "note": "Screen-reader name of the stage picker's left arrow.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_stage_next": {
+    "note": "Screen-reader name of the stage picker's right arrow.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_stage_group": {
+    "note": "Screen-reader name of the stage picker's row of dots.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_song_previous": {
+    "note": "Screen-reader name of the song picker's left arrow.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_song_next": {
+    "note": "Screen-reader name of the song picker's right arrow.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_song_group": {
+    "note": "Screen-reader name of the song picker's row of dots.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_random_stage": {
+    "note": "The stage choice that leaves it to chance.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_random_song": {
+    "note": "The song choice that leaves it to chance.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_item_position": {
+    "note": "Screen-reader line for the picker's current slide, e.g. 'Stage, 2 of 3: Snow Shrine'.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_lock_in": {
+    "note": "Picker button: confirm this choice.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_locked_in": {
+    "note": "Picker button once the choice is confirmed.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seconds": {
+    "note": "Seconds left in the pick step; s is the unit symbol.",
+    "maxChars": 6,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_reveal_your_pick": {
+    "note": "Under the reveal when the player's own pick won.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seed_random": {
+    "note": "The stage's course seed is drawn fresh for this race. On the seed chip and in the player rows; a short adjective for the course.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seed_classic": {
+    "note": "The stage's original, hand-made course layout rather than a random one. On the seed chip and in the player rows.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seed_label": {
+    "note": "Title of the dialog where a player enters a six-digit course seed (a number that picks the course layout).",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seed_chip_label": {
+    "note": "Screen-reader name of the seed chip button. {choice} is Random, Classic or a code like #048213.",
+    "maxChars": 60,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seed_enter": {
+    "note": "Button in the seed dialog's options: type a specific seed.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seed_confirm": {
+    "note": "Primary button in the seed dialog: race on the entered seed.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_seed_digit": {
+    "note": "Screen-reader name of one digit cell in the seed editor. {position} is 1 to 6.",
+    "maxChars": 40,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_reveal_pick_of": {
+    "note": "Under the reveal when another player's pick won; {name} is their typed name.",
+    "maxChars": 32,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_carousel": {
+    "note": "Screen-reader role description of a picker that turns through slides (lowercase, as screen readers say roles).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "select_slide": {
+    "note": "Screen-reader role description of one slide in a carousel (lowercase).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "race_go": {
+    "note": "Spoken by the screen reader when the race starts (not the on-stage GO! word, which stays English).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_lap_completed": {
+    "note": "Spoken when a racer finishes a lap; {name} is a typed player name.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_finished_first": {
+    "note": "Spoken when the winner finishes; {name} is a typed player name.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_player_out": {
+    "note": "Spoken when a racer falls below their rising screen in Survival and is out of the race; {name} is a typed player name. No gender."
+  },
+  "race_did_not_start": {
+    "note": "Spoken when a racer never moved from the start; {name} is a typed player name.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_a_racer": {
+    "note": "Stands in for a racer's name the game no longer knows (they left).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_pause_menu": {
+    "note": "Screen-reader name of the HUD's pause button.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_progress": {
+    "note": "Screen-reader name of the HUD panel with floors, time and lap.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_floors": {
+    "note": "HUD label over the floor count (shown uppercased in Latin scripts).",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_time": {
+    "note": "HUD label over the race timer.",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_lap": {
+    "note": "HUD label over the lap count (e.g. 2/3).",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_racers": {
+    "note": "Screen-reader name of the HUD's list of racers.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_restart_at": {
+    "note": "Screen-reader name of the timer, which restarts the climb when tapped; {time} is m:ss.t.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_status_dns": {
+    "note": "A racer who never left the start. Spelled out; the stylesheet draws it in capitals in the HUD and results.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_status_out": {
+    "note": "A racer who fell below their rising screen in Survival and is out of the race; said in their HUD row's name.",
+    "maxChars": 10
+  },
+  "race_out": {
+    "note": "Pop-up over the race when the local racer falls below their rising screen in Survival and is out.",
+    "maxChars": 10
+  },
+  "race_status_offline": {
+    "note": "A racer whose connection dropped; their seat is held.",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_lap_banner": {
+    "note": "Big banner when the player starts a new lap (capitals are authored in English).",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_final_lap": {
+    "note": "Big banner when the player starts the last lap.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-race.png"
+  },
+  "race_word_slam": {
+    "note": "Pops above a racer who slams onto a floor from a fast fall. Short and loud, a cartoon sound word.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_streak": {
+    "note": "Pops above a racer landing several floors in a row without falling: the count, like a combo counter. Keep the × and the number.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_streak_nice": {
+    "note": "The floor streak at five or more: the count and a short cheer.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_streak_great": {
+    "note": "The floor streak at ten or more: the count and a bigger cheer than NICE.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_skip": {
+    "note": "Pops above a racer who lands two or more floors higher than their last one.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_pass": {
+    "note": "Pops above the player's racer when they overtake a rival.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_lead": {
+    "note": "Pops when the player takes first place, and stamps their finish when they win: 'first!', short.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_lap": {
+    "note": "Stamped big in the middle of the screen when the player starts lap 2 of a three-lap race.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_final_ascent": {
+    "note": "Stamped big in the middle of the screen when the player starts the last lap, as the announcer says 'Final ascent!'.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_last_floor": {
+    "note": "Stamped big in the middle of the screen when the player is one floor from the top.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_whoops": {
+    "note": "Pops above a racer who falls. Friendly and playful, never mocking.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_word_back": {
+    "note": "Pops above a racer who lands on a floor right after falling: they are back in it.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "pause_title": {
+    "note": "The pause overlay's title.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "pause_race_continues": {
+    "note": "Pause overlay: online, the race keeps running while you are paused. Keep the {#strong}…{/strong} around the first phrase.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "pause_resume": {
+    "note": "Pause overlay: go back to racing.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "pause_settings": {
+    "note": "Pause overlay: open settings.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "pause_leave_race": {
+    "note": "Pause overlay: leave this race.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "pause_leave_confirm": {
+    "note": "Pause overlay: asks before leaving.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "pause_cancel": {
+    "note": "Pause overlay: do not leave after all.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "story_exit": {
+    "note": "Story pause overlay: leave the story.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "results_race_over": {
+    "note": "Results heading when nobody finished.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-results.png"
+  },
+  "results_winner": {
+    "note": "Results heading; {name} is the winner's typed name.",
+    "maxChars": 32,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-results.png"
+  },
+  "results_race_again": {
+    "note": "Results button: back to the ready room with the same racers.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-results.png"
+  },
+  "results_return_to_menu": {
+    "note": "Results button: leave the room for the lobby.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-results.png"
+  },
+  "a11y_touch_left": {
+    "note": "Screen-reader name of the on-screen left button."
+  },
+  "a11y_touch_right": {
+    "note": "Screen-reader name of the on-screen right button."
+  },
+  "a11y_touch_fast_fall": {
+    "note": "Screen-reader name of the on-screen fast-fall button."
+  },
+  "a11y_touch_controls": {
+    "note": "Screen-reader name of the touch controls guide (a carousel of four pictures)."
+  },
+  "a11y_slide_position": {
+    "note": "Screen-reader name of one slide in a carousel."
+  },
+  "a11y_show_slide": {
+    "note": "Screen-reader name of a carousel dot that jumps to that slide."
+  },
+  "a11y_previous": {
+    "note": "Screen-reader name of a carousel's back arrow."
+  },
+  "a11y_next": {
+    "note": "Screen-reader name of a carousel's forward arrow."
+  },
+  "touch_guide_steer": {
+    "note": "Touch guide (Settings → Controls), first picture's caption: drag a thumb in the lower half of the screen to steer left and right.",
+    "maxChars": 60,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "touch_guide_fast_fall": {
+    "note": "Touch guide, second caption: flick either thumb downward to drop fast onto the floor below.",
+    "maxChars": 60,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "touch_guide_restart": {
+    "note": "Touch guide, third caption: tapping the race timer starts the climb over from the bottom.",
+    "maxChars": 60,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "touch_guide_buttons_hint": {
+    "note": "Touch guide caption: on-screen buttons can replace swiping, in Settings.",
+    "maxChars": 60,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "story_race_now": {
+    "note": "End of tutorial: go find a race.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "story_play_now": {
+    "note": "End of tutorial (reached from the title): go to the lobby.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "a11y_glyph_left_stick": {
+    "note": "A controller's left thumbstick."
+  },
+  "a11y_glyph_view": {
+    "note": "The Xbox controller's View button (use the name Xbox uses in your language)."
+  },
+  "a11y_glyph_menu": {
+    "note": "The Xbox controller's Menu button (use the name Xbox uses in your language)."
+  },
+  "a11y_glyph_create": {
+    "note": "The PlayStation controller's Create button (use the name Sony uses in your language)."
+  },
+  "a11y_glyph_options": {
+    "note": "The PlayStation controller's Options button (use the name Sony uses in your language)."
+  },
+  "a11y_glyph_bottom_button": {
+    "note": "An unknown controller's bottom face button."
+  },
+  "a11y_glyph_right_button": {
+    "note": "An unknown controller's right face button."
+  },
+  "a11y_glyph_bottom_or_trigger": {
+    "note": "An unknown controller: either the bottom face button or the right trigger."
+  },
+  "a11y_glyph_select": {
+    "note": "An unknown controller's Select button."
+  },
+  "a11y_glyph_start": {
+    "note": "An unknown controller's Start button."
+  },
+  "error_invalid_room": {
+    "note": "Joining failed: no room has the code the player typed.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_room_full": {
+    "note": "Joining failed: the room already has four racers.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_room_racing": {
+    "note": "Joining failed: the room's race has started; it cannot be joined mid-race.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_version_mismatch": {
+    "note": "The game was updated; this tab runs an older version. Keep the name Floor Fifty in Latin letters.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_room_closed": {
+    "note": "The player's room ended (the server closed it).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_simulation_failure": {
+    "note": "The server stopped a race it could not run correctly; no result was kept.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_not_host": {
+    "note": "A non-host tried to change a room setting.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_malformed_message": {
+    "note": "The room refused a change it could not apply at this moment.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_rate_limited": {
+    "note": "The player sent requests too quickly.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_server_updating": {
+    "note": "A new version of the game is being deployed, or this tab is newer than the server. Shown with a Reload button.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_server_busy": {
+    "note": "The game server has reached its room limit. Shown with a Try again button.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_unreachable": {
+    "note": "The game server could not be reached: the phone is offline, the server is down or a gateway failed. Shown when Find a race, Create room or Join room fails before any room answers; the player may have typed no code. Shown with a Try again button.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_server_moving": {
+    "note": "A deploy closed the player's lobby; pressing the button below finds a race or creates a room on the new version.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_still_searching": {
+    "note": "A lone racer tried to start before the search for others ended.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_last_room_closed": {
+    "note": "On reopening the game: the room the player was in no longer exists.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_presentation_failed": {
+    "note": "An internal failure sent the player back to the menu.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_seat_lost": {
+    "note": "The connection dropped and did not return before the room gave the seat away.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_room_silent": {
+    "note": "The room went quiet before its race began.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_game_assets": {
+    "note": "The game's art or sound did not download.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_race_assets": {
+    "note": "The race's art or music did not download.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_unknown": {
+    "note": "A failure with no known cause.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_try_again": {
+    "note": "Error panel button: retry the failed load.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_reload": {
+    "note": "Error panel button when the game is out of date: reloads the page.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "error_dismiss": {
+    "note": "Error panel button: close the message.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-error-panel.png"
+  },
+  "content_character_diver_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_frog_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_kitsune_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_knight_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_oni_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_penguin_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_witch_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_ninja_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_character_robo_name": {
+    "note": "A character's name, on its tile and on the character page.",
+    "maxChars": 24
+  },
+  "content_pack_base_title": {
+    "note": "A content pack's name, over its page of tiles and in 'DLC · … pack'.",
+    "maxChars": 12
+  },
+  "content_pack_friends_title": {
+    "note": "A content pack's name, over its page of tiles and in 'DLC · … pack'.",
+    "maxChars": 12
+  },
+  "content_pack_after_hours_title": {
+    "note": "A content pack's name, over its page of tiles and in 'DLC · … pack'.",
+    "maxChars": 12
+  },
+  "content_stage_dawn_name": {
+    "note": "A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "content_stage_rooftops_name": {
+    "note": "A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "content_stage_snow_shrine_name": {
+    "note": "A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "content_stage_sunken_dome_name": {
+    "note": "A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
+  },
+  "content_unlock_any_match_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "content_unlock_games_5_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "content_unlock_games_2_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "content_unlock_games_3_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "content_unlock_games_7_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "content_unlock_games_8_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "content_unlock_games_10_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "content_unlock_share_replay_hint": {
+    "note": "How to earn a locked item, shown on its tile. Short.",
+    "maxChars": 32
+  },
+  "tutorial_the_button": {
+    "note": "Stands in for a controller button picture inside a tutorial sentence when no picture can be shown (lowercase, mid-sentence).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
+  },
+  "settings_sections": {
+    "note": "Screen-reader name of the Settings dialog's two tabs.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_tab_settings": {
+    "note": "Tab with audio, display, touch and language options.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_tab_controls": {
+    "note": "Tab listing every control for keyboard, controller and touch.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_language": {
+    "note": "Settings group that chooses the game's language.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_language_automatic": {
+    "note": "Language choice that follows the browser's language. Shown as the word alone, with no flag.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_language_changed": {
+    "note": "Spoken once after the language changes; {language} is the language's own name (日本語, Español…).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_audio": {
+    "note": "Settings group for sound.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_mute": {
+    "note": "Checkbox that silences all sound.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_mute_unfocused": {
+    "note": "Checkbox: silence the game while another window or app has focus. \"Background\" means the game window is not the active one.",
+    "maxChars": 28,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_music": {
+    "note": "Volume slider for the music.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_effects": {
+    "note": "Volume slider for sound effects.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_announcer": {
+    "note": "Volume slider for the announcer's voice.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_rumble": {
+    "note": "Checkbox: controller rumble and phone vibration on slams, falls, laps and the finish.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_display": {
+    "note": "Settings group for graphics.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_lcd_panel": {
+    "note": "Checkbox: draws the race through a retro LCD-screen filter.",
+    "maxChars": 28,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_character_effects": {
+    "note": "Checkbox: the racers' squash, dust, camera shake and the pop-up words (SLAM!, LAP 2!). Off hides them; sounds still play.",
+    "maxChars": 28,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_stage_effects": {
+    "note": "Checkbox: the backgrounds moving and flashing to the music (the splash, the menus and the race), and the race's weather and lighting events. Off keeps every backdrop still.",
+    "maxChars": 28,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_trajectory_guide": {
+    "note": "Checkbox: draws subtle bounce apex arc and notch showing trajectory.",
+    "maxChars": 28,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "photosensitivity_title": {
+    "note": "Heading of the photosensitivity (epilepsy) warning shown before the game's first splash screen. Use the wording players know from console games in this language.",
+    "maxChars": 40,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-photosensitivity.png"
+  },
+  "photosensitivity_body": {
+    "note": "The photosensitivity (epilepsy) warning itself: flashing lights and screen shake may cause seizures; stop and see a doctor if symptoms appear. Follow the customary platform wording in this language.",
+    "maxChars": 360,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-photosensitivity.png"
+  },
+  "photosensitivity_choose": {
+    "note": "Small heading over the two effect switches (Character effects, Stage effects) in the warning.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-photosensitivity.png"
+  },
+  "photosensitivity_later": {
+    "note": "Line under the switches: the same switches are in the Settings menu.",
+    "maxChars": 80,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-photosensitivity.png"
+  },
+  "photosensitivity_continue": {
+    "note": "Button that closes the warning and goes on to the game.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-photosensitivity.png"
+  },
+  "settings_graphics_quality": {
+    "note": "Choice of High, Medium or Low graphics.",
+    "maxChars": 24,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_quality_high": {
+    "note": "Graphics quality: best looking.",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_quality_medium": {
+    "note": "Graphics quality: balanced.",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_quality_low": {
+    "note": "Graphics quality: fastest, for slower devices.",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_touch_controls": {
+    "note": "Settings group: how to steer on a touch screen.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_touch_swipe": {
+    "note": "Touch steering by dragging a thumb.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_touch_buttons": {
+    "note": "Touch steering with on-screen buttons.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_method_keyboard": {
+    "note": "Controls tab: heading for keyboard controls.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_method_gamepad": {
+    "note": "Controls tab: heading for game controller controls.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_method_touch": {
+    "note": "Controls tab: heading for touch-screen controls.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_current_input": {
+    "note": "After a controls heading: the way the player is playing right now.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_keys_or": {
+    "note": "Between two sets of keys that do the same thing (A D or ← →).",
+    "maxChars": 6,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_action_mute": {
+    "note": "Controls legend: the key that mutes sound.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_action_pause": {
+    "note": "Controls legend: the key or button that pauses.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_action_choose": {
+    "note": "Controls legend: the controller button that selects in menus.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "settings_action_back": {
+    "note": "Controls legend: the controller button that goes back in menus.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-settings.png"
+  },
+  "lobby_code_letter": {
+    "note": "Screen-reader name of one letter cell in the room code editor a gamepad player uses. {position} is 1 to 6.",
+    "maxChars": 40,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "lobby_have_code": {
+    "note": "Lobby: introduces the field for joining a friend's room by its code.",
+    "maxChars": 32,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
+  },
+  "shell_landscape_title": {
+    "note": "Title of the card shown on a phone held sideways in a browser.",
+    "maxChars": 32
+  },
+  "shell_landscape_body": {
+    "note": "Why a phone held sideways in a browser must go fullscreen or turn upright."
+  },
+  "shell_landscape_go": {
+    "note": "Button on that card: enter fullscreen.",
+    "maxChars": 20
+  },
+  "shell_landscape_upright": {
+    "note": "The alternative on that card: hold the phone upright instead.",
+    "maxChars": 32
+  },
+  "gate_home_lead": {
+    "note": "The turn-upright card on iPhone Safari: the line between the title (turn your phone upright) and the three Home Screen steps, saying the steps are the other way to play sideways. Use the iOS name for Home Screen.",
+    "maxChars": 56
+  },
+  "gate_home_step_1": {
+    "note": "The turn-upright card on iPhone Safari: step 1 of 3 to play sideways from the Home Screen. Use the names iOS shows in the player's language for Share and Add to Home Screen; keep Floor Fifty in Latin letters.",
+    "maxChars": 32
+  },
+  "gate_home_step_2": {
+    "note": "The turn-upright card on iPhone Safari: step 2 of 3 to play sideways from the Home Screen. Use the names iOS shows in the player's language for Share and Add to Home Screen; keep Floor Fifty in Latin letters.",
+    "maxChars": 40
+  },
+  "gate_home_step_3": {
+    "note": "The turn-upright card on iPhone Safari: step 3 of 3 to play sideways from the Home Screen. Use the names iOS shows in the player's language for Share and Add to Home Screen; keep Floor Fifty in Latin letters.",
+    "maxChars": 48
+  },
+  "shell_more": {
+    "note": "Under a list that scrolls, on a line of its own: how many rows are below. The arrow points down to them.",
+    "maxChars": 16
+  },
+  "shell_loading_replay": {
+    "note": "Shown while a replay's art and music load.",
+    "maxChars": 32
+  },
+  "race_floor": {
+    "note": "HUD label over the floor reached, in Survival (one floor, not a count of them).",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_best_floor": {
+    "note": "Screen-reader prefix before the best floor reached in Survival (an arrow is drawn instead).",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-results-infinite.png"
+  },
+  "race_replay": {
+    "note": "Chip in place of the timer label while watching a replay.",
+    "maxChars": 10,
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "race_place": {
+    "note": "A race place as a player says it (1st, 2nd, 3rd, 4th). Use your language's own ordinal form.",
+    "maxChars": 6,
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_leads": {
+    "note": "In the standings pill: who is ahead; {name} is a typed player name.",
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_standings_pill": {
+    "note": "Screen-reader name of the standings pill; {standings} is its text (e.g. 2nd / 4 · Sable leads).",
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_row_best": {
+    "note": "Screen-reader name of a racer's HUD row in Survival: seat number, typed name, best floor reached."
+  },
+  "race_row_leads": {
+    "note": "Added to a racer's HUD row name when they hold the best floor (lowercase, after a comma).",
+    "screenshot": "docs/i18n/screens/en/desktop-race.png"
+  },
+  "race_restart_left": {
+    "note": "Screen-reader name of the Infinite clock, which restarts the climb when tapped; {clock} is the time left (m:ss)."
+  },
+  "race_time_up": {
+    "note": "Spoken when a Survival race's clock runs out, before the winner is named."
+  },
+  "ready_seats": {
+    "note": "Screen-reader name of the ready room's list of four seats.",
+    "screenshot": "docs/i18n/screens/en/desktop-ready-room.png"
+  },
+  "ready_rules_button": {
+    "note": "Ready room: the button that opens the race's rules (what the chosen race means, how walls work), and the title of that sheet. A noun.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-ready-room.png"
+  },
+  "ready_floors": {
+    "note": "Label of the ready room's choice of race length (20 floors, 50 floors, Survival).",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/desktop-ready-room.png"
+  },
+  "ready_mode_survival_tagline": {
+    "note": "Ready-room Survival rules: rising lava eliminates, last standing wins, clock ranks survivors by best reached floor, no restart.",
+    "maxChars": 220,
+    "screenshot": "docs/i18n/screens/en/desktop-ready-room.png"
+  },
+  "replay_position": {
+    "note": "Screen-reader name of the replay's scrub bar.",
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_room_moved": {
+    "note": "Notice while watching a replay: the room has moved on to its next race."
+  },
+  "replay_play": {
+    "note": "Screen-reader name of the replay's play button.",
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_pause": {
+    "note": "Screen-reader name of the replay's pause button.",
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_speed": {
+    "note": "Screen-reader name of the replay's speed button; {speed} is the current speed (1, 2…), × is the times sign.",
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_previous_racer": {
+    "note": "Screen-reader name: follow the previous racer in the replay.",
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_next_racer": {
+    "note": "Screen-reader name: follow the next racer in the replay.",
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_restart": {
+    "note": "Replay button: play it again from the start.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_back_to_results": {
+    "note": "Replay button: return to the results screen.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_watch_again": {
+    "note": "Button at the end of a replay: play it again.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/desktop-replay-end.png"
+  },
+  "replay_drifted": {
+    "note": "Notice when a replay stopped matching the race it recorded."
+  },
+  "replay_version_mismatch": {
+    "note": "Why a replay cannot be played: it was recorded by another version."
+  },
+  "replay_hint_touch": {
+    "note": "Hint over a replay with its controls hidden, on a touch screen.",
+    "maxChars": 32
+  },
+  "replay_hint_gamepad": {
+    "note": "The same hint with a controller.",
+    "maxChars": 40
+  },
+  "replay_hint_pointer": {
+    "note": "The same hint with a mouse or keyboard.",
+    "maxChars": 48
+  },
+  "results_tie": {
+    "note": "Results tag on racers who share a place.",
+    "maxChars": 8,
+    "screenshot": "docs/i18n/screens/en/desktop-results.png"
+  },
+  "results_replay_unavailable": {
+    "note": "Results: Watch replay is disabled because the replay has not arrived yet.",
+    "maxChars": 28
+  },
+  "results_standings": {
+    "note": "Screen-reader name of the results list.",
+    "screenshot": "docs/i18n/screens/en/desktop-results.png"
+  },
+  "results_watch_replay": {
+    "note": "Results button: watch the race's replay.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/desktop-results.png"
+  },
+  "results_best_floor": {
+    "note": "A Survival result: the best floor reached.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/desktop-results-infinite.png"
+  },
+  "results_out_at": {
+    "note": "A Survival result for a racer who fell below their rising screen: their best floor and when they went out ({time} is m:ss.hh).",
+    "maxChars": 20
+  },
+  "results_best_floor_at": {
+    "note": "A Survival result: the best floor and when it was reached ({time} is m:ss.hh).",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/desktop-results-infinite.png"
+  },
+  "content_mode_floors_20_name": {
+    "note": "A race length the room picks: a floor count, or Survival (each racer's screen rises; fall below it and you are out; the last one standing wins, else the best floor when the clock runs out).",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/desktop-ready-room.png"
+  },
+  "content_mode_floors_50_name": {
+    "note": "A race length the room picks: a floor count, or Survival (each racer's screen rises; fall below it and you are out; the last one standing wins, else the best floor when the clock runs out).",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/desktop-ready-room.png"
+  },
+  "content_mode_infinite_name": {
+    "note": "A race length the room picks: a floor count, or Survival (each racer's screen rises; fall below it and you are out; the last one standing wins, else the best floor when the clock runs out).",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/desktop-results-infinite.png"
+  },
+  "ready_seat_open": {
+    "note": "An empty seat in the room, waiting for a racer.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_add_cpu": {
+    "note": "Shown to the host in an empty seat's status slot: tap the seat to add a computer racer. 'CPU' is the arcade word for a computer-controlled player; keep it if your language's games use it.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_add_cpu_label": {
+    "note": "Screen-reader name of an empty seat's button, for the host: adds a computer racer.",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_cpu": {
+    "note": "A computer racer's seat, in the status slot where a person's Ready sits.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_remove_cpu_label": {
+    "note": "Screen-reader name of a computer racer's seat button, for the host; {name} is the racer's name (Blaze, Koi, Sunny or Moth).",
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_you": {
+    "note": "Tag on the player's own seat.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_change": {
+    "note": "Tag on the player's own seat: tap to change character.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_seat_host": {
+    "note": "Tag on the seat of the player who made the room.",
+    "maxChars": 12,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "select_new": {
+    "note": "Select and character pages: a small badge on a stage, song or character tile the player has just unlocked and not yet looked at. Drawn in capitals in Latin scripts; one short word.",
+    "maxChars": 6
+  },
+  "select_coming_soon": {
+    "note": "A tile from a downloadable pack that is not out yet: its button label, and the line on its pack's sheet.",
+    "maxChars": 16,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-coming-soon.png"
+  },
+  "select_coming_soon_label": {
+    "note": "Screen reader name of the button on a not-yet-released pack's slide. {pack} is the pack's description, e.g. \"DLC · Neon pack\".",
+    "maxChars": 60
+  },
+  "select_item_position_new": {
+    "note": "Screen reader name of a picker slide the player has just unlocked: \"Stage, 3 of 4: Snow Shrine, new\". Same as select_item_position, plus that it is new.",
+    "maxChars": 80
+  },
+  "ready_tile_new": {
+    "note": "Screen reader name of a character tile the player has just unlocked and not yet looked at. {label} is the character's name.",
+    "maxChars": 40
+  },
+  "results_unlock_new_song": {
+    "note": "Results: the banner across the top when a race unlocks a song. Drawn in capitals in Latin scripts; a short shout.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/desktop-unlock-banner.png"
+  },
+  "results_unlock_new_challenger": {
+    "note": "Results: the banner across the top when a race unlocks a character, in the fighting-game tradition of a new challenger appearing. A short shout.",
+    "maxChars": 18,
+    "screenshot": "docs/i18n/screens/en/desktop-unlock-banner.png"
+  },
+  "results_unlocked_song": {
+    "note": "Said to a screen reader (and shown in the replay window's status line) when a song unlocks. {title} is the song's title, never translated.",
+    "maxChars": 60
+  },
+  "results_unlocked_character": {
+    "note": "Said to a screen reader (and shown in the replay window's status line) when a character unlocks. {name} is the character's name.",
+    "maxChars": 60
+  },
+  "replay_save_video": {
+    "note": "Replay window: an icon button that downloads the race as a video file. Its tooltip and screen reader name.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_share_video": {
+    "note": "Replay window: an icon button that opens the device's share sheet with the race video. Its tooltip and screen reader name.",
+    "maxChars": 20,
+    "screenshot": "docs/i18n/screens/en/desktop-replay.png"
+  },
+  "replay_video_unavailable": {
+    "note": "Replay window: shown under the two video buttons when this race has no recording to save or share.",
+    "maxChars": 30
+  },
+  "replay_names_note": {
+    "note": "Replay window: said once, the first time a player shares a video, so they know the other players' names are in it.",
+    "maxChars": 40
+  },
+  "replay_share_failed": {
+    "note": "Replay window status line: the share sheet failed; the Save button still works.",
+    "maxChars": 60
+  },
+  "replay_share_unsupported": {
+    "note": "Replay window status line: this browser has no way to share a video file; the Save button still works.",
+    "maxChars": 60
+  },
+  "replay_share_failed_framed": {
+    "note": "Replay window status line inside a host page's frame, where there is no Save button: the share sheet failed.",
+    "maxChars": 60
+  },
+  "replay_share_unsupported_framed": {
+    "note": "Replay window status line inside a host page's frame, where there is no Save button: this browser has no way to share a video file.",
+    "maxChars": 60
+  },
+  "replay_share_text": {
+    "note": "The message sent along with a shared race video when nobody won (e.g. a Survival race). {stage} is the stage's name.",
+    "maxChars": 50
+  },
+  "replay_share_text_winner": {
+    "note": "The message sent along with a shared race video. {winner} is a player's name; {stage} is the stage's name.",
+    "maxChars": 50
+  },
+  "race_bark_blaze_cruising": {
+    "note": "Shouted by Blaze, a brash computer racer, as it pulls well ahead. Cocky, playful.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "race_bark_blaze_pushing": {
+    "note": "Shouted by Blaze, a brash computer racer, as it charges to catch up. All-out, reckless.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "race_bark_sunny_cruising": {
+    "note": "Shouted by Sunny, a showboating computer racer, as it pulls well ahead and shows off.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "race_bark_sunny_pushing": {
+    "note": "Shouted by Sunny, a showboating computer racer, as it falls behind: asking the leader to slow down.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "race_bark_moth_cruising": {
+    "note": "Sighed by Moth, a nervous computer racer, relieved to be ahead.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "race_bark_moth_pushing": {
+    "note": "Squeaked by Moth, a nervous computer racer, panicking as it falls behind.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/tablet-portrait-ready-room.png"
+  },
+  "ready_mode_finite_tagline": {
+    "note": "Ready room, finite 20/50-floor races. Every floor needs credit; a missed floor can be collected by descending. Reset is optional."
+  },
+  "ready_mode_featured": {
+    "note": "A small badge beside the default race mode (Survival) in the ready room's Floors row, marking it as the one to try. One word; drawn in capitals by the stylesheet.",
+    "maxChars": 14,
+    "screenshot": "docs/i18n/screens/en/desktop-ready-room.png"
+  },
+  "ready_wall_help": {
+    "note": "Practice/ready help. Pushing into the side of a floor makes the racer bounce higher but does not count the floor; landing on top does."
+  },
+  "shell_swipe_coach_survival": {
+    "note": "One-time swipe coach in Survival. No restart exists. Keep the lava reminder and both input instructions."
+  },
+  "race_missed_floor_help": {
+    "note": "Finite-race HUD recovery reminder, paired with a downward platform arrow. Descent can collect the missed floor; it is not dead or unreachable."
+  },
+  "idle_warning_line": {
+    "note": "A banner, shown a minute before the server closes a room nobody has done anything in for ten minutes. Press the button beside it to keep the room open.",
+    "maxChars": 96
+  },
+  "idle_warning_keep": {
+    "note": "The button on that banner: keeps the room open for another ten minutes.",
+    "maxChars": 24
+  },
+  "race_start_press": {
+    "note": "Large words over the player's racer at the start of a Survival race, until their first input. Keyboard and controller. Any key or button starts them.",
+    "maxChars": 40
+  },
+  "race_start_tap": {
+    "note": "The same, on touch. Any tap starts them.",
+    "maxChars": 24
+  },
+  "race_out_line": {
+    "note": "One line under OUT! when the lava catches the player in Survival. Says why, and that the race goes on.",
+    "maxChars": 80
+  },
+  "race_hint_edge": {
+    "note": "One-time toast in a keyboard or controller player's first Survival race. Lava rises from below; use the same word for lava as tutorial_ready_body.",
+    "maxChars": 48
+  },
+  "race_hint_floors": {
+    "note": "One-time toast at the start of a player's first 20- or 50-floor race: every floor counts.",
+    "maxChars": 110
+  },
+  "race_hint_restart_keyboard": {
+    "note": "One-time toast in the same race: how to start the climb over. R is a key legend and stays R.",
+    "maxChars": 60
+  },
+  "race_hint_restart_gamepad": {
+    "note": "One-time toast in the same race: how to start the climb over. {glyph} is the controller's button picture; keep it once.",
+    "maxChars": 60
+  },
+  "race_hint_restart_touch": {
+    "note": "One-time toast in the same race: how to start the climb over. The timer is the race clock at the top of the screen.",
+    "maxChars": 60
+  },
+  "shell_instructions": {
+    "note": "Quick-action button on the title (and the title of its dialog) that opens the short carousel of how-to-play demos. One short plain word.",
+    "maxChars": 16
+  },
+  "instructions_next": {
+    "note": "Button that moves the how-to-play carousel to the next demo.",
+    "maxChars": 12
+  },
+  "instructions_done": {
+    "note": "Button on the last demo of the how-to-play carousel; it closes the carousel.",
+    "maxChars": 12
+  },
+  "instructions_caption_bounce": {
+    "note": "Caption under a looping demo: the climber bounces without help and lands on the next floor. Plain words a child understands.",
+    "maxChars": 60
+  },
+  "instructions_caption_moving": {
+    "note": "Caption under a looping demo: some floors slide sideways; wait, then hop onto one.",
+    "maxChars": 60
+  },
+  "instructions_caption_lava": {
+    "note": "Caption under a looping demo: lava rises from below; stay above it.",
+    "maxChars": 40
+  },
+  "instructions_caption_race": {
+    "note": "Caption under a looping demo: four climbers race; the first to the top wins.",
+    "maxChars": 40
+  },
+  "gate_title": {
+    "note": "Title of the dialog shown once to a player who starts a multiplayer match without having seen how to play.",
+    "maxChars": 20
+  },
+  "gate_body": {
+    "note": "One line under the title of that dialog: a quick look shows how to climb.",
+    "maxChars": 50
+  },
+  "gate_show": {
+    "note": "Main button of that dialog: opens the how-to-play carousel.",
+    "maxChars": 20
+  },
+  "gate_story": {
+    "note": "Button of that dialog: starts the short story instead.",
+    "maxChars": 20
+  },
+  "gate_skip": {
+    "note": "Button of that dialog: skip the help and go on to the match.",
+    "maxChars": 12
+  },
+  "story_goal_reach": {
+    "note": "Story HUD objective chip, top centre: climb to this floor. {floor} is a number.",
+    "maxChars": 28
+  },
+  "story_goal_lamp": {
+    "note": "Story HUD objective chip: drop hard onto a lamp to break it open.",
+    "maxChars": 20
+  },
+  "story_goal_rescue": {
+    "note": "Story HUD objective chip: climb back down to the friend named {name}.",
+    "maxChars": 24
+  },
+  "story_goal_climb": {
+    "note": "Story HUD objective chip while lava chases: climb fast to floor {floor}.",
+    "maxChars": 24
+  },
+  "story_floors_away": {
+    "note": "Under the story's edge arrow: how many floors away the target is ({count} is 2 or more).",
+    "maxChars": 20
+  },
+  "story_floor_away": {
+    "note": "Under the story's edge arrow: the target is one floor away.",
+    "maxChars": 12
+  },
+  "story_wind": {
+    "note": "Story HUD chip beside an arrow: a gust of wind is blowing or about to.",
+    "maxChars": 12
+  },
+  "story_safe_spot": {
+    "note": "Story HUD flash: the game saved the player's restart point here.",
+    "maxChars": 16
+  },
+  "story_glims_count": {
+    "note": "A chapter's count of glims (tiny living lights) carried: {count} of {total}. Hub card and HUD.",
+    "maxChars": 32
+  },
+  "story_chapter_number": {
+    "note": "Small label above a story chapter's name: Chapter 1, Chapter 2 and so on.",
+    "maxChars": 24
+  },
+  "story_glims_lit": {
+    "note": "The ending: {count} (2 or more) glims the player carried light up the sky.",
+    "maxChars": 44
+  },
+  "story_glim_lit": {
+    "note": "The ending: the one glim the player carried lights up the sky.",
+    "maxChars": 32
+  },
+  "story_credits_by": {
+    "note": "Credits: who made the game. SNEKPRTY is a name; keep it as is.",
+    "maxChars": 24
+  },
+  "story_credits_story": {
+    "note": "Credits: the story's title, 'Don't Look Down' (the game's motto).",
+    "maxChars": 36
+  },
+  "story_credits_thanks": {
+    "note": "Last line of the credits: thanks for playing the story.",
+    "maxChars": 28
+  },
+  "story_chapters": {
+    "note": "Button: go to the story's chapter list.",
+    "maxChars": 16
+  },
+  "story_hub_totals": {
+    "note": "Story chapter list, under the heading: stars and glims collected over every chapter.",
+    "maxChars": 76
+  },
+  "story_locked": {
+    "note": "Story chapter list: a locked chapter; the player must finish the chapter {number} first.",
+    "maxChars": 40
+  },
+  "story_stars": {
+    "note": "Screen reader text on a chapter card: how many of its three stars are earned.",
+    "maxChars": 28
+  },
+  "story_restart": {
+    "note": "Pause menu in the story: restart this chapter from its start.",
+    "maxChars": 24
+  },
+  "story_results_title": {
+    "note": "Heading of the results after a story chapter is finished.",
+    "maxChars": 20
+  },
+  "story_star_finished": {
+    "note": "Results, first star: the chapter was finished.",
+    "maxChars": 16
+  },
+  "story_star_glims": {
+    "note": "Results, second star earned: every glim carried, {count} of {total}.",
+    "maxChars": 44
+  },
+  "story_star_fast": {
+    "note": "Results, third star earned: the time {time} beat the target {par} (both like 1:05).",
+    "maxChars": 36
+  },
+  "story_star_glims_need": {
+    "note": "Results, second star not earned: what it takes (find all {total} glims).",
+    "maxChars": 36
+  },
+  "story_star_fast_need": {
+    "note": "Results, third star not earned: finish faster than {par} (like 1:05).",
+    "maxChars": 32
+  },
+  "story_again": {
+    "note": "Results button: play the same chapter again.",
+    "maxChars": 12
+  },
+  "content_story_city_bark_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_city_bark_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_city_bark_2_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_city_bark_3_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_city_bark_4_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_city_bark_5_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_0_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_1_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_2_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_2_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_2_2": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_2_3": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_2_4": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_lowtown_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_cut_the_city_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_city_0_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_city_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_city_1_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_city_1_2": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_city_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_cut_the_deep_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_deep_0_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_deep_0_2": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_deep_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_cut_the_ledge_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_ledge_0_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_ledge_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_ledge_1_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_ledge_1_2": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_ledge_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_cut_the_top_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_top_0_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_top_0_2": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_top_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_top_1_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_top_2_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_top_2_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_the_top_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_cut_together_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_together_0_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_together_0_2": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_together_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_together_1_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_cut_together_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_deep_bark_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_2_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_3_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_3_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_4_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_5_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_6_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_deep_bark_7_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_fifty_bark_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_fifty_bark_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_fifty_bark_1_1": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_fifty_bark_2_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_fifty_bark_3_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_fifty_bark_4_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_fifty_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_last": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_lowtown_bark_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_lowtown_bark_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_lowtown_bark_2_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_lowtown_bark_3_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_lowtown_bark_4_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_lowtown_bark_5_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_lowtown_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_snow_bark_0_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_bark_1_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_bark_2_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_bark_3_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_bark_4_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_bark_5_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_bark_6_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_bark_7_0": {
+    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
+    "maxChars": 80
+  },
+  "content_story_snow_title": {
+    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
+    "maxChars": 24
+  },
+  "content_story_thesis_0": {
+    "note": "The story's lesson, two lines on a card at the end: the best climbers look down (to help others). Plain words an 8-year-old understands.",
+    "maxChars": 80
+  },
+  "content_story_thesis_1": {
+    "note": "The story's lesson, two lines on a card at the end: the best climbers look down (to help others). Plain words an 8-year-old understands.",
+    "maxChars": 80
+  }
 }

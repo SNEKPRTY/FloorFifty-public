@@ -59,7 +59,7 @@ test.describe("title", () => {
       const page = await openOn(browser, view);
       await expectWordedButtons(page, page.locator('[data-screen="title"]'));
       // The three utilities of the bottom row, icon and word, never the icon alone.
-      for (const id of ["quick-tutorial", "quick-contact"]) {
+      for (const id of ["quick-story", "quick-instructions", "quick-contact"]) {
         expect((await page.getByTestId(id).innerText()).trim(), `${id} shows its word`).not.toBe("");
       }
       expect((await page.getByTestId("title-language").innerText()).trim(), "the language button shows its endonym").not.toBe("");
@@ -347,6 +347,36 @@ test.describe("dialogs", () => {
       await expectUncovered(page, warning);
       for (const testId of ["photosensitivity-character-effects", "photosensitivity-stage-effects", "photosensitivity-continue"]) {
         await expect(page.getByTestId(testId), testId).toBeInViewport({ ratio: 1 });
+      }
+      await context.close();
+    });
+  }
+});
+
+/**
+ * The Instructions carousel (story-mode spec, criteria 18 and 20): on every
+ * slide the demo, its caption, the dots, Next and Back are all on the screen
+ * with nothing scrolled, because the caption is the instruction.
+ */
+test.describe("instructions", () => {
+  for (const view of UI_VIEWS) {
+    test(`every slide is whole, with its caption and buttons, on ${view.key}`, async ({ browser }) => {
+      const context = await browser.newContext(view.options);
+      await seedSettings(context, { locale: walkLocale() });
+      const page = await context.newPage();
+      await openTitle(page);
+      await page.getByTestId("quick-instructions").click();
+      const dialog = page.getByTestId("instructions");
+      await expect(dialog).toBeVisible();
+      for (let slide = 0; slide < 6; slide += 1) {
+        await expect(page.getByTestId("instructions-caption"), `slide ${slide + 1} caption`).toBeInViewport({ ratio: 1 });
+        for (const id of ["instructions-next", "instructions-back"]) await expect(page.getByTestId(id), `slide ${slide + 1} ${id}`).toBeInViewport({ ratio: 1 });
+        await expect(dialog.locator(".ff-pager"), `slide ${slide + 1} dots`).toBeInViewport({ ratio: 1 });
+        const demo = page.getByTestId("instructions-frame");
+        if ((await demo.count()) > 0) await expect(demo, `slide ${slide + 1} demo`).toBeInViewport({ ratio: 1 });
+        await expectWholeWords(page, dialog);
+        await expectInsideViewport(page, dialog);
+        if (slide < 5) await page.getByTestId("instructions-next").click();
       }
       await context.close();
     });
@@ -768,50 +798,57 @@ test.describe("contact", () => {
 });
 
 /**
- * The lobby on a first visit (spec, "Lobby"): the tutorial offer reads in
- * lines of more than one word, its answers are blue and Find a race is the one
- * green, the name and code fields show their whole text, and nothing covers
- * the offer's Skip (the menu hero's planters once did on a 360 x 640 window).
+ * The lobby on a first visit, and the match gate it raises (story-mode spec, "The first-match gate"):
+ * the gate reads in lines of more than one word, Show me how is the one green, Play story is blue, the
+ * name and code fields show their whole text, and nothing covers the gate's Skip.
  */
 test.describe("lobby", () => {
   const GREEN = "rgb(22, 90, 76)"; // #165a4c, Deep Pine (--ff-go)
   const BLUE = "rgb(77, 101, 180)"; // #4d65b4, Cornflower Blue (--ff-plain)
   const LATIN: readonly LocaleTag[] = ["en", "es-419"];
   const SMALL: View = { key: "desktop-360x640", options: { viewport: { width: 360, height: 640 }, deviceScaleFactor: 2 }, host: "standalone", touch: false, phoneLandscape: false };
+  const GATE_BUTTONS = ["match-gate-show", "match-gate-story", "match-gate-skip"] as const;
 
-  /** The lobby as a first Play shows it: the offer up, nothing declined. */
-  async function openOffer(browser: Browser, view: View, locale: LocaleTag = walkLocale()): Promise<Page> {
-    const page = await openOn(browser, view, locale);
+  /** The lobby of a player who has not been shown how. */
+  async function openLobby(browser: Browser, view: View, locale: LocaleTag = walkLocale()): Promise<Page> {
+    const context = await browser.newContext(view.options);
+    await seedSettings(context, { locale, seen: { tutorial: false } });
+    const page = await context.newPage();
+    await openTitle(page);
     await page.getByTestId("title-play").click();
     await expect(page.locator('[data-screen="lobby"]')).toBeVisible();
-    await expect(page.getByTestId("tutorial-offer")).toBeVisible();
+    return page;
+  }
+
+  /** The lobby with the gate up: Find a race pressed by a player never shown how. */
+  async function openGate(browser: Browser, view: View, locale: LocaleTag = walkLocale()): Promise<Page> {
+    const page = await openLobby(browser, view, locale);
+    await page.getByTestId("name-input").fill("Nana");
+    await page.getByTestId("find-race").click();
+    await expect(page.getByTestId("match-gate")).toBeVisible();
     return page;
   }
 
   for (const view of [...UI_VIEWS, SMALL]) {
-    test(`the offer's words and the form are whole and nothing is covered on ${view.key}`, async ({ browser }) => {
-      const page = await openOffer(browser, view);
-      const lobby = page.locator('[data-screen="lobby"]');
-      await expectWholeWords(page, lobby);
-      await expectUncovered(page, lobby);
-      await expectInsideViewport(page, page.getByTestId("tutorial-offer"));
-      for (const id of ["tutorial-offer-accept", "tutorial-offer-skip"]) {
-        await expect(page.getByTestId(id), id).toBeInViewport({ ratio: 1 });
-      }
+    test(`the gate's words are whole and nothing is covered on ${view.key}`, async ({ browser }) => {
+      const page = await openGate(browser, view);
+      const gate = page.getByTestId("match-gate");
+      await expectWholeWords(page, gate);
+      await expectUncovered(page, gate);
+      await expectInsideViewport(page, gate);
+      for (const id of GATE_BUTTONS) await expect(page.getByTestId(id), id).toBeInViewport({ ratio: 1 });
     });
 
-    test(`the offer's answers are blue and Find a race is the one green on ${view.key}`, async ({ browser }) => {
-      const page = await openOffer(browser, view);
-      for (const id of ["tutorial-offer-accept", "tutorial-offer-skip"]) {
-        await expect(page.getByTestId(id), id).toHaveCSS("background-color", BLUE);
-      }
-      await expect(page.getByTestId("find-race")).toHaveCSS("background-color", GREEN);
+    test(`the gate's Show me how is the one green and Play story is blue on ${view.key}`, async ({ browser }) => {
+      const page = await openGate(browser, view);
+      await expect(page.getByTestId("match-gate-show")).toHaveCSS("background-color", GREEN);
+      await expect(page.getByTestId("match-gate-story")).toHaveCSS("background-color", BLUE);
     });
 
     for (const locale of LATIN) {
-      test(`the offer reads in lines of more than one word on ${view.key} in ${locale}`, async ({ browser }) => {
-        const page = await openOffer(browser, view, locale);
-        const lines = await page.locator('[data-testid="tutorial-offer"] p').evaluate((p) => {
+      test(`the gate reads in lines of more than one word on ${view.key} in ${locale}`, async ({ browser }) => {
+        const page = await openGate(browser, view, locale);
+        const lines = await page.locator('[data-testid="match-gate"] p').first().evaluate((p) => {
           const node = p.firstChild!;
           const text = node.textContent ?? "";
           const range = document.createRange();
@@ -831,7 +868,7 @@ test.describe("lobby", () => {
     }
 
     test(`the name and code fields show their whole text on ${view.key}`, async ({ browser }) => {
-      const page = await openOffer(browser, view);
+      const page = await openLobby(browser, view);
       for (const id of ["name-input", "code-input"]) {
         const fit = await page.getByTestId(id).evaluate((input: HTMLInputElement) => {
           const style = getComputedStyle(input);
@@ -847,9 +884,9 @@ test.describe("lobby", () => {
   }
 
   test("Skip takes the press on 360 x 640", async ({ browser }) => {
-    const page = await openOffer(browser, SMALL);
-    await page.getByTestId("tutorial-offer-skip").click({ timeout: 5_000 });
-    await expect(page.getByTestId("tutorial-offer")).toHaveCount(0);
+    const page = await openGate(browser, SMALL);
+    await page.getByTestId("match-gate-skip").click({ timeout: 5_000 });
+    await expect(page.getByTestId("match-gate")).toHaveCount(0);
   });
 });
 
@@ -979,7 +1016,7 @@ test("the lobby's buttons wrap at spaces, not inside words, in es-419 on the sma
   const view = UI_VIEWS.find((candidate) => candidate.key === "iphone-se-portrait")!;
   const page = await openOn(browser, view, "es-419");
   await page.getByTestId("title-play").click();
-  await expect(page.getByTestId("tutorial-offer")).toBeVisible();
+  await expect(page.locator('[data-screen="lobby"]')).toBeVisible();
   await expectWholeWords(page, page.locator('[data-screen="lobby"]'));
   const hyphenated = await page.getByTestId("find-race").evaluate((el) => getComputedStyle(el).hyphens);
   expect(hyphenated).toBe("manual");
@@ -1054,7 +1091,7 @@ test.describe("select", () => {
  */
 test.describe("the corner row", () => {
   const OPENERS = [
-    { name: "lobby", open: async (page: Page) => { await page.getByTestId("title-play").click(); await expect(page.getByTestId("tutorial-offer")).toBeVisible(); } },
+    { name: "lobby", open: async (page: Page) => { await page.getByTestId("title-play").click(); await expect(page.locator('[data-screen="lobby"]')).toBeVisible(); } },
     { name: "character page", open: async (page: Page) => { await page.getByTestId("title-character").click(); await expect(page.getByTestId("character-page")).toBeVisible(); } },
   ] as const;
   for (const locale of ["en", "es-419", "pt-BR", "ja", "ko", "zh-Hans"] as const satisfies readonly LocaleTag[]) {
@@ -1448,15 +1485,19 @@ test.describe("race overlays", () => {
   }
 });
 
-/** The tutorial, entered as a first Play offers it. */
-async function intoTutorial(browser: Browser, view: View, locale: LocaleTag): Promise<Page> {
+/** The story, entered from the title. */
+async function intoStory(browser: Browser, view: View, locale: LocaleTag): Promise<Page> {
   const context = await browser.newContext(view.options);
   await seedSettings(context, { locale });
   const page = await context.newPage();
   await openTitle(page);
-  await page.getByTestId("quick-tutorial").click();
-  await expectScreen(page, "tutorial");
-  await expect(page.locator("[data-tutorial-card]")).toBeVisible();
+  await page.getByTestId("quick-story").click();
+  await expectScreen(page, "story");
+  await page.getByTestId("story-play").click({ timeout: 30_000 });
+  await page.getByTestId("story-cutscene-skip").click({ timeout: 30_000 });
+  await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible();
+  const coach = page.getByTestId("swipe-coach-dismiss");
+  if (await coach.isVisible().catch(() => false)) await coach.click();
   return page;
 }
 
@@ -1464,7 +1505,7 @@ test.describe("pause", () => {
   const PAUSE_VIEWS = UI_VIEWS.filter((view) => ["iphone-se-portrait", "iphone-se-landscape", "desktop-1280x800"].includes(view.key));
 
   for (const view of PAUSE_VIEWS) {
-    test(`pause and tutorial: words whole, nothing covered on ${view.key}`, async ({ browser }) => {
+    test(`pause and story: words whole, nothing covered on ${view.key}`, async ({ browser }) => {
       test.setTimeout(240_000);
       const race = await intoRace(browser, view, "es-419", { mode: "floors-20" });
       await race.getByTestId("pause-open").click();
@@ -1475,26 +1516,26 @@ test.describe("pause", () => {
       await expectInsideViewport(race, overlay);
       await expectMinText(race, overlay, 12);
 
-      const tutorial = await intoTutorial(browser, view, "es-419");
-      await tutorial.keyboard.press("Escape");
-      const paused = tutorial.getByTestId("pause-overlay");
+      const story = await intoStory(browser, view, "es-419");
+      await story.keyboard.press("Escape");
+      const paused = story.getByTestId("pause-overlay");
       await expect(paused).toBeVisible();
-      await expect(tutorial.locator("[data-tutorial-card]"), "the card is not drawn under the pause panel").toHaveCount(0);
-      await expectWholeWords(tutorial, paused);
-      await expectUncovered(tutorial, paused);
-      await expectInsideViewport(tutorial, paused);
-      // Skip and Leave stand apart from the menu, under a line.
-      const group = (await tutorial.getByTestId("pause-exit-group").boundingBox())!;
-      const resume = (await tutorial.getByTestId("pause-resume").boundingBox())!;
+      await expect(story.getByTestId("story-line").or(story.getByTestId("story-chip")), "the words are not drawn under the pause panel").toHaveCount(0);
+      await expectWholeWords(story, paused);
+      await expectUncovered(story, paused);
+      await expectInsideViewport(story, paused);
+      // Start again and Leave stand apart from the menu, under a line.
+      const group = (await story.getByTestId("pause-exit-group").boundingBox())!;
+      const resume = (await story.getByTestId("pause-resume").boundingBox())!;
       expect(group.y, "the exit group is below the menu").toBeGreaterThan(resume.y + resume.height);
     });
   }
 
-  test("the tutorial card reads in lines of more than one word on the iphone-se-portrait", async ({ browser }) => {
+  test("the story words read in lines of more than one word on the iphone-se-portrait", async ({ browser }) => {
     test.setTimeout(240_000);
     const view = UI_VIEWS.find((candidate) => candidate.key === "iphone-se-portrait")!;
-    const page = await intoTutorial(browser, view, "es-419");
-    const lines = await page.getByTestId("tutorial-prompt").evaluate((node) => {
+    const page = await intoStory(browser, view, "es-419");
+    const lines = await page.getByTestId("story-line").or(page.getByTestId("story-chip")).first().evaluate((node) => {
       const words: number[] = [];
       const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
       for (let text = walker.nextNode(); text !== null; text = walker.nextNode()) {
@@ -1510,7 +1551,7 @@ test.describe("pause", () => {
       for (const top of words) perLine.set(top, (perLine.get(top) ?? 0) + 1);
       return [...perLine.values()];
     });
-    expect(lines.length, "the card's lines").toBeLessThanOrEqual(4);
+    expect(lines.length, "the words' lines").toBeLessThanOrEqual(4);
     expect(Math.min(...lines), "a line holds a single word").toBeGreaterThan(1);
   });
 });

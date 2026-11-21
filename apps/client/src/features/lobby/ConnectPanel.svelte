@@ -23,15 +23,30 @@
   import Panel from "../kit/Panel.svelte";
   import Rise from "../kit/Rise.svelte";
   import { currentHosting } from "../ruken/current";
+  import type { StoryContent } from "@floor-fifty/shared/content/game-content";
+  import type { SettingsStore } from "../profile/store/settings.svelte";
+  import Instructions from "./Instructions.svelte";
+  import MatchGate from "./MatchGate.svelte";
 
   let {
     network,
-    attempt,
+    attempt: run,
     setStatus,
     touchMode = "swipe",
+    settings,
+    prompts,
+    artSrc,
+    onStory,
   }: {
     network: NetworkPort;
+    /** Runs a room command, reporting a refusal in place. */
     attempt: (action: () => Promise<void>) => void;
+    settings: SettingsStore;
+    /** The story's prompts, for the Instructions' captions. */
+    prompts: StoryContent["prompts"] | undefined;
+    artSrc: (alias: string) => string | undefined;
+    /** Opens the story at its first chapter; absent while story mode is hidden. */
+    onStory?: () => void;
     setStatus: (message: () => string, tone?: "info" | "error") => void;
     /** Which touch controls a race will show, so the help names those. */
     touchMode?: "swipe" | "buttons";
@@ -84,6 +99,30 @@
     name = value;
     rememberName(value);
     return value;
+  }
+
+  /**
+   * The one way into a match for all three buttons. A player never shown how
+   * to climb is asked once first (`MatchGate`), and the press waits here until
+   * they answer: Skip carries it on, Show me how or Play story drops it, since
+   * the flag is then set and the next press goes straight in.
+   */
+  let gate = $state<"closed" | "ask" | "instructions">("closed");
+  let held: (() => Promise<void>) | undefined;
+
+  function attempt(action: () => Promise<void>): void {
+    const shown = settings.value.seen.tutorial || settings.value.story.chaptersDone >= 1;
+    if (shown) return run(action);
+    held = action;
+    gate = "ask";
+  }
+
+  function skipGate(): void {
+    settings.update({ seen: { tutorial: true } });
+    gate = "closed";
+    const action = held;
+    held = undefined;
+    if (action !== undefined) run(action);
   }
 
   function create(): void {
@@ -395,3 +434,24 @@
     }
   }
 </style>
+
+{#if gate === "ask"}
+  <MatchGate
+    onShow={() => {
+      held = undefined;
+      gate = "instructions";
+    }}
+    {...onStory === undefined
+      ? {}
+      : {
+          onStory: () => {
+            held = undefined;
+            gate = "closed";
+            onStory();
+          },
+        }}
+    onSkip={skipGate}
+  />
+{:else if gate === "instructions"}
+  <Instructions {settings} {prompts} {artSrc} onClose={() => (gate = "closed")} />
+{/if}

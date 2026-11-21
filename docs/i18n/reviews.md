@@ -57,3 +57,65 @@ approved, and `pnpm i18n:check --release` green.
 | 2026-11-19 | es-419 | owner (mcthaydt), as-is, card 2026-11-19 | 2 approved |
 | 2026-11-19 | pt-BR | owner (mcthaydt), as-is, card 2026-11-19 | 2 approved |
 | 2026-11-19 | zh-Hans | owner (mcthaydt), as-is, card 2026-11-19 | 2 approved |
+| 2026-11-20 | ja | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | ko | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | es-419 | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | pt-BR | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | zh-Hans | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | ja | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | ko | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | es-419 | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | pt-BR | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | zh-Hans | owner (mcthaydt), as-is, card 2026-11-19 | 20 approved |
+| 2026-11-20 | ja | owner (mcthaydt), as-is, card 2026-11-19 | 15 approved |
+| 2026-11-20 | ko | owner (mcthaydt), as-is, card 2026-11-19 | 15 approved |
+| 2026-11-20 | es-419 | owner (mcthaydt), as-is, card 2026-11-19 | 15 approved |
+| 2026-11-20 | pt-BR | owner (mcthaydt), as-is, card 2026-11-19 | 15 approved |
+| 2026-11-20 | zh-Hans | owner (mcthaydt), as-is, card 2026-11-19 | 15 approved |
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 1 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 1 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 1 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 1 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 1 approved |
+
+2026-11-20: the Owner confirmed the five `lobby_code_letter` approvals above that read "owner to confirm" (decision in the project's internal notes).
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 20 approved |
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 5 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 5 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 5 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 5 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 5 approved |
+| 2026-11-20 | ja | claude (read against the English, 2026-11-20), owner to confirm | 3 approved |
+| 2026-11-20 | ko | claude (read against the English, 2026-11-20), owner to confirm | 3 approved |
+| 2026-11-20 | es-419 | claude (read against the English, 2026-11-20), owner to confirm | 3 approved |
+| 2026-11-20 | pt-BR | claude (read against the English, 2026-11-20), owner to confirm | 3 approved |
+| 2026-11-20 | zh-Hans | claude (read against the English, 2026-11-20), owner to confirm | 3 approved |
+| 2026-11-19 | ja | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |
+| 2026-11-19 | ko | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |
+| 2026-11-19 | es-419 | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |
+| 2026-11-19 | pt-BR | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |
+| 2026-11-19 | zh-Hans | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |

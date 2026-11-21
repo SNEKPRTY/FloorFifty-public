@@ -44,3 +44,18 @@ describe("the Full screen quick action", () => {
     expect(document.querySelector("[data-action-bar]")).not.toBeNull();
   });
 });
+
+describe("the Instructions quick action", () => {
+  it("is there only where it is wired, and opens the carousel when pressed", () => {
+    component = mount(QuickActions, { target: document.body, props: { onContact: () => {}, onHomeScreen: () => {} } });
+    flushSync();
+    expect(document.querySelector('[data-testid="quick-instructions"]')).toBeNull();
+    unmount(component);
+    document.body.innerHTML = "";
+    const opened: number[] = [];
+    component = mount(QuickActions, { target: document.body, props: { onContact: () => {}, onHomeScreen: () => {}, onInstructions: () => opened.push(1) } });
+    flushSync();
+    document.querySelector<HTMLButtonElement>('[data-testid="quick-instructions"]')!.click();
+    expect(opened).toEqual([1]);
+  });
+});

@@ -323,6 +323,20 @@ export class JuiceDirector {
     return result;
   }
 
+  /**
+   * A moment the story names (story mode v2, "Feel"): dust from a point, and
+   * for the local racer the camera kick and the hit-stop. Drawn on the next
+   * frame's clock; nothing under reduced motion but the still dust.
+   */
+  storyMoment(moment: { readonly at?: { readonly x: number; readonly y: number }; readonly dust?: DustSpec; readonly tints?: readonly number[]; readonly hitStopMs?: number; readonly kickUnits?: number }): void {
+    const nowMs = this.lastNowMs ?? 0;
+    const reduced = this.deps.reduced() || this.off;
+    if (moment.dust !== undefined && moment.at !== undefined) this.throwFromFeet(moment.dust, moment.at, nowMs, reduced, moment.tints);
+    if (reduced) return;
+    if (moment.kickUnits !== undefined && moment.kickUnits > 0) this.kick.lift(moment.kickUnits);
+    if (moment.hitStopMs !== undefined && moment.hitStopMs > 0) this.hitStop.start(nowMs, moment.hitStopMs);
+  }
+
   /** Particles on screen now, for the leak checks. */
   get liveParticles(): number {
     return this.dust.live;

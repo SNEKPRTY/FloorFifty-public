@@ -85,7 +85,7 @@ describe("through the real screen manager", () => {
         Lobby: () => screen("Lobby"),
         Gameplay: () => screen("Gameplay", true),
         GameEnd: () => screen("GameEnd"),
-        Tutorial: () => screen("Tutorial"),
+        Story: () => screen("Story"),
         Replay: () => screen("Replay"),
       },
       context,

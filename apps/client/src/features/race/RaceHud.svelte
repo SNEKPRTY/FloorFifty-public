@@ -57,6 +57,7 @@
     onPause,
     onRestart,
     solo = false,
+    floorGoal = undefined,
     replay = false,
     announcement = "",
     recoveryHint = false,
@@ -65,7 +66,10 @@
     popScale = 1.06,
     barks = {},
     popSpring = undefined,
+    floorReading = undefined,
   }: {
+    /** The story's reading: the tower's floor now and the chapter's goal floor, over the model's count. */
+    floorReading?: { readonly floor: number; readonly goal: number } | undefined;
     model: HudModel;
     recoveryHint?: boolean;
     /** Where the local racer is drawn, while the coach is up: the coach hangs clear of it. */
@@ -89,10 +93,12 @@
      */
     onRestart?: () => void;
     /**
-     * One racer on one lap, as the tutorial is: the Lap chip and the standings
+     * One racer on one lap, as the story is: the Lap chip and the standings
      * would say nothing Floors does not, so neither is drawn.
      */
     solo?: boolean;
+    /** The floor the chip counts to when it is not the course's last: a story chapter's goal. */
+    floorGoal?: number | undefined;
     /** A replay: the timer carries a Replay chip, its capitals from CSS. */
     replay?: boolean;
     /** What the race's polite region says now (race-flow spec §6). */
@@ -296,13 +302,15 @@
        reached (race-options spec §5.5). The count rolls when it changes
        (polish spec §6): a swap under reduced motion. -->
   {#snippet floorsValue()}
-    {#if model.endless}
+    {#if floorReading !== undefined}
+      <span class="ff-hud__value ff-hud__value--large" data-testid="hud-story-floor"><span use:rollDigits={twoDigits(floorReading.floor)}></span> / {twoDigits(floorReading.goal)}</span>
+    {:else if model.endless}
       <span class="ff-hud__value ff-hud__value--large">
         <span use:rollDigits={twoDigits(model.endless.floor)}></span>
         <span class="ff-hud__best" data-testid="hud-best"><span class="sr-only">{m.race_best_floor()} </span><span aria-hidden="true">▲</span> {model.endless.best}</span>
       </span>
     {:else}
-      <span class="ff-hud__value ff-hud__value--large"><span use:rollDigits={twoDigits(model.collected)}></span> / {twoDigits(model.floorCount)}</span>
+      <span class="ff-hud__value ff-hud__value--large"><span use:rollDigits={twoDigits(floorGoal === undefined ? model.collected : Math.min(model.collected, floorGoal))}></span> / {twoDigits(floorGoal ?? model.floorCount)}</span>
     {/if}
   {/snippet}
 
@@ -324,13 +332,11 @@
   <section class="ff-hud__metrics" aria-label={m.race_progress()} data-hud-metrics use:measureHeight={(height) => (metricsHeight = height)}>
     <div class="ff-hud__cell ff-hud__cell--lead">
       <!-- Pops when authority credits the local racer a floor (polish spec §6). -->
-      <!-- Not in the tutorial, where nothing asks her to fill it. -->
-      {#if !solo}
-        <Panel as="span" tone="hud" arrive="none" leave="none" class="ff-hud__chip ff-hud__chip--stacked" data-testid="hud-floors" {@attach popFloors}>
-          <span class="ff-hud__label">{model.endless ? m.race_floor() : m.race_floors()}</span>
-          {@render floorsValue()}
-        </Panel>
-      {/if}
+      <!-- In the story it counts to the chapter's goal floor. -->
+      <Panel as="span" tone="hud" arrive="none" leave="none" class="ff-hud__chip ff-hud__chip--stacked" data-testid="hud-floors" {@attach popFloors}>
+        <span class="ff-hud__label">{model.endless || floorReading !== undefined ? m.race_floor() : m.race_floors()}</span>
+        {@render floorsValue()}
+      </Panel>
       {#if !placement.portrait && !solo}
         <Panel as="span" tone="hud" arrive="none" leave="none" class="ff-hud__chip ff-hud__chip--stacked" data-testid="hud-lap">
           <span class="ff-hud__label">{m.race_lap()}</span>
@@ -593,7 +599,7 @@
      the row does not lean on Floors. */
   .ff-hud[data-orientation="portrait"] .ff-hud__cell > :global(.ff-hud__chip) { flex: 1 1 auto; }
   /* Held upright the menu is always the row's last, square tile, whatever stands beside it: in
-     the tutorial, with Time alone, it had flowed into a wide column as a blue slab (review R29). */
+     the story, with Time alone, it had flowed into a wide column as a blue slab (review R29). */
   .ff-hud[data-orientation="portrait"] :global(.ff-hud__pause--tile) { grid-column: -2; justify-self: end; aspect-ratio: 1; }
   /* And Time keeps the centre column, alone or not. */
   .ff-hud[data-orientation="portrait"] .ff-hud__metrics > :global(.ff-hud__cell--centre),

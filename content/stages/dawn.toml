@@ -1,6 +1,6 @@
-# The tutorial's stage (tutorial stage spec). Not in `catalog.toml`: no room
-# can be raced here. `content/tutorial.toml` names it, and the compiler emits
-# it inside the tutorial alone, so it reaches `contentRevision` only.
+# The story's stage (story spec). Not in `catalog.toml`: no room
+# can be raced here. `content/story.toml` names it, and the compiler emits
+# it inside the story alone, so it reaches `contentRevision` only.
 #
 # A hazy dawn with the sun on a pyramid's apex, painted as one plate
 # (`world.dawnSky`), misty teal hills that part from it as the climb goes on
@@ -11,7 +11,7 @@ id = "dawn"
 displayName = "Dawn"
 platformAlias = "world.platform"
 
-# Empty on purpose: the tutorial's course is `tutorial.toml`'s seed on base tuning.
+# Empty on purpose: the story's course is `story.toml`'s seed on base tuning.
 [courseTuning]
 
 [theme]
@@ -19,7 +19,7 @@ backdropAlias = "world.dawnSky"
 ambienceAlias = "ambience.dawn"
 
 # The plate's foot stands at sink 440 in the sky's units at the start of the
-# climb. Measured against captures of the tutorial: it puts the plate's sun a
+# climb. Measured against captures of the story: it puts the plate's sun a
 # third of the way down a 16:9 frame, with the fog at its foot behind the near
 # rooftops.
 [[theme.layers]]
@@ -52,7 +52,7 @@ refractionIntensity = 0.45
 horizonLift = 12
 silhouette = true
 
-# The tutorial's sunrise (Wonder spec §6.4): three palette steps across its
+# The story's sunrise (Wonder spec §6.4): three palette steps across its
 # own short course, by the same scaling, from night to day. Each stays, so the
 # next steps on from it and the sunrise builds rather than resetting (owner).
 

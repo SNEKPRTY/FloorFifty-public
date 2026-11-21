@@ -5,7 +5,6 @@ import { createRoomStore } from "../../../../apps/client/src/features/net/store/
 import { installLocaleStrategy } from "../../../../apps/client/src/features/i18n/strategy";
 import { RaceHudView } from "../../../../apps/client/src/features/race/race-hud.svelte";
 import { FakeNetwork } from "../../support/fakes/network";
-import { tutorialWithFakes } from "../../support/fakes/screens";
 import { fakeSettings } from "../../support/fakes/settings";
 import { fakeStage } from "../../support/fakes/stage";
 import { LOCAL_ID, playerSnapshot, snapshotAt } from "../../support/snapshots";
@@ -67,16 +66,6 @@ describe("selected-mode guidance", () => {
     flushSync();
     expect(stage.overlay.querySelector('[data-testid="swipe-coach"]')?.textContent).toMatch(/restart/i);
   });
-
-  it.each(["keyboard", "gamepad", "touch"] as const)("labels the %s tutorial as climb practice and keeps skip available", async (method) => {
-    const tutorial = await tutorialWithFakes({ method });
-    cleanup.push(() => tutorial.screen.exit());
-    expect(tutorial.query("tutorial-practice")?.textContent).toMatch(/climb practice/i);
-    expect(tutorial.query("tutorial-skip")).not.toBeNull();
-    // A real button, not underlined link text (review R30 on #218: the drunk-grandma test's big
-    // obvious buttons).
-    expect(tutorial.query("tutorial-skip")?.classList.contains("ff-aq-control")).toBe(true);
-  });
 });
 
 
@@ -92,22 +81,4 @@ it("recomputes the current mode words after a language switch without remounting
   flushSync();
   expect(rules.textContent).toMatch(/drop back/i);
   expect(rules.textContent).not.toMatch(/last.*standing/i);
-});
-
-it("labels button practice and preserves its skip-to-ready path", async () => {
-  const tutorial = await tutorialWithFakes({ method: "touch", settings: fakeSettings({ input: { touchMode: "buttons" } }) });
-  cleanup.push(() => tutorial.screen.exit());
-  expect(tutorial.query("tutorial-practice")?.textContent).toMatch(/climb practice/i);
-  expect(tutorial.query("tutorial-prompt")?.textContent).toMatch(/hold the left arrow/i);
-  tutorial.click("tutorial-skip");
-  expect(tutorial.query("tutorial-done")?.textContent).toMatch(/lava rises from below/i);
-});
-
-describe("the tutorial's end card (review R31)", () => {
-  it("hides the race HUD while it is up, so the clock never sticks out above it", async () => {
-    const { readFileSync } = await import("node:fs");
-    const { resolve } = await import("node:path");
-    const source = readFileSync(resolve(import.meta.dirname, "../../../..", "apps/client/src/features/tutorial/TutorialPrompt.svelte"), "utf8");
-    expect(source).toMatch(/:global\(body:has\(\[data-testid="tutorial-done"\]\) \.ff-hud\) \{\s*visibility: hidden;/);
-  });
 });

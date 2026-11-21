@@ -1,13 +1,14 @@
 {
-  "for": "Upright iPad ready room and Character page fill their screens; character tiles on an upright phone sit under the name row",
+  "for": "Help: the race page has its picture; races and replays framed by black bars again on wide screens",
   "views": {
     "es-419": [
-      "ipad-portrait",
-      "iphone-se-portrait"
+      "desktop-1280x800",
+      "ipad-landscape"
     ]
   },
   "screens": [
-    "11",
-    "16-17"
+    "15",
+    "35-36",
+    "38"
   ]
 }

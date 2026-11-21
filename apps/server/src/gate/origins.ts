@@ -16,11 +16,25 @@ export type OriginPolicy = {
   corsHeaders(origin: string | undefined): Record<string, string>;
 };
 
+/**
+ * The origin list from the environment: `FLOOR_FIFTY_ALLOWED_ORIGINS` (in
+ * fly.toml) plus `FLOOR_FIFTY_EXTRA_ORIGINS`, a Fly secret. Setting the secret
+ * (`fly secrets set FLOOR_FIFTY_EXTRA_ORIGINS=https://g-<id>.ruken.dev`)
+ * restarts the server on the same build, so a new Ruken origin needs no code
+ * change and no release. Undefined when neither is set, as in dev.
+ */
+export function allowedOriginsFromEnv(env: Record<string, string | undefined>): string | undefined {
+  const parts = [env["FLOOR_FIFTY_ALLOWED_ORIGINS"], env["FLOOR_FIFTY_EXTRA_ORIGINS"]].filter(
+    (part): part is string => part !== undefined && part.trim() !== "",
+  );
+  return parts.length === 0 ? undefined : parts.join(",");
+}
+
 export function originPolicy(list: string | undefined): OriginPolicy {
   const origins = new Set(
     (list ?? "")
       .split(",")
-      .map((origin) => origin.trim())
+      .map((origin) => origin.trim().replace(/\/+$/, ""))
       .filter((origin) => origin !== ""),
   );
   if (origins.size === 0) {

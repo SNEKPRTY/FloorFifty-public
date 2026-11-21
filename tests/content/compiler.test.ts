@@ -193,17 +193,22 @@ describe("the repository's own content", () => {
     if (result.ok) expect(result.artifact.content.baseTuning.SURVIVAL_START_WAIT_TICKS).toBe(600);
   });
 
-  it("ships a five-step tutorial that ends on Survival's lava (first-race spec §1)", async () => {
+  it("ships the five-chapter story on its measured seeds (story mode v2 spec)", async () => {
     const result = await compile(paths);
     expect(result.ok).toBe(true);
-    if (result.ok)
-      expect(result.artifact.content.tutorial.steps.map((step) => step.kind)).toEqual([
-        "move",
-        "land",
-        "fastFall",
-        "landMoving",
-        "survive",
+    if (result.ok) {
+      const { chapters, cutscenes, actors } = result.artifact.content.story;
+      expect(chapters.map((chapter) => [chapter.id, chapter.stage.id, chapter.song.id, chapter.seed])).toEqual([
+        ["lowtown", "dawn", "dawn-tutorial", 862],
+        ["city", "rooftops", "moving-on", 139],
+        ["deep", "sunken-dome", "farther-from-home", 8],
+        ["snow", "snow-shrine", "whats-next", 354],
+        ["fifty", "dawn", "we-outside", 70],
       ]);
+      expect(cutscenes.map((cutscene) => cutscene.id)).toEqual(["lowtown", "the-city", "the-deep", "together", "the-ledge", "the-top"]);
+      expect(Object.keys(actors).sort()).toEqual(["frog", "oni"]);
+      expect(chapters.flatMap((chapter) => chapter.teaches)).toEqual(["move", "fastFall"]);
+    }
   });
 
   it("points at the tree, the manifest, and the generated file", () => {

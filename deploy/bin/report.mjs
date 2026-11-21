@@ -34,6 +34,9 @@ if (process.argv.includes("--json")) {
       `build skew           ${counts.buildSkew}`,
       `refused by limit     ${table(counts.refusedByLimit)}`,
       `peak live rooms      ${counts.peakRooms}`,
+      `peak sockets         ${counts.peakSockets}`,
+      `peak memory (rss)    ${counts.peakRssMb} MB`,
+      `peak loop delay p99  ${counts.peakLoopP99Ms} ms`,
       "",
     ].join("\n"),
   );

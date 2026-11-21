@@ -1,4 +1,4 @@
-# The tutorial's song, "Jersey Triplets", supplied by the project owner as a
+# The story's song, "Jersey Triplets", supplied by the project owner as a
 # commercially licensed WAV master (CommericalSongs/Jersey Triplets Tutorial.wav).
 # It replaced FloorFifty Tutorial.mp3 on 2026-09-25.
 #
@@ -10,15 +10,15 @@
 # The tempo is an octave call. A beat-grid scan at 0.05 BPM scores 93.00 at
 # 3.52x the onset envelope's mean and 186.00 at 3.48x, against 2.23 at 186.05
 # and 2.20 at 185.95. It takes the upper octave, as the owner chose for the
-# tutorial's previous song.
+# first chapter's previous song.
 #
 # `beatOffsetTicks` is 9 because the first beat sits at about 155 ms and a tick
 # is 16.667 ms. The phase search was calibrated against the two documented
-# downbeats (Chrome in the Rain, and the previous tutorial song), which it read
+# downbeats (Chrome in the Rain, and the previous first-chapter song), which it read
 # 8-18 ms late; the +/-5 ms left over is a third of a tick and visual only.
 #
-# Not in `catalog.toml`: `tutorial.toml` names it, and no room races it.
-# The tutorial loops the whole file (0 to its 160 760 ms length).
+# Not in `catalog.toml`: `story.toml` names it, and no room races it.
+# The story loops the whole file (0 to its 160 760 ms length).
 id = "dawn-tutorial"
 displayName = "Jersey Triplets"
 bpm = 186.0

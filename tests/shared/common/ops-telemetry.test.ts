@@ -42,6 +42,24 @@ describe("operational telemetry events (release readiness §7.1)", () => {
     }
   });
 
+  // Audit S27: a crash may carry one short reason, and nothing longer or wider.
+  it("accepts a crash with a short one-line reason", () => {
+    expect(
+      opsEventSchema.safeParse({ event: "fatal", class: "TypeError", screen: "Gameplay", reason: "Invalid array length", ...common }).success,
+    ).toBe(true);
+  });
+
+  it.each([
+    ["a reason over 120 characters", "x".repeat(121)],
+    ["a reason with a second line, which could be a stack", "first\nat foo (bar.js:1:2)"],
+  ])("refuses %s", (_label, reason) => {
+    expect(opsEventSchema.safeParse({ event: "fatal", class: "TypeError", screen: "Gameplay", reason, ...common }).success).toBe(false);
+  });
+
+  it("gives no other event a reason", () => {
+    expect(opsEventSchema.safeParse({ event: "rejection", class: "EncodingError", screen: "Gameplay", reason: "x", ...common }).success).toBe(false);
+  });
+
   it("refuses a load id that could carry anything", () => {
     expect(opsEventSchema.safeParse({ event: "phase", phase: "racing", ...common, load: "Kite ABC234" }).success).toBe(
       false,

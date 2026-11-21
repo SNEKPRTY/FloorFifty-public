@@ -22,10 +22,10 @@ describe("the touch guide", () => {
     mounted = mount(TouchGuide, { target: document.body, props: { mode: "swipe" } });
     const captions = [...document.querySelectorAll("figcaption")].map((caption) => caption.textContent?.trim());
     expect(captions).toEqual([
-      m.tutorial_touch_steer(),
-      m.tutorial_touch_fast_fall(),
-      m.tutorial_touch_restart(),
-      m.tutorial_touch_buttons_hint(),
+      m.touch_guide_steer(),
+      m.touch_guide_fast_fall(),
+      m.touch_guide_restart(),
+      m.touch_guide_buttons_hint(),
     ]);
   });
 });

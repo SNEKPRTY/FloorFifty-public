@@ -16,19 +16,20 @@ import { createColyseusRaceServer } from "./colyseus-server";
 import { telemetryFromEnvironment } from "./telemetry-config";
 import { drainOnSigterm } from "./drain";
 import { proxySourceFromEnv } from "./gate/client-ip";
+import { allowedOriginsFromEnv } from "./gate/origins";
 import { forbiddenInProduction, installCrashHandlers } from "./process-safety";
 
 if (process.env["VITEST"] === undefined) {
   const forbidden = forbiddenInProduction(process.env);
   if (forbidden.length > 0) {
-    process.stderr.write(`refusing to start in production with ${forbidden.join(", ")} set\n`);
+    process.stderr.write(`refusing to start: ${forbidden.join(", ")}\n`);
     process.exit(1);
   }
   installCrashHandlers(process, (code) => process.exit(code), (line) => process.stderr.write(`${line}\n`));
 
   const port = Number(process.env["PORT"] ?? 3_000);
   const maxRooms = Number(process.env["MAX_ROOMS"]);
-  const allowedOrigins = process.env["FLOOR_FIFTY_ALLOWED_ORIGINS"];
+  const allowedOrigins = allowedOriginsFromEnv(process.env);
   void createColyseusRaceServer({
     port,
     contentStore: new ContentStore(GENERATED_CONTENT),

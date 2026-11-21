@@ -20,7 +20,7 @@ export const LAYERS: readonly string[] = [
   "net",
   "screen",
   "race",
-  "tutorial",
+  "story",
   "replay",
   "boot",
   "select",

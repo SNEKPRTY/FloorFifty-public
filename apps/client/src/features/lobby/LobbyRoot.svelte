@@ -53,10 +53,8 @@
     artSrc,
     content,
     onBack,
+    onStory,
     heroRises = true,
-    offerTutorial = false,
-    onTutorial,
-    onSkipTutorial,
     access = NO_ACCESS,
     seatedOnEntry = undefined,
   }: {
@@ -70,11 +68,8 @@
     /** A getter, because the artifact can be replaced while the panel is up. */
     content: () => GameContentPayload | undefined;
     onBack: () => void;
-    /** A first Play from the title: offer the tutorial once (§3.1.4). */
-    offerTutorial?: boolean;
-    onTutorial?: () => void;
-    /** Skip marks the tutorial seen; the offer is not made again. */
-    onSkipTutorial?: () => void;
+    /** Opens the story, which the match gate offers; absent while story mode is hidden. */
+    onStory?: () => void;
     /** Off when arriving from the title, whose hero is already on screen. */
     heroRises?: boolean;
     /** What this device may pick: the dev flag, what it earned and what it owns. */
@@ -169,8 +164,6 @@
    */
   // svelte-ignore state_referenced_locally
   let connectHeroRises = $state(heroRises);
-  // svelte-ignore state_referenced_locally
-  let offering = $state(offerTutorial);
   $effect(() => {
     if (inRoom) connectHeroRises = true;
   });
@@ -262,32 +255,20 @@
               onChangeCharacter={() => (characterOpen = true)}
             />
           {:else}
-            <!-- The offer and the form as one group, the offer above (UI layout
-                 spec §6.2): where a stack puts the form (a phone's foot, under a
+            <!-- The form as one group: where a stack puts it (a phone's foot, under a
                  tablet's hero), centred beside the hero in a split. -->
             <div class="ff-lobby__connect">
-              {#if offering}
-                <!-- The offer, a strip of its own above the form (UI layout spec §6.2): one
-                     line and its two answers, dismissed by either. -->
-                <Panel data-testid="tutorial-offer" class="ff-tutorial-offer flex items-center gap-8 px-12 py-8">
-                  <!-- One row: the words wrap beside the answers rather than the
-                       answers dropping under them, which cost a short screen a row. -->
-                  <p class="ff-aq-body m-0 min-w-0 grow text-aq-ink">{m.lobby_tutorial_offer()}</p>
-                  <div class="flex shrink-0 gap-8">
-                    <Button kind="ghost" data-testid="tutorial-offer-accept" onclick={onTutorial}>{m.lobby_tutorial_try()}</Button>
-                    <Button
-                      kind="ghost"
-                      data-testid="tutorial-offer-skip"
-                      onclick={() => {
-                        offering = false;
-                        onSkipTutorial?.();
-                      }}>{m.lobby_tutorial_skip()}</Button
-                    >
-                  </div>
-                </Panel>
-              {/if}
               <MenuSheet>
-                <ConnectPanel {network} {attempt} {setStatus} touchMode={settings.value.input.touchMode} />
+                <ConnectPanel
+                  {network}
+                  {attempt}
+                  {setStatus}
+                  touchMode={settings.value.input.touchMode}
+                  {settings}
+                  prompts={content()?.story?.prompts}
+                  {artSrc}
+                  {...onStory === undefined ? {} : { onStory }}
+                />
               </MenuSheet>
             </div>
           {/if}
@@ -349,8 +330,7 @@
     justify-items: stretch;
     align-content: stretch;
   }
-  /* The form takes what the offer leaves, and scrolls inside past it only
-     under the soft keyboard; the offer keeps its own height. */
+  /* The form scrolls inside only under the soft keyboard. */
   .ff-lobby__connect {
     display: grid;
     height: 100%;
@@ -362,65 +342,16 @@
     grid-template-rows: minmax(7.5rem, max-content);
     align-content: var(--ff-stack-sheet-align);
   }
-  .ff-lobby__connect:has(> :global(.ff-tutorial-offer)) {
-    grid-template-rows: auto minmax(7.5rem, max-content);
-  }
   :global([data-arrangement="split"]) .ff-lobby__connect {
     align-content: center;
   }
-  :global(.ff-tutorial-offer) {
-    width: var(--ff-sheet-width);
-    justify-self: center;
-    flex-wrap: wrap;
-  }
-  /* The sentence keeps a column of its own at least 260 px wide, so it never
-     breaks into one-word lines; the answers drop under it when the row is
-     narrower than that and the sentence plus the answers. */
-  :global(.ff-tutorial-offer) p {
-    flex: 1 1 16.25rem;
-  }
-
-  /* The first-visit guidance shares a short sideways room with the form.
-     Use the existing guidance type and touch-target floors so the offer
-     does not cost the form its second input row. */
-  @container ff-screen (max-height: 340px) {
-    :global(.ff-tutorial-offer) {
-      --ff-aq-control-height: var(--ff-aq-target);
-      flex-wrap: nowrap;
-    }
-    :global(.ff-tutorial-offer) p {
-      flex: 1 1 0;
-    }
-    :global(.ff-tutorial-offer) p {
-      font-size: var(--ff-type-hint);
-      line-height: 1.4;
-    }
-    /* The offer already points to the controls lesson. As with touch help,
-       its short first-visit layout gives the keyboard legend's row back. */
-    .ff-lobby__connect:has(> :global(.ff-tutorial-offer)) :global(.ff-help) {
-      display: none;
-    }
-  }
-
-  /* A phone held upright: the hero's cell is what the form (and the offer)
+  /* A phone held upright: the hero's cell is what the form
      leave, so it is a size container the hero shrinks to (MenuHero sets the
      wordmark on one line there). Only here: elsewhere the stack sizes the
      hero's row to the hero, and a size container would collapse it. */
   :global([data-form-factor="phone-portrait"]) .ff-menu :global(.ff-screen-frame[data-arrangement="stack"] > .ff-screen-frame__content > .ff-screen-frame__hero) {
     container: ff-hero / size;
   }
-  /* With the offer showing, the friends line and the touch help give up
-     their rows: the offer is the newcomer's note (and offers the tutorial
-     the help summarises), and the form must fit beside it at 1280 x 720 and
-     on a touch desktop. */
-  :global([data-form-factor="phone-portrait"]) .ff-lobby__connect:has(> :global(.ff-tutorial-offer)) :global(.ff-help) {
-    display: none;
-  }
-  .ff-lobby__connect:has(> :global(.ff-tutorial-offer)) :global([data-testid="menu-friends"]),
-  .ff-lobby__connect:has(> :global(.ff-tutorial-offer)) :global(.ff-help-touch) {
-    display: none;
-  }
-
   /* The screen holds only the status line now (the frame is fixed to the
      band on its own), so it keeps to the band as the frame does: inset to the
      viewport, the line sat on the letterbox's bottom bar. */

@@ -4,7 +4,7 @@
  * Paraglide asks the `custom-settings` strategy on every message call. It
  * answers from the settings store's `$state`, so a template that calls a
  * message re-renders when the choice changes: the switch is live, with no
- * reload, and a race, a room or the tutorial carries on (D-L6). While the
+ * reload, and a race, a room or the story carries on (D-L6). While the
  * choice is Automatic it answers detection, read fresh each time so a
  * browser's language change is followed on the next boot.
  */

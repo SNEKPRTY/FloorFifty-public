@@ -60,9 +60,19 @@ describe("fullscreen", () => {
       throw new Error("NotSupportedError");
     });
     vi.stubGlobal("screen", { orientation: { lock } });
-    await expect(toggleFullscreen(d)).resolves.toBeUndefined();
+    await expect(toggleFullscreen(d, false)).resolves.toBeUndefined();
     expect((d.documentElement as unknown as { requestFullscreen: () => void }).requestFullscreen).toHaveBeenCalled();
     expect(lock).toHaveBeenCalledWith("landscape");
+    vi.unstubAllGlobals();
+  });
+
+  it("never asks for a direction lock in a frame, where the host owns the screen", async () => {
+    const d = doc();
+    const lock = vi.fn(async () => {});
+    vi.stubGlobal("screen", { orientation: { lock } });
+    await toggleFullscreen(d, true);
+    expect((d.documentElement as unknown as { requestFullscreen: () => void }).requestFullscreen).toHaveBeenCalled();
+    expect(lock).not.toHaveBeenCalled();
     vi.unstubAllGlobals();
   });
 

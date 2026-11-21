@@ -85,6 +85,17 @@ describe("the weekly report (release readiness §7.3)", () => {
     ).toMatchObject({ slowTicks: 2, buildSkew: 1, refusedByLimit: { create: 2, busy: 1 }, peakRooms: 11 });
   });
 
+  // Audit S25: the process's vital signs, once a minute.
+  it("reports the peaks of the process's vital signs", () => {
+    expect(
+      report([
+        JSON.stringify({ event: "vitals", rooms: 3, sockets: 9, rssMb: 210, heapMb: 80, loopP99Ms: 12, uptimeS: 60 }),
+        JSON.stringify({ event: "vitals", rooms: 5, sockets: 17, rssMb: 340, heapMb: 120, loopP99Ms: 48, uptimeS: 120 }),
+        JSON.stringify({ event: "vitals", rooms: 2, sockets: 6, rssMb: 300, heapMb: 100, loopP99Ms: 20, uptimeS: 180 }),
+      ]),
+    ).toMatchObject({ peakSockets: 17, peakRssMb: 340, peakLoopP99Ms: 48 });
+  });
+
   it("ignores lines it does not know, and malformed JSON", () => {
     expect(report(["floor-fifty server listening on 3001", "{not json", ""])).toMatchObject({ restarts: 0, peakRooms: 0 });
   });

@@ -140,12 +140,12 @@ test("the landscape connect sheet fits its contents at rest", async ({ page }) =
   await seedSettings(page.context(), { seen: { tutorial: false } });
   await openTitle(page);
   await page.getByTestId("title-play").click();
-  await expect(page.getByTestId("tutorial-offer")).toBeVisible();
+  await expect(page.locator('[data-screen="lobby"]')).toBeVisible();
   const sheet = page.getByTestId("menu-sheet");
   await expect.poll(() => sheet.evaluate((node) => node.scrollHeight - node.clientHeight), {
     message: "the connect form must fit without scrolling at rest",
   }).toBeLessThanOrEqual(1);
-  await page.screenshot({ path: test.info().outputPath("connect-offer.png") });
+  await page.screenshot({ path: test.info().outputPath("connect-sheet.png") });
 });
 
 test("the keys sit in one row at the panel's foot", async ({ page }) => {

@@ -265,6 +265,8 @@
   }
 
   :global(.ff-modal__dialog) {
+    /* The form's width, or the band's where a form factor lifts the cap (aquarian-tokens). */
+    max-width: var(--ff-dialog-max-width, var(--container-form));
     /* The shell's scale on a tablet (aquarian-tokens), as ScreenFrame. */
     zoom: var(--ff-ui-zoom, 1);
     gap: var(--ff-dialog-gap);
@@ -331,9 +333,11 @@
     overscroll-behavior: contain;
   }
 
+  /* 44 px as drawn: inside a zoom the box is divided by it, so the header is not a tall row. */
   :global(.ff-modal__close) {
-    min-width: 44px;
-    min-height: 44px;
+    --ff-close: calc(var(--ff-aq-target) / var(--ff-ui-zoom, 1) / var(--ff-ancestor-zoom, 1));
+    min-width: var(--ff-close);
+    min-height: var(--ff-close);
     padding: 0;
   }
 </style>

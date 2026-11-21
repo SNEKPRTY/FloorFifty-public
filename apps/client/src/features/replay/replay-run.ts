@@ -1,6 +1,6 @@
 /**
- * A replay played on this device (race-options spec §7.2), as `TutorialRun`
- * plays the tutorial: the shared simulation stepped here, projected with
+ * A replay played on this device (race-options spec §7.2), as `StoryRun`
+ * plays the story: the shared simulation stepped here, projected with
  * `raceToSnapshot`, drawn by the race's own scene.
  *
  * Each event's ID is re-keyed per playthrough. The audio engine never forgets
@@ -22,7 +22,7 @@ import type { GameContent } from "@floor-fifty/shared/content/game-content";
 import { REPLAY_INFLATE_MAX_BYTES, unpackReplay } from "@floor-fifty/shared/replay/compression";
 import type { Replay } from "@floor-fifty/shared/replay/replay";
 import { createReplayStepper, type ReplayStepper } from "@floor-fifty/shared/replay/stepper";
-import { raceToSnapshot } from "../tutorial/tutorial-run";
+import { raceToSnapshot } from "../story/story-run";
 import { streamCompression } from "./replay-compression";
 
 /** The most ticks one frame may step: at 2× a frame steps two or more, and a slow device plays late rather than stalling. */
@@ -152,7 +152,7 @@ export class ReplayRun {
     if (!this.paused && !this.stepper.done) {
       this.accumulated += elapsedMs * this.speed * scale;
       const due = Math.min(MAX_STEPS_PER_FRAME, Math.floor(this.accumulated / TICK_MS + 1e-6));
-      // Time past the cap is dropped, as the tutorial drops it.
+      // Time past the cap is dropped, as the story drops it.
       this.accumulated = due === MAX_STEPS_PER_FRAME ? 0 : this.accumulated - due * TICK_MS;
       for (let i = 0; i < due && !this.stepper.done; i += 1) {
         if (this.stepOnce(events)) driftedNow = true;

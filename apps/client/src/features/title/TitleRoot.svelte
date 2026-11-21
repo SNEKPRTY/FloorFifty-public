@@ -28,6 +28,7 @@
   import LanguagePicker from "../settings/LanguagePicker.svelte";
   import { ENDONYMS } from "../i18n/locales";
   import ContactPanel from "../settings/ContactPanel.svelte";
+  import Instructions from "../lobby/Instructions.svelte";
   import QuickActions from "../lobby/QuickActions.svelte";
   import CharacterPage from "../select/CharacterPage.svelte";
   import type { GameContentPayload } from "@floor-fifty/shared/content/game-content";
@@ -41,7 +42,7 @@
 
   let {
     onPlay,
-    onTutorial,
+    onStory,
     settings,
     heroRises = true,
     racersDrop = false,
@@ -51,7 +52,7 @@
     access = NO_ACCESS,
   }: {
     onPlay: () => void;
-    onTutorial?: () => void;
+    onStory?: () => void;
     settings: SettingsStore;
     /** Off when arriving from the lobby, whose hero is already on screen. */
     heroRises?: boolean;
@@ -68,7 +69,7 @@
   } = $props();
 
   /** Which modal is open, if any; one at a time. */
-  let open = $state<"settings" | "language" | "contact" | "home-screen" | "character" | undefined>();
+  let open = $state<"settings" | "language" | "contact" | "home-screen" | "instructions" | "character" | undefined>();
   /** A pick in the Language modal, said once it has closed, as the Settings panel says it (languages spec §5). */
   let announcement = $state("");
 
@@ -154,7 +155,8 @@
                  card; the bar measures what the card gives it and gives way. -->
             <div class="min-w-0 phone-l:col-span-2">
               <QuickActions
-                {...onTutorial === undefined ? {} : { onTutorial }}
+                {...onStory === undefined ? {} : { onStory }}
+                onInstructions={() => (open = "instructions")}
                 onContact={() => (open = "contact")}
                 onHomeScreen={() => (open = "home-screen")}
               />
@@ -211,6 +213,8 @@
       }}
     />
   </Modal>
+{:else if open === "instructions"}
+  <Instructions {settings} prompts={content()?.story?.prompts} {artSrc} onClose={() => (open = undefined)} />
 {:else if open === "contact"}
   <Modal title={m.title_contact()} testId="contact-modal" onClose={() => (open = undefined)}>
     <ContactPanel />
@@ -291,6 +295,11 @@
   :global([data-form-factor="phone-portrait"][data-height="short"] .ff-title__card) {
     gap: 6px;
     padding: 8px;
+  }
+  /* The quick actions' own rows (two bars, each wrapping) close up with it. */
+  :global([data-form-factor="phone-portrait"][data-height="short"] .ff-quick),
+  :global([data-form-factor="phone-portrait"][data-height="short"] .ff-quick [data-row="visible"]) {
+    gap: 3px;
   }
 
   /* A phone held sideways, or upright on a short screen (the SE): the choices at

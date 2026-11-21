@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import { characterName, packTitle, stageName, tutorialPrompt, unlockHint } from "../../../../apps/client/src/features/i18n/content";
-import { GLYPH_MARKER, promptWords, promptWordsFromText } from "../../../../apps/client/src/features/tutorial/tutorial-prompt.svelte";
+import { characterName, packTitle, stageName, storyPrompt, unlockHint } from "../../../../apps/client/src/features/i18n/content";
+import { chipWords } from "../../../../apps/client/src/features/story/control-chip";
+import { GLYPH_MARKER, promptWordsFromText } from "../../../../apps/client/src/features/race/prompt-words";
 
 describe("authored words in the active locale (languages spec §4.2)", () => {
   it("names an item from its message", () => {
@@ -21,13 +22,13 @@ describe("authored words in the active locale (languages spec §4.2)", () => {
 
   it("resolves every key the content build generates", async () => {
     const generated = JSON.parse(await readFile("apps/client/messages/content/en.json", "utf8")) as Record<string, string>;
-    const keys = Object.keys(generated).filter((key) => key.startsWith("content_tutorial_"));
+    const keys = Object.keys(generated).filter((key) => key.startsWith("content_story_prompt_"));
     expect(keys.length).toBeGreaterThan(0);
     for (const key of keys) {
-      const [, , ...rest] = key.split("_");
+      const [, , , ...rest] = key.split("_");
       const method = rest.pop()!;
       const kind = rest.join("_").replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
-      expect(tutorialPrompt(kind, method, "authored", GLYPH_MARKER), key).toBe(generated[key]!.replaceAll("{glyph}", GLYPH_MARKER));
+      expect(storyPrompt(kind, method, "authored", GLYPH_MARKER), key).toBe(generated[key]!.replaceAll("{glyph}", GLYPH_MARKER));
     }
   });
 });
@@ -52,16 +53,12 @@ describe("the glyph marker (languages spec §4.3)", () => {
     expect(promptWordsFromText(`Press ${GLYPH_MARKER}`, undefined)).toEqual({ before: "Press the button", after: "" });
   });
 
-  it("words a step for the controls in hand, through the catalogue", () => {
-    const step = {
-      kind: "fastFall" as const,
-      prompt: { keyboard: "kb", gamepad: "In the air, press {glyph} or push down to fast fall.", touch: "t", buttons: "b" },
+  it("words a chip for the controls in hand, through the catalogue", () => {
+    const prompts = {
+      move: { keyboard: "k", gamepad: "g", touch: "t", buttons: "b" },
+      fastFall: { keyboard: "kb", gamepad: "{glyph} to drop fast", touch: "t", buttons: "b" },
     };
-    expect(promptWords(step, "gamepad", "swipe", "A / RT")).toEqual({
-      before: "In the air, press ",
-      glyph: "A / RT",
-      after: " or push down to fast fall.",
-    });
-    expect(promptWords(step, "touch", "buttons", undefined).before).toBe("In the air, hold the down arrow to fast fall.");
+    expect(chipWords(prompts, "fastFall", "gamepad", "swipe", "A / RT")).toEqual({ before: "", glyph: "A / RT", after: " to drop fast" });
+    expect(chipWords(prompts, "fastFall", "touch", "buttons", undefined).before).toBe("Hold the down arrow to drop fast");
   });
 });

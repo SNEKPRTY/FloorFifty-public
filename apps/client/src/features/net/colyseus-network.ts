@@ -316,6 +316,18 @@ let requestCounter = 0;
  */
 const BACKGROUND_PING_MS = 1_000;
 
+/**
+ * How long a connected socket may hear nothing from the server before the
+ * client treats it as dead and reconnects (audit S16). The client pings every
+ * second and the server answers each, so silence this long is a stalled link,
+ * not a quiet room. Without it the badge said connected while the race froze,
+ * until the system killed the socket, usually after the server's 30 second
+ * grace, when the seat was gone. The Owner's number (2026-11-14): 8 seconds.
+ */
+export const SILENT_SOCKET_MS = 8_000;
+/** How often the watchdog looks. */
+const SILENT_CHECK_MS = 2_000;
+
 /** Round trips remembered for the estimate. The median of these is the answer. */
 const RTT_SAMPLES = 7;
 
@@ -503,6 +515,11 @@ export class ColyseusNetworkManager implements NetworkPort {
    */
   private adopt(room: Room, generation: number): void {
     const current = (): boolean => this.current(generation) && this.room === room;
+    // When this socket last delivered anything at all (audit S16).
+    let heardAt = performance.now();
+    const heard = (): void => {
+      heardAt = performance.now();
+    };
     if (this.room !== undefined) this.rejectPending("the connection was replaced");
     this.detach?.();
     this.room = room;
@@ -544,6 +561,7 @@ export class ColyseusNetworkManager implements NetworkPort {
     // Answered at once by the room, never after a patch: the time it took is
     // the measurement.
     room.onMessage(SERVER_MESSAGES.pong, (pong: Pong) => {
+      heard();
       if (!current()) return;
       const sentAt = this.pingsSent.get(pong.id);
       if (sentAt === undefined) return;
@@ -583,7 +601,10 @@ export class ColyseusNetworkManager implements NetworkPort {
       for (const listener of [...this.subscribers]) listener.onReplay?.(replay);
     });
 
-    room.onStateChange(() => { if (current()) this.publish(); });
+    room.onStateChange(() => {
+      heard();
+      if (current()) this.publish();
+    });
 
     // Counted off the socket itself, because the SDK decodes a patch before
     // anything here sees it and a decoded schema has no size.
@@ -591,6 +612,7 @@ export class ColyseusNetworkManager implements NetworkPort {
       ?.transport?.ws;
     const countBytes = (event: Event): void => {
       if (!current()) return;
+      heard();
       const data = (event as MessageEvent).data as unknown;
       if (data instanceof ArrayBuffer) this.bytesIn += data.byteLength;
       else if (ArrayBuffer.isView(data)) this.bytesIn += data.byteLength;
@@ -642,7 +664,35 @@ export class ColyseusNetworkManager implements NetworkPort {
     }, BACKGROUND_PING_MS);
     (this.pingTimer as { unref?: () => void }).unref?.();
 
+    // A socket that is open but silent is dropped, so the reconnect starts now
+    // and not after the system notices (audit S16). A hidden tab is not held to
+    // account: the browser slows its timers and sockets, and what was lost to
+    // that is not counted once the tab is back.
+    const returned = (): void => {
+      if (!document.hidden) heard();
+    };
+    document.addEventListener("visibilitychange", returned);
+    const watchdog = setInterval(() => {
+      if (!current() || this.state !== "connected" || document.hidden) return;
+      if (performance.now() - heardAt <= SILENT_SOCKET_MS) return;
+      // The reconnect starts here, not from `onLeave`: on a stalled link the
+      // browser waits for a closing handshake that never comes (about 60 s in
+      // Chromium), past the server's 30 s hold on the seat. Moving to a new
+      // generation first detaches the old room, so its late close starts nothing.
+      const next = this.invalidate();
+      room.connection?.close();
+      if (this.session === undefined) {
+        this.setState("offline");
+        return;
+      }
+      this.setState("reconnecting");
+      void this.attemptReconnect(next);
+    }, SILENT_CHECK_MS);
+    (watchdog as { unref?: () => void }).unref?.();
+
     this.detach = () => {
+      clearInterval(watchdog);
+      document.removeEventListener("visibilitychange", returned);
       if (this.pingTimer !== undefined) clearInterval(this.pingTimer);
       this.pingTimer = undefined;
       socket?.removeEventListener?.("message", countBytes);

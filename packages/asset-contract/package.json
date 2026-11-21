@@ -1,6 +1,6 @@
 {
   "name": "@floor-fifty/asset-contract",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0",
   "private": true,
   "license": "SEE LICENSE IN ../../CONTENT-LICENSE.md",
   "type": "module",

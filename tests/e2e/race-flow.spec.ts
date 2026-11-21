@@ -16,13 +16,10 @@ test.beforeAll(async () => {
 
 /** Title → Tutorial → Title: a liquid edge each way (race-flow spec §7.1). */
 async function tutorialRoundTrip(page: Page): Promise<void> {
-  await page.getByTestId("quick-tutorial").click();
-  await expectScreen(page, "tutorial");
-  await expect(page.getByTestId("tutorial-prompt")).toBeVisible({ timeout: 20_000 });
-  const coach = page.getByTestId("swipe-coach-dismiss");
-  if (await coach.isVisible().catch(() => false)) await coach.click();
-  await page.keyboard.press("Escape");
-  await page.getByTestId("pause-leave").click();
+  await page.getByTestId("quick-story").click();
+  await expectScreen(page, "story");
+  await expect(page.getByTestId("story-hub")).toBeVisible({ timeout: 20_000 });
+  await page.getByTestId("story-hub-back").click();
   await expectScreen(page, "title");
 }
 

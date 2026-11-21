@@ -1200,48 +1200,11 @@ describe("seat identity", () => {
   });
 });
 
-describe("the tutorial offer (launch polish §3.1.4)", () => {
-  it("offers the tutorial on the first Play, once", async () => {
-    const settings = fakeSettings();
-    const first = await lobbyWithFakeNetwork({ settings, previousScreen: "MainMenu" });
-    expect(first.query("tutorial-offer")).not.toBeNull();
-    first.click("tutorial-offer-accept");
-    expect(first.published()).toContain("ui.tutorial-requested");
-    first.screen.exit();
-
-    const skipped = await lobbyWithFakeNetwork({ settings, previousScreen: "MainMenu" });
-    skipped.click("tutorial-offer-skip");
-    expect(settings.value.seen.tutorial).toBe(true);
-    // The offer is a kit panel and falls out before it goes.
-    await vi.waitFor(() => expect(skipped.query("tutorial-offer")).toBeNull());
-    skipped.screen.exit();
-
-    const again = await lobbyWithFakeNetwork({ settings, previousScreen: "MainMenu" });
-    expect(again.query("tutorial-offer")).toBeNull();
-    again.screen.exit();
-  });
-
-  it("does not offer the tutorial to a player returning from a race", async () => {
-    const lobby = await lobbyWithFakeNetwork({ previousScreen: "GameEnd" });
-    expect(lobby.query("tutorial-offer")).toBeNull();
-    lobby.screen.exit();
-  });
-
-  it("does not offer the tutorial to a player already in a room", async () => {
-    const held = new FakeNetwork();
-    await held.createRoom("Kite");
-    const seated = await lobbyWithFakeNetwork({ network: held, previousScreen: "MainMenu" });
-    expect(seated.query("tutorial-offer")).toBeNull();
-    seated.screen.exit();
-  });
-
-  it("offers the tutorial above the form, not inside it", async () => {
-    // The offer shows on a first Play from the title. Seeded unseen: the
-    // tests above store a skip, which a fresh store would read back.
+describe("the first-Play offer is gone (story spec §3)", () => {
+  it("makes no offer on a first Play: the match gate asks instead, before a first match", async () => {
     const lobby = await lobbyWithFakeNetwork({ settings: fakeSettings({ seen: { tutorial: false } }), previousScreen: "MainMenu" });
-    const offer = lobby.query<HTMLElement>("tutorial-offer")!;
-    expect(offer.closest('[data-testid="menu-sheet"]')).toBeNull();
-    expect(offer.compareDocumentPosition(lobby.query("menu-sheet")!) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(lobby.query("tutorial-offer")).toBeNull();
+    expect(lobby.query("menu-sheet")).not.toBeNull();
     lobby.screen.exit();
   });
 });

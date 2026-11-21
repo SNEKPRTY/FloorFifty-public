@@ -1,0 +1,91 @@
+[
+  {
+    "id": "ground",
+    "stageId": "dawn",
+    "songId": "dawn-tutorial",
+    "seed": 4,
+    "goalFloor": 5,
+    "beats": [
+      {
+        "teaches": "move",
+        "when": "start"
+      },
+      {
+        "of": "land",
+        "teaches": "land",
+        "when": "done"
+      },
+      {
+        "when": "goal"
+      }
+    ]
+  },
+  {
+    "id": "city",
+    "stageId": "rooftops",
+    "songId": "moving-on",
+    "seed": 6,
+    "goalFloor": 8,
+    "beats": [
+      {
+        "when": "start"
+      },
+      {
+        "floor": 3,
+        "teaches": "fastFall",
+        "when": "floor"
+      },
+      {
+        "of": "fastFall",
+        "when": "done"
+      },
+      {
+        "when": "goal"
+      }
+    ]
+  },
+  {
+    "id": "deep",
+    "stageId": "sunken-dome",
+    "songId": "farther-from-home",
+    "seed": 8,
+    "goalFloor": 8,
+    "beats": [
+      {
+        "when": "start"
+      },
+      {
+        "floor": 2,
+        "teaches": "landMoving",
+        "when": "floor"
+      },
+      {
+        "of": "landMoving",
+        "when": "done"
+      },
+      {
+        "when": "goal"
+      }
+    ]
+  },
+  {
+    "id": "moon",
+    "stageId": "snow-shrine",
+    "songId": "whats-next",
+    "seed": 35,
+    "goalFloor": 6,
+    "beats": [
+      {
+        "when": "start"
+      },
+      {
+        "floor": 3,
+        "teaches": "survive",
+        "when": "floor"
+      },
+      {
+        "when": "caught"
+      }
+    ]
+  }
+]

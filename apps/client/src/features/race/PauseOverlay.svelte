@@ -9,11 +9,11 @@
    * on every other dialog. Escape steps back one level: from Settings or
    * Leave to the menu, and from the menu it resumes.
    *
-   * The tutorial pauses for real, so it says so in `status`, names its way
+   * The story pauses for real, so it says so in `status`, names its way
    * out in `leaveLabel`, and leaves at once (`confirmLeave: false`): nothing
-   * is lost by leaving it. It also offers `onSkip`, which a controller,
-   * driving the racer while the tutorial runs, reaches no other way. The
-   * defaults are the race's.
+   * is lost by leaving it. It also offers `onRestart`, "Start chapter
+   * again", which a controller, driving the racer while the story runs,
+   * reaches no other way. The defaults are the race's.
    */
   import * as m from "../../paraglide/messages.js";
   import { tick } from "svelte";
@@ -30,7 +30,7 @@
     settings,
     onResume,
     onLeave,
-    onSkip,
+    onRestart,
     status,
     leaveLabel,
     confirmLeave = true,
@@ -38,8 +38,8 @@
     settings: SettingsStore;
     onResume: () => void;
     onLeave: () => void;
-    /** Where given, a Skip tutorial button before the way out. */
-    onSkip?: () => void;
+    /** Where given, a "Start chapter again" button before the way out. */
+    onRestart?: () => void;
     /** Replaces the race's "Race continues" line; `null` draws none (the title says it). */
     status?: string | null;
     leaveLabel?: string;
@@ -120,8 +120,8 @@
         {#if shown === "menu"}
           <!-- Two across once the dialog is 340 px wide (a phone held sideways, a
                tablet, a desktop), so every choice fits the 270 px a browser leaves
-               without scrolling (spec §5.7). The tutorial's two ways out, Skip and
-               Leave, stand apart under a line, so they are not read as part of the
+               without scrolling (spec §5.7). The story's two ways out, Start again
+               and Leave, stand apart under a line, so they are not read as part of the
                menu above and two alike words are not side by side with it. -->
           {#snippet leave()}
             <Button
@@ -133,7 +133,7 @@
               {leaveLabel ?? m.pause_leave_race()}
             </Button>
           {/snippet}
-          <div class="ff-pause__menu grid gap-8" class:ff-pause__three={onSkip !== undefined}>
+          <div class="ff-pause__menu grid gap-8" class:ff-pause__three={onRestart !== undefined}>
             <Button kind="go" data-testid="pause-resume" onclick={onResume}>{m.pause_resume()}</Button>
             <Button
               kind="ghost"
@@ -146,11 +146,11 @@
               {muted ? m.shell_unmute() : m.shell_mute()}
             </Button>
             <Button kind="ghost" data-testid="pause-settings" onclick={() => void show("settings")}>{m.pause_settings()}</Button>
-            {#if onSkip === undefined}{@render leave()}{/if}
+            {#if onRestart === undefined}{@render leave()}{/if}
           </div>
-          {#if onSkip !== undefined}
+          {#if onRestart !== undefined}
             <div data-testid="pause-exit-group" class="ff-pause__exit grid gap-8">
-              <Button kind="ghost" data-testid="pause-skip" onclick={onSkip}>{m.pause_skip_tutorial()}</Button>
+              <Button kind="ghost" data-testid="pause-restart" onclick={onRestart}>{m.story_restart()}</Button>
               {@render leave()}
             </div>
           {/if}
@@ -189,7 +189,7 @@
   }
   /* Led by the dialog's own width (its `ff-dialog` container), not the form
      factor: two across where a whole word fits in each (about 230 px a
-     column; at 340 "Configuración" split), one column below. The tutorial's menu is Resume over a pair, and its
+     column; at 340 "Configuración" split), one column below. The story's menu is Resume over a pair, and its
      two ways out sit under a line of their own. */
   .ff-pause__exit {
     margin-top: 12px;
