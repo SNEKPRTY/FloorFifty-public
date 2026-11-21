@@ -16,7 +16,6 @@ import { z } from "zod";
 import type { LapCount } from "../common/ids";
 import { SEAT_COLOURS, type SeatColour } from "../common/seats";
 import { TUNABLES, type ResolvedTuning, type TunableName } from "../common/tuning";
-import { TUTORIAL_STEP_KINDS, type TutorialStepKind } from "../level/tutorial";
 import {
   FLOW_EVENTS,
   PRESENTATION_ACTION_IDS,
@@ -295,35 +294,179 @@ export type ModeContent = {
   readonly tuning: Readonly<Partial<ResolvedTuning>>;
 };
 
-/**
- * The interactive tutorial (launch polish §3.1.4): a base-tuning course from
- * `seed`, and its steps in order; the run loops at the top and the last step
- * ends it. `targetFloor` is carried but read by nothing (`tutorial.toml`'s
- * header). Each prompt is worded for the input method the player is holding.
- */
-export type TutorialContent = {
+export const STORY_MOODS = ["win", "lose"] as const;
+/** A portrait's mood: plain when a line names none. */
+export type StoryMood = (typeof STORY_MOODS)[number];
+
+/** One line of talk: `you` (the player's own racer), an actor's id, or none for the narrator. */
+export type StoryLine = {
+  readonly speaker?: string | undefined;
+  readonly mood?: StoryMood | undefined;
+  readonly text: string;
+};
+
+/** A move's prompt, worded for the input method the player is holding. */
+export type StoryPrompt = {
+  readonly keyboard: string;
+  /** May name `{glyph}`, where the pad's own button goes. */
+  readonly gamepad: string;
+  /** Worded for swipe steering. */
+  readonly touch: string;
+  /** Worded for the on-screen buttons. */
+  readonly buttons: string;
+};
+
+/** A lamp, opened, gives this many glims (spec, "Lamps"). */
+export const STORY_GLIMS_PER_LAMP = 2;
+
+/** The moves a chapter's control chip may teach. */
+export const STORY_TEACHES = ["move", "fastFall"] as const;
+export type StoryTeach = (typeof STORY_TEACHES)[number];
+
+/** A CPU personality's knobs, as a story actor drives (no name of its own, and never banding). */
+export type StoryPersonality = {
+  readonly reactionTicks: number;
+  readonly linedUpFraction: number;
+  readonly slipChance: number;
+  readonly slipTicks: number;
+  readonly movingFloorPause: number;
+  readonly stallTicks: number;
+  readonly eagerDrop: number;
+  readonly leadEase: number;
+  readonly easeTicks: number;
+};
+
+/** One who climbs beside you: a character in a seat colour, with a CPU's hands. */
+export type StoryActor = {
+  readonly characterId: string;
+  readonly colour: SeatColour;
+  readonly personality: StoryPersonality;
+};
+
+/** How a panel moves while it shows: a push in (scale) or a pan across (share of the spare picture). */
+export type StoryPanelMove = { readonly kind: "push" | "pan"; readonly from: number; readonly to: number };
+
+export type StoryPanel = {
+  /** A `story.*` image alias. */
+  readonly art: string;
+  readonly move: StoryPanelMove;
+  /** The glims the player carried rise over this panel. */
+  readonly glims?: boolean | undefined;
+  readonly lines: readonly StoryLine[];
+};
+
+export type StoryCutscene = {
+  readonly id: string;
+  readonly title: string;
+  /** An audio alias played under it. */
+  readonly bed: string;
+  readonly panels: readonly StoryPanel[];
+};
+
+export type StoryGoal =
+  | { readonly kind: "reach"; readonly floor: number; readonly lamps?: number | undefined }
+  | { readonly kind: "rescue"; readonly actor: string };
+
+export type StoryLava = {
+  readonly under: "player" | "actor";
+  /** How far below its target it starts, in world units. */
+  readonly startBelow: number;
+  /** Units a second. */
+  readonly rise: number;
+  /** Ticks before it moves. */
+  readonly grace: number;
+};
+
+export type StoryPhase = {
+  readonly id: string;
+  readonly goal: StoryGoal;
+  readonly lava?: StoryLava | undefined;
+  /** The gusts' speed, in units a second. */
+  readonly wind?: number | undefined;
+  readonly safeSpots?: readonly number[] | undefined;
+};
+
+export const STORY_PLAIN_WHENS = [
+  "start",
+  /** The player's first input: the chapter's clock starts. */
+  "going",
+  "landed",
+  "glimSeen",
+  "glimFirst",
+  "goal",
+  "lampSeen",
+  "lampSoft",
+  "lampOpen",
+  "needLamp",
+  "movingSeen",
+  "movingLanded",
+  "descended",
+  "rescue",
+  "caught",
+  "gust",
+] as const;
+export type StoryPlainWhen = (typeof STORY_PLAIN_WHENS)[number];
+
+export type StoryWhen =
+  | { readonly kind: StoryPlainWhen }
+  | { readonly kind: "floor"; readonly floor: number }
+  | { readonly kind: "phase"; readonly phase: string };
+
+export type StoryAction =
+  | { readonly do: "quake"; readonly strength: number }
+  | { readonly do: "drop"; readonly actor: string; readonly floors: number }
+  | { readonly do: "place"; readonly actor: string; readonly floor: number; readonly parked: boolean }
+  | { readonly do: "lookAt"; readonly actor: string; readonly ticks: number }
+  | { readonly do: "ceiling"; readonly actor: string; readonly floor: number }
+  | { readonly do: "leash"; readonly actor: string; readonly on: boolean }
+  | { readonly do: "unpark"; readonly actor: string };
+
+/** Something that happens in a climb: a few words, things done, or both. Nothing in it stops the climb. */
+export type StoryMoment = {
+  readonly when: StoryWhen;
+  readonly do?: readonly StoryAction[] | undefined;
+  readonly lines?: readonly StoryLine[] | undefined;
+};
+
+export type StoryChapterActor = {
+  readonly id: string;
+  /** The highest floor it climbs to. */
+  readonly ceiling: number;
+  /** Whether it waits for the player. */
+  readonly leash: boolean;
+  readonly floor?: number | undefined;
+  readonly ahead?: number | undefined;
+  readonly parked?: boolean | undefined;
+};
+
+/** One chapter: a course from `seed` on base tuning, played on an existing stage with its song. */
+export type StoryChapter = {
+  readonly id: string;
+  readonly title: string;
   readonly seed: number;
-  readonly targetFloor: number;
-  readonly steps: readonly {
-    readonly kind: TutorialStepKind;
-    /**
-     * `touch` is worded for swipe steering, and `buttons`, where given, for the
-     * on-screen buttons. A gamepad prompt may name `{glyph}`, where the pad's
-     * own button goes.
-     */
-    readonly prompt: {
-      readonly keyboard: string;
-      readonly gamepad: string;
-      readonly touch: string;
-      readonly buttons?: string | undefined;
-    };
-  }[];
-  /**
-   * The stage the tutorial is played on, and its song (tutorial stage spec
-   * §3.1). Emitted here alone, never in `stages` or `songs`: no room races it.
-   */
+  readonly floorOffset: number;
+  readonly parSeconds: number;
+  /** The cutscene before it. */
+  readonly before: string;
+  readonly startFloor: number;
+  readonly teaches: readonly StoryTeach[];
+  readonly lamps?: readonly number[] | undefined;
+  readonly actors: readonly StoryChapterActor[];
+  readonly glims?: readonly { readonly floor: number; readonly offset: number }[] | undefined;
+  readonly phases: readonly StoryPhase[];
+  readonly moments: readonly StoryMoment[];
   readonly stage: StageContent;
   readonly song: SongContent;
+};
+
+/** The story. Its stages and songs are emitted here, as the chapters name them. */
+export type StoryContent = {
+  /** Only `move` and `fastFall` have a control to name. */
+  readonly prompts: { readonly move: StoryPrompt; readonly fastFall: StoryPrompt };
+  readonly actors: Readonly<Record<string, StoryActor>>;
+  readonly cutscenes: readonly StoryCutscene[];
+  readonly ending: { readonly cutscene: string; readonly thesis: readonly string[]; readonly last: StoryLine };
+  readonly chapters: readonly StoryChapter[];
 };
 
 /** A spring's constants (Wonder spec §4.2): frequency, damping, response. */
@@ -449,7 +592,7 @@ export type GameContentPayload = {
   readonly stages: readonly StageContent[];
   readonly songs: readonly SongContent[];
   readonly modes: readonly ModeContent[];
-  readonly tutorial: TutorialContent;
+  readonly story: StoryContent;
   readonly juice: JuiceTuning;
 };
 
@@ -666,7 +809,79 @@ const routing = z
   })
   .strict();
 
-/** One stage, as the payload carries it: in `stages`, and as the tutorial's own. */
+const storyLineArtifact = z
+  .object({ speaker: z.string().min(1).optional(), mood: z.enum(STORY_MOODS).optional(), text: z.string().min(1) })
+  .strict();
+
+const storyPromptArtifact = z
+  .object({ keyboard: z.string().min(1), gamepad: z.string().min(1), touch: z.string().min(1), buttons: z.string().min(1) })
+  .strict();
+
+const storyFloor = z.number().int().min(0);
+const storyActorId = z.string().min(1);
+const storyCutsceneArtifact = z
+  .object({
+    id: z.string().min(1),
+    title: z.string().min(1),
+    bed: z.string().min(1),
+    panels: z
+      .array(
+        z
+          .object({
+            art: z.string().min(1),
+            move: z.object({ kind: z.enum(["push", "pan"]), from: z.number(), to: z.number() }).strict(),
+            glims: z.boolean().optional(),
+            lines: z.array(storyLineArtifact).min(1),
+          })
+          .strict(),
+      )
+      .min(1),
+  })
+  .strict();
+const storyPhaseArtifact = z
+  .object({
+    id: z.string().min(1),
+    goal: z.discriminatedUnion("kind", [
+      z.object({ kind: z.literal("reach"), floor: storyFloor, lamps: z.number().int().min(1).optional() }).strict(),
+      z.object({ kind: z.literal("rescue"), actor: storyActorId }).strict(),
+    ]),
+    lava: z
+      .object({ under: z.enum(["player", "actor"]), startBelow: z.number().min(0), rise: z.number().min(0), grace: z.number().int().min(0) })
+      .strict()
+      .optional(),
+    wind: z.number().min(0).optional(),
+    safeSpots: z.array(storyFloor).optional(),
+  })
+  .strict();
+const storyWhenArtifact = z.union([
+  z.object({ kind: z.enum(STORY_PLAIN_WHENS) }).strict(),
+  z.object({ kind: z.literal("floor"), floor: storyFloor }).strict(),
+  z.object({ kind: z.literal("phase"), phase: z.string().min(1) }).strict(),
+]);
+const storyActionArtifact = z.discriminatedUnion("do", [
+  z.object({ do: z.literal("quake"), strength: z.number().min(0).max(1) }).strict(),
+  z.object({ do: z.literal("drop"), actor: storyActorId, floors: z.number().int().min(1) }).strict(),
+  z.object({ do: z.literal("place"), actor: storyActorId, floor: storyFloor, parked: z.boolean() }).strict(),
+  z.object({ do: z.literal("lookAt"), actor: storyActorId, ticks: z.number().int().min(1) }).strict(),
+  z.object({ do: z.literal("ceiling"), actor: storyActorId, floor: storyFloor }).strict(),
+  z.object({ do: z.literal("leash"), actor: storyActorId, on: z.boolean() }).strict(),
+  z.object({ do: z.literal("unpark"), actor: storyActorId }).strict(),
+]);
+const storyPersonalityArtifact = z
+  .object({
+    reactionTicks: z.number().int().min(0),
+    linedUpFraction: z.number().min(0).max(1),
+    slipChance: z.number().min(0).max(1),
+    slipTicks: z.number().int().min(0),
+    movingFloorPause: z.number().int().min(0),
+    stallTicks: z.number().int().min(1),
+    eagerDrop: z.number().min(0).max(1),
+    leadEase: z.number().min(0).max(1),
+    easeTicks: z.number().int().min(0),
+  })
+  .strict();
+
+/** One stage, as the payload carries it: in `stages`, and as the story's own. */
 const stageArtifact = z
   .object({
     id: contentId,
@@ -754,7 +969,7 @@ const stageArtifact = z
   })
   .strict();
 
-/** One song, as the payload carries it: in `songs`, and as the tutorial's own. */
+/** One song, as the payload carries it: in `songs`, and as the story's own. */
 const songArtifact = z
   .object({
     id: contentId,
@@ -824,27 +1039,59 @@ const artifactSchema = z
             })
             .strict(),
         ),
-        tutorial: z
+        story: z
           .object({
-            seed: z.number().int().min(0),
-            targetFloor: z.number().int().positive(),
-            steps: z.array(
+            prompts: z
+              .object({ move: storyPromptArtifact, fastFall: storyPromptArtifact })
+              .strict(),
+            actors: z.record(
+              z.string().min(1),
+              z.object({ characterId: z.string().min(1), colour: z.enum(SEAT_COLOURS), personality: storyPersonalityArtifact }).strict(),
+            ),
+            cutscenes: z.array(storyCutsceneArtifact).min(1),
+            ending: z
+              .object({ cutscene: z.string().min(1), thesis: z.array(z.string().min(1)).min(1), last: storyLineArtifact })
+              .strict(),
+            chapters: z.array(
               z
                 .object({
-                  kind: z.enum(TUTORIAL_STEP_KINDS),
-                  prompt: z
-                    .object({
-                      keyboard: z.string().min(1),
-                      gamepad: z.string().min(1),
-                      touch: z.string().min(1),
-                      buttons: z.string().min(1).optional(),
-                    })
-                    .strict(),
+                  id: z.string().min(1),
+                  title: z.string().min(1),
+                  seed: z.number().int().min(0),
+                  floorOffset: z.number().int().min(0),
+                  parSeconds: z.number().int().positive(),
+                  before: z.string().min(1),
+                  startFloor: storyFloor,
+                  teaches: z.array(z.enum(STORY_TEACHES)),
+                  lamps: z.array(storyFloor).optional(),
+                  actors: z.array(
+                    z
+                      .object({
+                        id: storyActorId,
+                        ceiling: storyFloor,
+                        leash: z.boolean(),
+                        floor: storyFloor.optional(),
+                        ahead: z.number().int().min(0).optional(),
+                        parked: z.boolean().optional(),
+                      })
+                      .strict(),
+                  ),
+                  glims: z.array(z.object({ floor: storyFloor, offset: z.number().int() }).strict()).optional(),
+                  phases: z.array(storyPhaseArtifact).min(1),
+                  moments: z.array(
+                    z
+                      .object({
+                        when: storyWhenArtifact,
+                        do: z.array(storyActionArtifact).optional(),
+                        lines: z.array(storyLineArtifact).min(1).optional(),
+                      })
+                      .strict(),
+                  ),
+                  stage: stageArtifact,
+                  song: songArtifact,
                 })
                 .strict(),
             ),
-            stage: stageArtifact,
-            song: songArtifact,
           })
           .strict(),
         juice: juiceArtifact,

@@ -26,6 +26,7 @@ import { liveRoomSummaries } from "./rooms/room-telemetry";
 import type { ContentStore } from "./content/content-store";
 import { DRAIN_MAX_MS, waitForRoomsToEmpty, type DrainResult } from "./drain";
 import { createHash } from "node:crypto";
+import { monitorEventLoopDelay } from "node:perf_hooks";
 import { securityTxt } from "./security-txt";
 import { createTelemetryEndpoint } from "./telemetry-endpoint";
 import { createMatchmakeGate } from "./gate/matchmake-gate";
@@ -379,12 +380,34 @@ export async function createColyseusRaceServer(
 
   // The live room count, once a minute, so the report can name the week's peak (§7.3), and
   // the minute's tick costs across every room, which the watch Worker keeps past Fly's buffer.
+  // Beside them, the process's vital signs (audit S25): how loaded it is and how
+  // its memory moves, so a climb toward running out is visible before the
+  // restart. Numbers only; nothing here names a person, an address or a code.
+  const loopDelay = monitorEventLoopDelay({ resolution: 20 });
+  loopDelay.enable();
+  const startedAt = Date.now();
+  const mb = (bytes: number): number => Math.round(bytes / 1_048_576);
   const roomsLog = setInterval(() => {
     telemetryLog?.(JSON.stringify({ event: "rooms", live: liveRooms.size }));
     const minute = tickCosts.take();
     if (minute !== undefined) telemetryLog?.(JSON.stringify({ event: "ticks", ...minute }));
+    const memory = process.memoryUsage();
+    telemetryLog?.(
+      JSON.stringify({
+        event: "vitals",
+        rooms: liveRooms.size,
+        sockets: sockets.open,
+        rssMb: mb(memory.rss),
+        heapMb: mb(memory.heapUsed),
+        loopP99Ms: Math.round(loopDelay.percentile(99) / 1e6),
+        uptimeS: Math.round((Date.now() - startedAt) / 1_000),
+      }),
+    );
+    loopDelay.reset();
   }, options.roomsLogEveryMs ?? 60_000);
   roomsLog.unref();
+  // Which build is running, once, so a line can be read against a release.
+  telemetryLog?.(JSON.stringify({ event: "start", build: buildId, node: process.version }));
 
   let shutDown: Promise<void> | undefined;
   const shutdown = (): Promise<void> => {
@@ -392,6 +415,7 @@ export async function createColyseusRaceServer(
     clearInterval(roomsLog);
     clearInterval(refusalFlush);
     refusals?.flush(true);
+    loopDelay.disable();
     return (shutDown ??= gameServer.gracefullyShutdown(false));
   };
   let drained: Promise<DrainResult> | undefined;

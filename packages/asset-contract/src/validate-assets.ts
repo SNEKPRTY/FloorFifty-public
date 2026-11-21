@@ -16,11 +16,13 @@ import {
   expectedFileSize,
   isAudioAsset,
   isCoverAsset,
+  isDemoAsset,
   type ArtAsset,
   type ArtManifest,
   type AudioAsset,
   type BundleName,
   type CoverAsset,
+  type DemoAsset,
   type VisualAsset,
 } from "./manifest-schema";
 import { DEFAULT_MAX_GRAIN, measureGrain } from "./pixel-grain";
@@ -202,6 +204,92 @@ function validateCoverAsset(root: string, asset: CoverAsset): AssetIssue[] {
   return issues;
 }
 
+/** The carousel's slides, in order: each has a clip (`demo.<slide>`) and a still (`demo.<slide>Still`). */
+export const DEMO_SLIDES = ["steer", "bounce", "dropFast", "movingFloors", "lava", "race"] as const;
+/**
+ * The slides that have a recording: all six. The race's is four racers, recorded from the replay of a real
+ * four-seat race on stepped frames (`demo-capture.spec.ts`, "records the race demo").
+ */
+export const RECORDED_SLIDES = DEMO_SLIDES;
+/** The most bytes one clip may weigh, one still, and the six clips together (story spec, "Size budget"). */
+export const DEMO_CLIP_BYTES = 350 * 1024;
+export const DEMO_STILL_BYTES = 30 * 1024;
+export const DEMO_SET_BYTES = 1.8 * 1024 * 1024;
+
+/**
+ * Checks one demo against its row: there, a WebP, the size the row says and
+ * inside its byte budget. Recordings of the game, so no palette applies.
+ */
+function validateDemoAsset(root: string, asset: DemoAsset): AssetIssue[] {
+  const issues: AssetIssue[] = [];
+  const report = (problem: string): void => {
+    issues.push({ alias: asset.alias, file: asset.file, problem });
+  };
+  for (const field of ["tool", "prompt", "source", "license"] as const) {
+    if (asset.provenance[field]) continue;
+    report(`missing provenance.${field}; an asset nobody can regenerate cannot be fixed`);
+  }
+  let bytes: Uint8Array;
+  try {
+    bytes = readFileSync(resolve(root, asset.file));
+  } catch (error) {
+    report(`could not read ${asset.file}: ${(error as Error).message}`);
+    return issues;
+  }
+  const size = webpSize(bytes);
+  if (size === undefined) report(`${asset.file} is not a WebP`);
+  else if (size.width !== asset.width || size.height !== asset.height)
+    report(`expected ${asset.width}x${asset.height}, found ${size.width}x${size.height}`);
+  const limit = asset.kind === "clip" ? DEMO_CLIP_BYTES : DEMO_STILL_BYTES;
+  if (bytes.length > limit) report(`${asset.file} is ${bytes.length} bytes, over the ${limit / 1024} KB a ${asset.kind} may be`);
+  return issues;
+}
+
+/** The set as a whole: every slide has both rows, and the clips together stay inside their budget. */
+function validateDemoSet(root: string, demos: readonly DemoAsset[]): AssetIssue[] {
+  if (demos.length === 0) return [];
+  const issues: AssetIssue[] = [];
+  const byAlias = new Map(demos.map((demo) => [demo.alias, demo]));
+  for (const slide of RECORDED_SLIDES) {
+    if (!byAlias.has(`demo.${slide}`)) issues.push({ alias: `demo.${slide}`, file: "-", problem: "no row for this slide's clip" });
+    if (!byAlias.has(`demo.${slide}Still`)) issues.push({ alias: `demo.${slide}Still`, file: "-", problem: "no row for this slide's still" });
+  }
+  let clipBytes = 0;
+  for (const clip of demos.filter((demo) => demo.kind === "clip")) {
+    try {
+      clipBytes += statSync(resolve(root, clip.file)).size;
+    } catch {
+      // Unreadable: the row's own check says so.
+    }
+  }
+  if (clipBytes > DEMO_SET_BYTES)
+    issues.push({ alias: "demo.*", file: "-", problem: `the clips are ${clipBytes} bytes, over the ${(DEMO_SET_BYTES / 1024 / 1024).toFixed(1)} MB the set may be` });
+  return issues;
+}
+
+/** The most bytes one story picture may weigh, and all of them together (story mode v2 spec, "The contract"). */
+export const STORY_PANEL_BYTES = 90 * 1024;
+export const STORY_SET_BYTES = 1000 * 1024;
+
+/** The story's pictures as a set: each inside its own budget and all of them inside theirs. */
+function validateStorySet(root: string, rows: readonly ArtAsset[]): AssetIssue[] {
+  const issues: AssetIssue[] = [];
+  let total = 0;
+  for (const row of rows) {
+    let bytes = 0;
+    try {
+      bytes = statSync(resolve(root, row.file)).size;
+    } catch {
+      continue; // Unreadable: the row's own check says so.
+    }
+    total += bytes;
+    if (bytes > STORY_PANEL_BYTES) issues.push({ alias: row.alias, file: row.file, problem: `${bytes} bytes, over the ${STORY_PANEL_BYTES / 1024} KB a story picture may be` });
+  }
+  if (total > STORY_SET_BYTES)
+    issues.push({ alias: "story.*", file: "-", problem: `the story's pictures are ${total} bytes, over the ${STORY_SET_BYTES / 1024} KB they may be together` });
+  return issues;
+}
+
 /** Checks one visual asset against its declaration. */
 function validateAsset(root: string, asset: VisualAsset): AssetIssue[] {
   const issues: AssetIssue[] = [];
@@ -309,9 +397,19 @@ export function validateAssets(root: string, manifest: ArtManifest): AssetValida
         ? validateAudioAsset(root, asset)
         : isCoverAsset(asset)
           ? validateCoverAsset(root, asset)
-          : validateAsset(root, asset)),
+          : isDemoAsset(asset)
+            ? validateDemoAsset(root, asset)
+            : validateAsset(root, asset)),
     );
   }
+  issues.push(
+    ...validateDemoSet(
+      root,
+      entries.map((entry) => entry.asset).filter(isDemoAsset),
+    ),
+  );
+
+  issues.push(...validateStorySet(root, manifest.bundles.story ?? []));
 
   return { ok: issues.length === 0, checked: entries.length, issues };
 }

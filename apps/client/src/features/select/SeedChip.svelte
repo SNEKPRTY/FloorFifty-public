@@ -61,7 +61,7 @@
     gap: 6px;
     min-height: 44px;
     padding-inline: 12px;
-    font: 600 var(--ff-type-hint) / 1 var(--ff-font-ui);
+    font: 600 var(--ff-type-name) / 1 var(--ff-font-ui);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
   }

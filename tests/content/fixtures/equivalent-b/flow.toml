@@ -63,22 +63,22 @@ from = "Splash"
 
 [[transitions]]
 from = "MainMenu"
-event = "tutorial"
-to = "Tutorial"
+event = "story"
+to = "Story"
 
 [[transitions]]
 from = "Lobby"
-event = "tutorial"
-to = "Tutorial"
+event = "story"
+to = "Story"
 
 [[transitions]]
-from = "Tutorial"
-event = "tutorialToTitle"
+from = "Story"
+event = "storyToTitle"
 to = "MainMenu"
 
 [[transitions]]
-from = "Tutorial"
-event = "tutorialToLobby"
+from = "Story"
+event = "storyToLobby"
 to = "Lobby"
 
 [[transitions]]

@@ -83,10 +83,9 @@ describe("WCAG AA on the menus' surfaces", () => {
     expect(onPanel("ff-text-2")).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("draws the race's small buttons (the coach's OK, the tutorial's Skip) as kit buttons, so they carry a measured button face below and write no colour of their own", () => {
+  it("draws the race's small buttons (the coach's OK) as kit buttons, so they carry a measured button face below and write no colour of their own", () => {
     for (const [file, testId] of [
       ["SwipeCoach.svelte", "swipe-coach-dismiss"],
-      ["TutorialPrompt.svelte", "tutorial-skip"],
     ] as const) {
       const source = readClient(file);
       expect(source, testId).toMatch(new RegExp(`<Button[^>]*data-testid="${testId}"`));

@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased
+## 1.0.0 (2026-11-21)
+
+The full release, no longer a candidate. The title now shows v1.0.0. The game
+has been live on Ruken since 2026-11-20.
 
 ### The UI overhaul
 

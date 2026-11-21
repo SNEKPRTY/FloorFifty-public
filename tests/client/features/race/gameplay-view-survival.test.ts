@@ -2,6 +2,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { resolveTuning } from "@floor-fifty/shared/common/tuning";
 import { GameplayView } from "../../../../apps/client/src/features/race/gameplay-view";
+import { LOGICAL_VIEWPORT } from "../../../../apps/client/src/lib/constants";
 import { emptyTextures } from "../../../../apps/client/src/features/render/textures";
 import { resolveStagePresentation } from "../../../../apps/client/src/features/render/stage-presentation";
 import { LOCAL_ID, REMOTE_ID, playerSnapshot, snapshotAt } from "../../support/snapshots";
@@ -97,15 +98,15 @@ describe("the tutorial's edge on a finite course (first-race spec §1)", () => {
   const finiteTuning = resolveTuning();
   const finite = snapshotAt(600, { raceStartedAtTick: 0, players: [playerSnapshot({ id: LOCAL_ID, y: 300, floorEdgeY: -265 })] });
   const viewWithEdge = () =>
-    new GameplayView(resolveStagePresentation(undefined), emptyTextures, finiteTuning, () => LOCAL_ID, undefined, { tutorialEdge: true });
+    new GameplayView(resolveStagePresentation(undefined), emptyTextures, finiteTuning, () => LOCAL_ID, undefined, { storyEdge: true });
 
   it("draws the tutorial's edge, and hides the lava when there is none", () => {
     const view = viewWithEdge();
-    view.setTutorialEdge({ y: 274, rise: 30 });
+    view.setStoryEdge({ y: 274, rise: 30 });
     view.applySnapshot(finite, LOCAL_ID);
     expect(view.lava!.root.visible).toBe(true);
     expect(view.lava!.surfaceY).toBe(274);
-    view.setTutorialEdge(undefined);
+    view.setStoryEdge(undefined);
     view.applySnapshot(finite, LOCAL_ID);
     expect(view.lava!.root.visible).toBe(false);
   });
@@ -113,9 +114,31 @@ describe("the tutorial's edge on a finite course (first-race spec §1)", () => {
   it("hands the lava the edge's own rise, not the race clock's", () => {
     const view = viewWithEdge();
     const update = vi.spyOn(view.lava!, "update");
-    view.setTutorialEdge({ y: 274, rise: 30 });
+    view.setStoryEdge({ y: 274, rise: 30 });
     view.applySnapshot(finite, LOCAL_ID);
     expect(update.mock.calls[0]![0]).toMatchObject({ edgeY: 274, rise: 30 });
+  });
+
+  it("frames the story's lava: an edge under the view's foot pulls the camera down a little until it shows, the racer kept below the HUD (review 2, R1; re-check 3, R1 and R2)", () => {
+    const high = (tick: number) => snapshotAt(tick, { raceStartedAtTick: 0, players: [playerSnapshot({ id: LOCAL_ID, y: 1400 })] });
+    const settle = (edge: { y: number; rise: number } | undefined) => {
+      const view = viewWithEdge();
+      view.setStoryEdge(edge);
+      for (let frame = 0; frame < 240; frame += 1) view.applySnapshot(high(600 + frame), LOCAL_ID, 16);
+      return view;
+    };
+    // 260 under the racer: the chase's leash (200 under its floor) with a bounce on top, at the foot of a wide view.
+    const framed = settle({ y: 1140, rise: 30 });
+    expect(framed.camera.showsY(1140 + 10)).toBe(true);
+    // The racer stays in the middle band: never above 35% of the field from its top.
+    const racerAt = framed.camera.logicalToScreen({ x: 0, y: 1400 }).y;
+    expect(racerAt).toBeGreaterThanOrEqual(LOGICAL_VIEWPORT.height * 0.35);
+    // An edge far below is not chased: the look-down is capped, so the racer keeps its place.
+    const far = settle({ y: 700, rise: 30 });
+    expect(far.camera.logicalToScreen({ x: 0, y: 1400 }).y).toBeGreaterThanOrEqual(LOGICAL_VIEWPORT.height * 0.35);
+    // The same camera with no lava holds the racer in the middle, and that edge would be off the foot.
+    const plain = settle(undefined);
+    expect(plain.camera.showsY(1140 + 10)).toBe(false);
   });
 
   it("builds no lava for a finite race", () => {

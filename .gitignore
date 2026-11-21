@@ -42,6 +42,8 @@ packages/asset-contract/assets/source/*
 !packages/asset-contract/assets/source/city-mid.png
 !packages/asset-contract/assets/source/brand
 !packages/asset-contract/assets/source/rooftop-details.png
+# The story panels' kept fal pictures and the spend ledger (story mode v2 spec, "Art").
+!packages/asset-contract/assets/source/story
 
 # The city sources are the exception, and are committed.
 #
@@ -128,3 +130,6 @@ packages/asset-contract/assets/source/sounds/*
 # Ruken packs (tools/ruken-pack).
 /ruken-build*.zip
 prod-secrets/
+
+# The story panels' fal candidates; the kept source of each panel is committed beside them.
+packages/asset-contract/assets/source/story/candidates/

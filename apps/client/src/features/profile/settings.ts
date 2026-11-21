@@ -33,6 +33,20 @@ export type SettingsStorage = Pick<Storage, "getItem" | "setItem"> &
 /** A player seen in a room, for the title's lineup: their seat's ID, body and colour. */
 export type SeenRacer = { readonly id: string; readonly characterId: string; readonly colour: SeatColour };
 
+/** One story chapter's best (story mode v2, "Stars and saved progress"). */
+export type StoryChapterRecord = {
+  /** Finished, every glim, under par: each kept once earned. */
+  stars: [boolean, boolean, boolean];
+  /** The most glims carried up in one run. */
+  glims: number;
+  /** The fastest finish, first input to goal; null before the first. */
+  bestMs: number | null;
+};
+
+export const STORY_CHAPTER_COUNT = 5;
+
+export const freshChapterRecord = (): StoryChapterRecord => ({ stars: [false, false, false], glims: 0, bestMs: null });
+
 export const DEFAULT_SETTINGS = {
   version: 2,
   audio: { muted: false, music: 1, sfx: 1, announcer: 1, muteUnfocused: false },
@@ -41,6 +55,9 @@ export const DEFAULT_SETTINGS = {
   input: { touchMode: "swipe", rumble: true },
   seen: { rotateHint: false, swipeCoach: false, tutorial: false, replayNames: false, photosensitivity: false, edgeLine: false, climbHints: false },
   profile: { lastCharacter: "ninja", lastColour: "scarlet", lastSeen: [] as SeenRacer[] },
+  // How many story chapters were finished (0 to 5), and each chapter's best:
+  // the stars ever earned, the most glims carried up and the fastest time.
+  story: { chaptersDone: 0, chapters: {} as Record<string, StoryChapterRecord> },
   // Phase 5: null is Automatic, detected from the browser on every boot.
   locale: null as LocaleTag | null,
 } as const satisfies {
@@ -50,6 +67,7 @@ export const DEFAULT_SETTINGS = {
   input: { touchMode: "swipe" | "buttons"; rumble: boolean };
   seen: { rotateHint: boolean; swipeCoach: boolean; tutorial: boolean; replayNames: boolean; photosensitivity: boolean; edgeLine: boolean; climbHints: boolean };
   profile: { lastCharacter: string; lastColour: SeatColour; lastSeen: readonly SeenRacer[] };
+  story: { chaptersDone: number; chapters: Record<string, StoryChapterRecord> };
   locale: LocaleTag | null;
 };
 
@@ -101,7 +119,7 @@ export const settingsSchema = z.object({
       photosensitivity: flag(D.seen.photosensitivity),
       // A first race's one-time hints (first-race spec parts 4 and 5): the
       // lava named once for every input method, and the floors-and-restart
-      // lessons the tutorial no longer teaches, each shown once and then not.
+      // lessons the story no longer teaches, each shown once and then not.
       edgeLine: flag(D.seen.edgeLine),
       climbHints: flag(D.seen.climbHints),
     })
@@ -119,6 +137,26 @@ export const settingsSchema = z.object({
         .catch([]),
     })
     .catch({ ...D.profile }),
+  // Added with the story: a stored value without it starts at chapter 1. The
+  // chapter records came with story mode v2: the old `{ chaptersDone }` alone
+  // loads with none, and one bad record costs that record alone.
+  story: z
+    .object({
+      chaptersDone: z.number().int().min(0).max(STORY_CHAPTER_COUNT).catch(D.story.chaptersDone),
+      chapters: z
+        .record(
+          z.string().max(32),
+          z
+            .object({
+              stars: z.tuple([flag(false), flag(false), flag(false)]).catch([false, false, false]),
+              glims: z.number().int().min(0).max(99).catch(0),
+              bestMs: z.number().int().positive().nullable().catch(null),
+            })
+            .catch(freshChapterRecord),
+        )
+        .catch({}),
+    })
+    .catch({ chaptersDone: D.story.chaptersDone, chapters: {} }),
   // Added in phase 5 (languages spec §3.3). A bad value is Automatic, alone.
   locale: z.enum(LOCALE_TAGS).nullable().catch(null),
 });

@@ -7577,6 +7577,460 @@
         },
         "peakDbfs": -3.1
       }
+    ],
+    "demos": [
+      {
+        "alias": "demo.steer",
+        "file": "production/demos/steer.webp",
+        "role": "demo",
+        "kind": "clip",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 6, script \"steer\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.steerStill",
+        "file": "production/demos/steer-still.webp",
+        "role": "demo",
+        "kind": "still",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 6, script \"steer\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.bounce",
+        "file": "production/demos/bounce.webp",
+        "role": "demo",
+        "kind": "clip",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 1, script \"bounce\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.bounceStill",
+        "file": "production/demos/bounce-still.webp",
+        "role": "demo",
+        "kind": "still",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 1, script \"bounce\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.dropFast",
+        "file": "production/demos/dropFast.webp",
+        "role": "demo",
+        "kind": "clip",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 1, script \"dropFast\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.dropFastStill",
+        "file": "production/demos/dropFast-still.webp",
+        "role": "demo",
+        "kind": "still",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 1, script \"dropFast\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.movingFloors",
+        "file": "production/demos/movingFloors.webp",
+        "role": "demo",
+        "kind": "clip",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 4, script \"movingFloors\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.movingFloorsStill",
+        "file": "production/demos/movingFloors-still.webp",
+        "role": "demo",
+        "kind": "still",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 4, script \"movingFloors\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.lava",
+        "file": "production/demos/lava.webp",
+        "role": "demo",
+        "kind": "clip",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 1, script \"lava\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.lavaStill",
+        "file": "production/demos/lava-still.webp",
+        "role": "demo",
+        "kind": "still",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the story scene on Rooftops, ninja in scarlet, seed 1, script \"lava\", 15 frames a second of 60 ticks",
+          "source": "commit d100867",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.race",
+        "file": "production/demos/race.webp",
+        "role": "demo",
+        "kind": "clip",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the replay of a four-seat race on the real server (floors-20, driven by the server's test driver), ninja in scarlet watching, rivals at full colour in a closer view that follows the ninja (capture only), 15 frames a second of 60 ticks",
+          "source": "commit 88840f1",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      },
+      {
+        "alias": "demo.raceStill",
+        "file": "production/demos/race-still.webp",
+        "role": "demo",
+        "kind": "still",
+        "width": 480,
+        "height": 270,
+        "provenance": {
+          "tool": "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
+          "prompt": "recorded from the replay of a four-seat race on the real server (floors-20, driven by the server's test driver), ninja in scarlet watching, rivals at full colour in a closer view that follows the ninja (capture only), 15 frames a second of 60 ticks",
+          "source": "commit 88840f1",
+          "license": "own work (a recording of Floor Fifty)"
+        }
+      }
+    ],
+    "story": [
+      {
+        "alias": "story.lowtown",
+        "role": "image",
+        "file": "production/story/story-lowtown.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.lowtown\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-lowtown.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.046,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.frogWarning",
+        "role": "image",
+        "file": "production/story/story-frog-warning.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.frogWarning\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-frog-warning.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.057,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.oniAbove",
+        "role": "image",
+        "file": "production/story/story-oni-above.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.oniAbove\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-oni-above.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.075,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.cityLamps",
+        "role": "image",
+        "file": "production/story/story-city-lamps.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.cityLamps\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-city-lamps.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.03,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.oniLeaps",
+        "role": "image",
+        "file": "production/story/story-oni-leaps.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.oniLeaps\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-oni-leaps.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.047,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.theDeep",
+        "role": "image",
+        "file": "production/story/story-the-deep.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.theDeep\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-the-deep.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.045,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.theHand",
+        "role": "image",
+        "file": "production/story/story-the-hand.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.theHand\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-the-hand.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        }
+      },
+      {
+        "alias": "story.lookingUp",
+        "role": "image",
+        "file": "production/story/story-looking-up.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.lookingUp\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-looking-up.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.094,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.theLedge",
+        "role": "image",
+        "file": "production/story/story-the-ledge.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.theLedge\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-the-ledge.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.055,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.oniAfraid",
+        "role": "image",
+        "file": "production/story/story-oni-afraid.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.oniAfraid\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-oni-afraid.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.04,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.floorFifty",
+        "role": "image",
+        "file": "production/story/story-floor-fifty.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.floorFifty\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-floor-fifty.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.045,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      },
+      {
+        "alias": "story.lookingDown",
+        "role": "image",
+        "file": "production/story/story-looking-down.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.lookingDown\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-looking-down.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.032,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn. Looking down from the top, the whole city below is drawn small: its roofs and windows are one-pixel detail on purpose."
+        }
+      },
+      {
+        "alias": "story.oniReaches",
+        "role": "image",
+        "file": "production/story/story-oni-reaches.png",
+        "width": 480,
+        "height": 270,
+        "requiresAlpha": false,
+        "paletteRoles": [
+          "outline"
+        ],
+        "provenance": {
+          "tool": "packages/asset-contract/tools/story-panels.ts (pnpm assets:story build: box-downscale, nearest Resurrect 64 swatch, 3x3 lone-pixel pass)",
+          "prompt": "STORY_STYLE and STORY_PANELS[\"story.oniReaches\"] in packages/asset-contract/tools/story-prompts.ts, with that row's reference pictures",
+          "source": "Generated imagery from fal-ai/nano-banana/edit via fal.ai (ledger: assets/source/story/fal-ledger.jsonl); the kept source is committed at packages/asset-contract/assets/source/story/story-oni-reaches.png",
+          "license": "Original work for SNEKPRTY. Generated imagery, converted and palette-locked in this repository.",
+          "quantizedTo": "resurrect-64"
+        },
+        "maxGrain": {
+          "budget": 0.029,
+          "because": "A cutscene illustration is a scene, not a plate: faces, one-pixel outlines, stars and falling snow are its detail, and it is shown at two times or more, where one pixel reads as drawn."
+        }
+      }
     ]
   }
 }

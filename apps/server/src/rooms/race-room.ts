@@ -347,6 +347,7 @@ export class RaceRoom extends Room<{ state: RaceRoomState }> {
     this.project();
 
     this.registerHandlers();
+    this.telemetry.lifecycle("room", "open", { access });
 
     this.scheduler = startTickScheduler({
       tickMs: TICK_MS,
@@ -441,6 +442,7 @@ export class RaceRoom extends Room<{ state: RaceRoomState }> {
     this.inputMeter.fill(playerId);
     this.emptySinceTick = undefined;
     this.noteActivity();
+    this.telemetry.lifecycle("seat", "join", { players: this.seats.size });
 
     this.syncLock();
     this.evaluate();
@@ -466,6 +468,7 @@ export class RaceRoom extends Room<{ state: RaceRoomState }> {
     const playerId = this.seats.playerOf(client.sessionId);
     if (playerId === undefined) return;
 
+    this.telemetry.lifecycle("seat", "leave", { consented: code === CloseCode.CONSENTED, players: this.seats.size });
     if (code === CloseCode.CONSENTED) {
       this.removePlayer(client.sessionId, playerId);
       return;
@@ -505,6 +508,7 @@ export class RaceRoom extends Room<{ state: RaceRoomState }> {
       // The page that came back numbers on from what was acknowledged, holds
       // nothing, and has nothing of the old page's waiting (audit S13).
       this.inputQueue.resume(playerId, returned?.lastSequence ?? 0);
+      this.telemetry.lifecycle("seat", "return", { players: this.seats.size });
       this.project();
     } catch {
       // The deadline passed. `expireGhosts` has already decided what the seat
@@ -523,6 +527,7 @@ export class RaceRoom extends Room<{ state: RaceRoomState }> {
     // disposed by Colyseus without ever having built these, and claimed no
     // code; tearing it down must not throw.
     const built = this as unknown as { telemetry?: RoomTelemetry; simulation?: RaceSimulation };
+    built.telemetry?.lifecycle("room", "close", { ticks: this.race?.tick ?? 0 });
     built.telemetry?.dispose();
     built.simulation?.dispose();
     if (this.codeClaimed) void releaseRoomCode(this.presence as Presence, this.roomId);
@@ -727,6 +732,7 @@ export class RaceRoom extends Room<{ state: RaceRoomState }> {
       if (this.race.tick < player.ghostDeadlineTick) continue;
 
       const sessionId = this.seats.sessionOf(player.id);
+      this.telemetry.lifecycle("seat", "expired", { players: this.seats.size });
       // The hold ends with the grace: whatever the seat becomes, a token
       // presented after this tick is refused.
       if (sessionId !== undefined) this.seats.closeHold(sessionId);

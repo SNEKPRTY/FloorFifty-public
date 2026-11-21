@@ -1175,7 +1175,12 @@ describe("session intent owns asynchronous room work", () => {
       const attempts = first.client.reconnect.mock.calls.length;
       first.client.create.mockResolvedValue(next.room);
       await manager.createRoom("New");
-      await vi.advanceTimersByTimeAsync(RECONNECT_GRACE_TICKS * TICK_MS + 3_000);
+      // A real server answers the client's pings; the fake does not, and a socket silent for
+      // SILENT_SOCKET_MS is dropped on purpose (audit S16). So the new room keeps talking.
+      for (let second = 0; second < (RECONNECT_GRACE_TICKS * TICK_MS + 3_000) / 1_000; second += 1) {
+        await vi.advanceTimersByTimeAsync(1_000);
+        next.room.pushState();
+      }
       expect(first.client.reconnect).toHaveBeenCalledTimes(attempts);
       expect(manager.roomCode).toBe("NEW234");
       expect(manager.connectionState).toBe("connected");

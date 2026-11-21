@@ -450,7 +450,7 @@ export class FastFallWhoosh {
 }
 
 /**
- * How a fast-fall sounds; shared by the race and the tutorial. Under a landing
+ * How a fast-fall sounds; shared by the race and the story. Under a landing
  * (`LANDING_GAIN`): a press made over and over is a texture, and a bright one
  * wears on the ear long before the race is over.
  */

@@ -2,8 +2,8 @@ import * as m from "../../paraglide/messages.js";
 
 /*
  * The words a prompt shows beside a controller's button picture. They live in
- * the race because the race's hints and the tutorial's card both set words this
- * way, and the tutorial sits above the race.
+ * the race because the race's hints and the story's card both set words this
+ * way, and the story sits above the race.
  */
 
 /**

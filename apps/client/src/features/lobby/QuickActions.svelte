@@ -1,7 +1,7 @@
 <script lang="ts">
   /**
-   * The title's quick actions (spec §3.1.1, §3.1.5): fullscreen, tutorial and
-   * contact, as one row of utilities (UI layout spec §6.1). Mute is the
+   * The title's quick actions (spec §3.1.1, §3.1.5): fullscreen, story,
+   * instructions and contact, as one row of utilities (UI layout spec §6.1). Mute is the
    * corner's, as on every screen. Fullscreen is offered as the browser allows
    * it: a toggle where element fullscreen exists, Add to Home Screen help on
    * an iPhone or iPad, and absent elsewhere rather than dead. The help is the
@@ -16,10 +16,11 @@
   import type { BarAction } from "../kit/layout/action-bar";
 
   let {
-    onTutorial,
+    onStory,
+    onInstructions,
     onContact,
     onHomeScreen,
-  }: { onTutorial?: () => void; onContact: () => void; onHomeScreen: () => void } = $props();
+  }: { onStory?: () => void; onInstructions?: () => void; onContact: () => void; onHomeScreen: () => void } = $props();
 
   // State, because inside Ruken the host's answer to the first press can
   // change it (to the Home Screen help on an iPhone).
@@ -53,16 +54,42 @@
         ? // Quiet: the modal it opens plays ui.open (polish spec §8.2).
           [{ id: "quick-home-screen", label: m.shell_fullscreen(), icon: fullscreenIcon, kind: "utility" as const, sfx: "none", onSelect: onHomeScreen }]
         : []),
-    ...(onTutorial !== undefined ? [{ id: "quick-tutorial", label: m.shell_tutorial(), icon: tutorialIcon, kind: "utility" as const, onSelect: onTutorial }] : []),
+  ]);
+
+  /** Socials, a bar of its own. */
+  const contact = $derived<BarAction[]>([
     // Quiet: the modal it opens plays ui.open (polish spec §8.2).
     { id: "quick-contact", label: m.shell_contact(), icon: contactIcon, kind: "utility" as const, sfx: "none", onSelect: onContact },
+  ]);
+
+  /** How to play: the story and the instructions, a bar of their own so each bar stays one row. */
+  const learn = $derived<BarAction[]>([
+    ...(onStory !== undefined ? [{ id: "quick-story", label: m.shell_story(), icon: storyIcon, kind: "utility" as const, onSelect: onStory }] : []),
+    // Quiet: the carousel it opens plays ui.open (polish spec §8.2).
+    ...(onInstructions !== undefined ? [{ id: "quick-instructions", label: m.shell_instructions(), icon: instructionsIcon, kind: "utility" as const, sfx: "none", onSelect: onInstructions }] : []),
   ]);
 </script>
 
 {#snippet fullscreenIcon()}<Icon name={fullscreen ? "collapse" : "expand"} />{/snippet}
-{#snippet tutorialIcon()}<Icon name="help" />{/snippet}
+{#snippet storyIcon()}<Icon name="play" />{/snippet}
+{#snippet instructionsIcon()}<Icon name="help" />{/snippet}
 {#snippet contactIcon()}<Icon name="at" />{/snippet}
 
 <div role="toolbar" aria-label={m.shell_quick_actions()} class="ff-quick">
-  <ActionBar {actions} testId="quick-actions" keepWords />
+  {#if learn.length > 0}<ActionBar actions={learn} testId="quick-learn" keepWords />{/if}
+  {#if actions.length > 0}<ActionBar {actions} testId="quick-actions" keepWords />{/if}
+  <ActionBar actions={contact} testId="quick-contact-bar" keepWords />
 </div>
+
+<style>
+  /* Bars of a button or two, each one row (the contract: an action bar never wraps). Where they fit on one
+     line they share it; where they do not, they stack. */
+  .ff-quick {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ff-quick > :global(.ff-action-bar) {
+    flex: 1 1 auto;
+  }
+</style>

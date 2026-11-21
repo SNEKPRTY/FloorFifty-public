@@ -231,6 +231,6 @@ describe("the surfaces that use them", () => {
   it("a resume plays the pause overlay's outro; a screen leaving simply removes it", () => {
     const screens = (name: string) => readClient(name);
     expect(screens("gameplay.ts")).toMatch(/} else if \(this\.pause !== undefined\) {\s*(\/\/.*\s*)?void unmount\(this\.pause, { outro: true }\);/);
-    expect(screens("tutorial.ts")).toMatch(/} else if \(pauseOverlay !== undefined\) {\s*(\/\/.*\s*)?void unmount\(pauseOverlay, { outro: true }\);/);
+    expect(screens("story.ts")).toMatch(/} else if \(pauseOverlay !== undefined\) {\s*(\/\/.*\s*)?void unmount\(pauseOverlay, { outro: true }\);/);
   });
 });

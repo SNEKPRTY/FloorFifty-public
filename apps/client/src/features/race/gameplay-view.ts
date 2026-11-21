@@ -92,6 +92,11 @@ const BLOOM = { city: 1.8, marks: 1.1, markTolerance: 0.05 } as const;
 
 /** The most specks a set piece's weather draws at once. */
 const SKY_PARTICLE_LIMIT = 120;
+/** The story's lava edge is framed inside this share of the view under the racer (`storyLavaLead`). */
+export const STORY_LAVA_FRAME = 0.75;
+/** The most the camera looks down for the story's lava: this share of the view above the racer, so the racer stays below the HUD with the floor above in sight. */
+export const STORY_LAVA_MAX_LOOK = 0.28;
+
 /** A set piece's camera kick settles on the slam kick's starting spring. */
 const SET_PIECE_KICK_SPRING = { f: 6, zeta: 0.4, r: 0 } as const;
 
@@ -217,17 +222,17 @@ export class GameplayView {
   private pulseOffsetY = 0;
   /** The slam's camera kick, in whole logical units downward (polish spec §4.2). */
   private kickOffsetY = 0;
-  /** Survival's lava, or undefined on a finite course (lava spec §5); the tutorial draws one for its last step. */
+  /** Survival's lava, or undefined on a finite course (lava spec §5); the story draws one for its last step. */
   private readonly lavaView: LavaView | undefined;
-  /** The tutorial's lava is driven by `setTutorialEdge`, not by the snapshot's edge or the race clock. */
-  private readonly tutorialLava: boolean;
-  private tutorialEdge: { y: number; rise: number } | undefined;
+  /** The story's lava is driven by `setStoryEdge`, not by the snapshot's edge or the race clock. */
+  private readonly storyLava: boolean;
+  private storyEdge: { y: number; rise: number } | undefined;
   /** Whether any floor transitioned to missed on this update. */
   private missedTransition = false;
   /** Parabolic bounce apex guidance layer. */
   readonly trajectoryGuide = new TrajectoryGuide();
   private trajectoryGuideEnabled = true;
-  private isTutorial = false;
+  private isStory = false;
   /** Lets the sizzle sound once per dip (lava spec §5). */
 
   private readonly sizzle = new SizzleGate();
@@ -278,10 +283,10 @@ export class GameplayView {
     options: {
       sheetAliasFor?: (characterId: string, colour: SeatScarf) => string;
       /**
-       * The tutorial: its last step has an edge of its own on a finite course, drawn with
-       * the race's lava (`setTutorialEdge`). A race never sets this.
+       * The story: its last step has an edge of its own on a finite course, drawn with
+       * the race's lava (`setStoryEdge`). A race never sets this.
        */
-      tutorialEdge?: boolean;
+      storyEdge?: boolean;
     } = {},
   ) {
     this.world.label = "gameplay-world";
@@ -316,8 +321,8 @@ export class GameplayView {
 
     // Survival's lava covers the bodies and leaves the tags on top, so a
     // rival under it reads as a silhouette with a name (lava spec L4).
-    this.tutorialLava = options.tutorialEdge === true;
-    if (tuning.RACE_TIME_LIMIT_TICKS > 0 || this.tutorialLava) {
+    this.storyLava = options.storyEdge === true;
+    if (tuning.RACE_TIME_LIMIT_TICKS > 0 || this.storyLava) {
       const lava = new LavaView(tuning);
       this.players.root.addChildAt(lava.root, this.players.root.getChildIndex(this.players.bodies) + 1);
       this.lavaLayer.addChild(lava.marker);
@@ -481,17 +486,59 @@ export class GameplayView {
     this.trajectoryGuideEnabled = enabled;
   }
 
-  setTutorial(isTutorial: boolean): void {
-    this.isTutorial = isTutorial;
+  /**
+   * The story's own world layer (story mode v2): its glims, lamps and rings,
+   * over the floors and under the racers, carried by the camera. Made on the
+   * first ask, so a race that never asks draws exactly what it drew before.
+   */
+  storyLayer(): Container {
+    if (this.storyRoot === undefined) {
+      this.storyRoot = new Container({ label: "story-layer" });
+      this.world.addChildAt(this.storyRoot, this.world.getChildIndex(this.platforms.root) + 1);
+    }
+    return this.storyRoot;
+  }
+
+  private storyRoot: Container | undefined;
+
+  setStory(isStory: boolean): void {
+    this.isStory = isStory;
+    this.players.setDimRivals(!isStory);
+    this.players.setSeatNumbers(!isStory);
+    this.players.setColourRims(isStory);
+    this.players.setClusterChips(!isStory);
   }
 
   /**
-   * The tutorial's edge this frame: its height and how fast it is rising, or
+   * The story's edge this frame: its height and how fast it is rising, or
    * undefined off its last step, which hides the lava. Read only by a view
-   * built with the `tutorialEdge` option.
+   * built with the `storyEdge` option.
    */
-  setTutorialEdge(edge: { y: number; rise: number } | undefined): void {
-    this.tutorialEdge = edge;
+  setStoryEdge(edge: { y: number; rise: number } | undefined): void {
+    this.storyEdge = edge;
+  }
+
+  /**
+   * The story's lava is the threat the player is told about, so it is framed
+   * (review 2, R1): when its edge is lower than `STORY_LAVA_FRAME` of the view
+   * under the racer reaches, the camera looks down by the difference, at most
+   * `STORY_LAVA_MAX_LOOK` of the view above the racer, so the racer stays below
+   * the HUD with the floor above in sight (re-check 3, R2): the lava itself is
+   * kept close (`STORY_RULES.lavaLeash`). Nothing on a step without lava. In
+   * logical units (negative is below).
+   */
+  private storyLavaLead(targetY: number | undefined): number {
+    const edge = this.storyLava ? this.storyEdge : undefined;
+    if (edge === undefined || targetY === undefined) return 0;
+    const scale = this.camera.transform().scale;
+    if (scale <= 0) return 0;
+    const anchor = (this.camera.visibleBottom() + this.camera.visibleTop()) / 2;
+    const below = (this.camera.visibleBottom() - anchor) / scale;
+    const above = (anchor - this.camera.visibleTop()) / scale;
+    const depth = targetY - edge.y;
+    const wanted = depth - below * STORY_LAVA_FRAME;
+    if (wanted <= 0) return 0;
+    return -Math.min(wanted, above * STORY_LAVA_MAX_LOOK);
   }
 
 
@@ -727,7 +774,7 @@ export class GameplayView {
     );
 
     const showGuide =
-      Boolean(this.isTutorial) ||
+      Boolean(this.isStory) ||
       (this.trajectoryGuideEnabled && !this.reducedMotion);
     if (local !== undefined) {
       this.trajectoryGuide.update({
@@ -769,9 +816,12 @@ export class GameplayView {
     const target = focused ?? local;
     if (!this.followSurvival(snapshot, focused === undefined, predicted, local?.y, moving, deltaMs)) {
       // A fast fall's look-ahead leads the local racer only; the winner is watched, not led.
-      const lead = focused === undefined ? this.lookAhead : 0;
+      // The story's lava is framed under whoever is watched: the player, or the friend the dive is for.
+      const lead = (focused === undefined ? this.lookAhead : 0) + this.storyLavaLead(target?.y);
+      // With the story's lava up, the camera keeps its wide moving zoom: settling in on a still racer would crop the lava out (re-check 4).
+      const wide = moving || (this.storyLava && this.storyEdge !== undefined);
       this.camera.update(
-        target === undefined ? { moving } : { moving, targetY: target.y, lead },
+        target === undefined ? { moving: wide } : { moving: wide, targetY: target.y, lead },
         deltaMs / 1000,
       );
     }
@@ -884,8 +934,8 @@ export class GameplayView {
     const self = snapshot.players.find((player) => player.id === this.localId);
     const elapsed = snapshot.tick - (snapshot.raceStartedAtTick ?? snapshot.tick);
     const drained = self?.outAtTick !== undefined && elapsed - self.outAtTick >= LAVA_LINGER_TICKS;
-    const edgeY = this.tutorialLava
-      ? this.tutorialEdge?.y
+    const edgeY = this.storyLava
+      ? this.storyEdge?.y
       : self === undefined || drained
         ? undefined
         : (predicted?.floorEdgeY ?? self.floorEdgeY);
@@ -902,8 +952,8 @@ export class GameplayView {
       racer,
       // The local racer's own banded rise, as the simulation moves their edge (lava band): none while
       // the edge waits for their first input or rests from it (first-race spec §2).
-      rise: this.tutorialLava
-        ? (this.tutorialEdge?.rise ?? 0)
+      rise: this.storyLava
+        ? (this.storyEdge?.rise ?? 0)
         : self === undefined
           ? 0
           : edgeRiseSpeed(elapsed, self, bandRacers(snapshot.players), snapshot.tuning),

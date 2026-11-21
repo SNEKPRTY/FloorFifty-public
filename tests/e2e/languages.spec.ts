@@ -108,7 +108,10 @@ async function expectNothingClipped(page: Page, where: string): Promise<void> {
       const outside = [...document.querySelectorAll(targets)]
         .filter((el) => probe["shown"]!(el) && probe["reachable"]!(el))
         .filter((el) => {
-          const parent = el.parentElement?.getBoundingClientRect();
+          // The parent that draws a box: a `display: contents` wrapper (the HUD's cells held upright) has none, and measures as 0 by 0.
+          let holder = el.parentElement;
+          while (holder !== null && getComputedStyle(holder).display === "contents") holder = holder.parentElement;
+          const parent = holder?.getBoundingClientRect();
           const box = el.getBoundingClientRect();
           return parent !== undefined && (box.right > parent.right + 1 || box.left < parent.left - 1);
         })
@@ -236,7 +239,7 @@ for (const locale of LOCALE_TAGS) {
       );
     });
 
-    test(`${locale} on ${viewport.name}: the photosensitivity warning, error panel, settings, tutorial and pause fit`, async ({ browser }) => {
+    test(`${locale} on ${viewport.name}: the photosensitivity warning, error panel, settings, story and pause fit`, async ({ browser }) => {
       test.slow();
       const context = await browser.newContext({
         viewport: { width: viewport.sweep.width, height: viewport.sweep.height },
@@ -291,11 +294,18 @@ for (const locale of LOCALE_TAGS) {
         await capture(page, locale, viewport.name, "language");
         await page.keyboard.press("Escape");
 
-        await page.getByTestId("quick-tutorial").click();
-        await expectScreen(page, "tutorial");
-        await expect(page.getByTestId("tutorial-prompt")).toBeVisible({ timeout: 20_000 });
-        await expectNothingClipped(page, where("tutorial"));
-        await capture(page, locale, viewport.name, "tutorial-prompt");
+        await page.getByTestId("quick-story").click();
+        await expectScreen(page, "story");
+        await expect(page.getByTestId("story-hub")).toBeVisible({ timeout: 20_000 });
+        await expectNothingClipped(page, where("story hub"));
+        await capture(page, locale, viewport.name, "story-hub");
+        await page.getByTestId("story-play").click();
+        await expect(page.getByTestId("story-cutscene")).toBeVisible({ timeout: 30_000 });
+        await expectNothingClipped(page, where("story cutscene"));
+        await page.getByTestId("story-cutscene-skip").click();
+        await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible({ timeout: 20_000 });
+        await expectNothingClipped(page, where("story"));
+        await capture(page, locale, viewport.name, "story-words");
 
         await page.getByTestId("pause-open").click();
         await expect(page.getByTestId("pause-overlay")).toBeVisible();

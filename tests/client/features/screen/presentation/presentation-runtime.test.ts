@@ -81,11 +81,11 @@ describe("the title, lobby and race flow", () => {
     await app.runtime.start();
     await app.settleTransitions();
 
-    app.runtime.publish("ui.tutorial-requested", {});
+    app.runtime.publish("ui.story-requested", {});
     await app.settleTransitions();
-    expect(app.screens.currentName).toBe("Tutorial");
+    expect(app.screens.currentName).toBe("Story");
 
-    app.runtime.publish("ui.tutorial-closed-to-title", {});
+    app.runtime.publish("ui.story-closed-to-title", {});
     await app.settleTransitions();
     expect(app.screens.currentName).toBe("MainMenu");
     expect(app.failures).toEqual([]);
@@ -94,11 +94,11 @@ describe("the title, lobby and race flow", () => {
 
   it("opens the tutorial from the lobby and returns to it", async () => {
     const app = await presentationHarness({ config: shipped, currentScreen: "Lobby" });
-    app.runtime.publish("ui.tutorial-requested", {});
+    app.runtime.publish("ui.story-requested", {});
     await app.settleTransitions();
-    app.runtime.publish("ui.tutorial-closed-to-lobby", {});
+    app.runtime.publish("ui.story-closed-to-lobby", {});
     await app.settleTransitions();
-    expect(app.screenHistory).toEqual(["Lobby", "Tutorial", "Lobby"]);
+    expect(app.screenHistory).toEqual(["Lobby", "Story", "Lobby"]);
     expect(app.failures).toEqual([]);
     app.dispose();
   });

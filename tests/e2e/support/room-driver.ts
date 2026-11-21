@@ -215,18 +215,10 @@ export async function openClient(page: Page, path = "/"): Promise<void> {
   await enterLobby(page);
 }
 
-/** From the title, through Play into the lobby, declining a first tutorial offer. */
+/** From the title, through Play into the lobby. */
 export async function enterLobby(page: Page): Promise<void> {
   await page.getByTestId("title-play").click();
   await expectScreen(page, "lobby");
-  // A first Play is offered the tutorial (launch polish §3.1.4); these specs
-  // are about the lobby, so they decline it as a returning player would.
-  const offer = page.getByTestId("tutorial-offer-skip");
-  const offered = await offer
-    .waitFor({ state: "visible", timeout: 1_000 })
-    .then(() => true)
-    .catch(() => false);
-  if (offered) await offer.click();
 }
 
 /**

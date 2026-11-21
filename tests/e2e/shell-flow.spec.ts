@@ -1,6 +1,4 @@
-import * as m from "../../apps/client/src/paraglide/messages.js";
 import { expect, test, type Page } from "./support/test";
-import { authoredStepKinds } from "./support/tutorial-walk";
 import { FakePad, focusedTestId } from "./support/fake-gamepad";
 import { readCounters } from "./support/inspection";
 import {
@@ -18,7 +16,7 @@ import { holdRoomClocks, waitForServer } from "./support/server-fixture";
 /**
  * The phase 2 gate (launch polish spec §3.1.7): the whole shell, end to end,
  * against the real server. Title to race to pause and back; the title walked
- * by keyboard and by pad; the tutorial and the leaks it could leave; quality
+ * by keyboard and by pad; the story and the leaks it could leave; quality
  * switched back and forth; and a reload in the middle of a race.
  */
 
@@ -85,7 +83,7 @@ test("the title walks in one order by keyboard, and a pad opens and closes Setti
     const id = await focusedTestId(page);
     if (id !== null) seen.push(id);
   }
-  for (const id of ["title-play", "title-settings", "quick-tutorial", "quick-contact", "corner-mute"]) {
+  for (const id of ["title-play", "title-settings", "quick-story", "quick-contact", "corner-mute"]) {
     expect(seen, `Tab never reached ${id}`).toContain(id);
   }
   expect(seen.indexOf("title-play")).toBeLessThan(seen.indexOf("title-settings"));
@@ -100,7 +98,7 @@ test("the title walks in one order by keyboard, and a pad opens and closes Setti
   await expect(page.getByTestId("settings-modal")).toBeHidden();
 });
 
-test("the tutorial teaches its first step, exits to the title, and leaves nothing behind", async ({ page }) => {
+test("the story starts a chapter, moves a held key, exits to the title, and leaves nothing behind", async ({ page }) => {
   test.slow();
   await openTitle(page);
   // Settled first: the title's backdrop and racers are still arriving for a moment.
@@ -127,45 +125,26 @@ test("the tutorial teaches its first step, exits to the title, and leaves nothin
   // A title that drew nothing would make the comparison vacuous.
   expect(before.displayObjects).toBeGreaterThan(0);
 
-  await page.getByTestId("quick-tutorial").click();
-  await expectScreen(page, "tutorial");
-  // The race loads under the screen first; the prompt is its end.
-  await expect(page.getByTestId("tutorial-prompt")).toBeVisible({ timeout: 20_000 });
+  await page.getByTestId("quick-story").click();
+  await expectScreen(page, "story");
+  await page.getByTestId("story-play").click({ timeout: 30_000 });
+  await page.getByTestId("story-cutscene-skip").click({ timeout: 30_000 });
+  // The race loads under the screen first; the first words are its end.
+  await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible({ timeout: 20_000 });
   // On touch the swipe coach is its own first-run card, over the first step.
   const coach = page.getByTestId("swipe-coach-dismiss");
   if (await coach.isVisible().catch(() => false)) await coach.click();
-  // The prompt is the slim toast in every layout, which counts "1/5"
-  // (TutorialPrompt.svelte). The count is the authored steps'.
-  const total = authoredStepKinds().length;
-  await expect(page.getByTestId("tutorial-step")).toContainText(m.tutorial_step_toast({ step: 1, total }));
-  // Each step waits, frozen, for the player: the first key lifts the veil,
-  // and the step clears once both ways have been steered.
-  // A press inside the step's minimum freeze is not taken, and a held key is
-  // not a fresh press after it, so press again until the veil lifts.
-  // A press is fresh only if a tick saw the key up first (`observeFrozen` in
-  // packages/shared/src/level/tutorial.ts), so the release is held for a few
-  // ticks; released and pressed back to back, every retry read as one hold.
-  await expect(async () => {
-    await page.keyboard.up("KeyA");
-    await page.waitForTimeout(100);
-    await page.keyboard.down("KeyA");
-    await expect(page.getByTestId("tutorial-freeze")).toBeHidden({ timeout: 500 });
-  }).toPass({ timeout: 10_000 });
-  await page.waitForTimeout(300);
-  await page.keyboard.up("KeyA");
+  // The run is the player's own from the first tick: a held key moves the racer, and the page follows the
+  // run, so the waits name how long a page may take to follow.
+  const tickOf = (): Promise<number> => page.evaluate(() => (window as unknown as { __ffRacer?: () => { tick: number } }).__ffRacer?.().tick ?? -1);
   await page.keyboard.down("KeyD");
-  // The run is stepped by the render clock, at most five ticks a frame
-  // (`MAX_STEPS_PER_FRAME` in tutorial-run.ts), and the rest of a long frame is
-  // dropped. So both the clear and the 1.1 s the "Nice." stands (66 ticks) take
-  // as long as the frames do: a few seconds on a loaded GPU runner, where
-  // Playwright's 5 s default timed out once ("1 of 5" still showing). The page
-  // is following the run, so the waits name how long a page may take to follow.
-  await expect(page.getByTestId("tutorial-cleared")).toBeVisible({ timeout: CLIENT_FOLLOWS_MS });
+  await expect.poll(tickOf, { timeout: CLIENT_FOLLOWS_MS }).toBeGreaterThan(30);
   await page.keyboard.up("KeyD");
-  await expect(page.getByTestId("tutorial-step")).toContainText(m.tutorial_step_toast({ step: 2, total }), { timeout: CLIENT_FOLLOWS_MS });
 
   await page.keyboard.press("Escape");
   await page.getByTestId("pause-leave").click();
+  await expect(page.getByTestId("story-hub")).toBeVisible({ timeout: 20_000 });
+  await page.getByTestId("story-hub-back").click();
   await expectScreen(page, "title");
   await expect.poll(async () => (await readCounters(page)).displayObjects, { timeout: 10_000 }).toBe(before.displayObjects);
   await expect.poll(async () => (await readCounters(page)).audioSources, { timeout: 10_000 }).toBe(before.audioSources);

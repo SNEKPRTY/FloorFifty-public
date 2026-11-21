@@ -159,6 +159,16 @@ export class FeelDirector {
   }
 
   /** Settles everything at once: a rewind, reduced motion, or no content. */
+  /**
+   * A shake and a punch the story names (story mode v2, "Feel"), on top of
+   * the race's own. Nothing under reduced motion, where the frame rests them.
+   */
+  jolt(trauma: number, punch: number): void {
+    if (this.deps.reduced() || this.deps.feel() === undefined) return;
+    if (trauma > 0) this.shake.add(trauma);
+    if (punch > 0) this.punch.lift(punch);
+  }
+
   restart(): void {
     this.shake.settle();
     this.punch.set(0);

@@ -27,7 +27,7 @@ import type { PlayerId } from "@floor-fifty/shared/common/ids";
 import type { PlayerSnapshot } from "@floor-fifty/shared/common/protocol";
 import type { PredictedState } from "../net/local-simulation";
 import type { ResolvedTuning } from "@floor-fifty/shared/common/tuning";
-import { roleTint } from "@floor-fifty/asset-contract/roles";
+import { playerColorTint, roleTint } from "@floor-fifty/asset-contract/roles";
 import {
   LOGICAL_VIEWPORT,
   PLAYER_SPRITE_SIZE,
@@ -35,6 +35,7 @@ import {
   type SeatScarf,
 } from "../../lib/constants";
 import { createOutlineFilter } from "../render/filters/outline";
+import { VISUAL_INSPECTION_ENABLED } from "../render/inspection";
 import {
   FrameSheet,
   loadedSheetData,
@@ -137,6 +138,9 @@ type Figure = {
   tag: NameTag;
 };
 
+/** How bright a story racer's body is on a silhouetted stage, as a share of its colour. */
+export const STORY_SILHOUETTE_SHADE = 0.78;
+
 type PlayerDisplay = {
   root: Container;
   sprite: Sprite;
@@ -163,6 +167,8 @@ type PlayerDisplay = {
   lastX: number;
   /** The body's own alpha, as a flicker last set it; 1 when none has. */
   bodyAlpha: number;
+  /** The body's tint on a silhouetted stage: black, or in the story its racer's own colour in shadow. */
+  silhouetteTint: number;
   /** Someone else's racer, drawn dimmed (`RIVAL_BODY_ALPHA`). */
   rival: boolean;
   /** A CPU's mood word, made on its first (CPU banding spec §4). */
@@ -216,6 +222,15 @@ export const IDLE_BOB_HZ = 1.25;
 export const RIVAL_BODY_ALPHA = 0.55;
 /** A rival's body, darkened toward grey; white leaves a sprite as drawn. */
 export const RIVAL_BODY_TINT = 0xb4b4b4;
+
+/**
+ * Whether rivals are drawn undimmed: only while the Help's race demo is recorded (`demo-capture.spec.ts` sets
+ * `window.__ffDemoFullColourRivals` before the page loads), and only in a build with the inspection hooks, so a
+ * player's game always dims them (Owner, 2026-11-20: "Full-colour rivals, closer view", for the recording only).
+ */
+export function fullColourRivals(): boolean {
+  return VISUAL_INSPECTION_ENABLED && (globalThis as { __ffDemoFullColourRivals?: boolean }).__ffDemoFullColourRivals === true;
+}
 
 /** How far a waiting racer is lifted this frame, in whole pixels (0 to 2). */
 export function idleBob(elapsedMs: number, reduced: boolean): number {
@@ -400,7 +415,7 @@ export class PlayerView {
       // A disconnected player is still on the course; showing them faded says
       // so without moving them or removing their nameplate.
       display.root.alpha = player.status === "connected" ? 1 : 0.4;
-      display.rival = focus !== undefined && player.id !== focus;
+      display.rival = this.dimRivals && focus !== undefined && player.id !== focus;
       this.paintBody(display);
 
       // Vertical state is authority's, or the prediction's for the local
@@ -541,7 +556,7 @@ export class PlayerView {
       x: display.root.position.x,
       y: -display.root.position.y,
     }));
-    const { hidden, chips } = this.declutter.update(sites, localId, deltaMs);
+    const { hidden, chips } = this.clusterChips ? this.declutter.update(sites, localId, deltaMs) : { hidden: new Set<PlayerId>(), chips: [] };
 
     for (const [id, display] of this.displays) {
       display.tag.root.visible = !hidden.has(id);
@@ -614,9 +629,11 @@ export class PlayerView {
         // The warm end of the sky, because that is where the light in this
         // world comes from: a rim in the overhead blue would be a second light
         // source the scene does not have.
-        rimColor: roleTint("skyLow"),
-        thickness: 1,
-        rimStrength: 0.9,
+        // In the story, on a silhouetted stage, each racer's rim is its own colour, so the three are told apart (review R11).
+        rimColor: this.colourRims && this.options.silhouette === true ? playerColorTint(player.colour) : roleTint("skyLow"),
+        // The story's rim is a full line, not a glint: it is how Frog, Oni and you are told apart at dawn (review 2, R3).
+        thickness: this.colourRims && this.options.silhouette === true ? 2 : 1,
+        rimStrength: this.colourRims && this.options.silhouette === true ? 1 : 0.9,
       }),
     ];
     // Drawn at the reference's own player size: square, as `player.rs:48`
@@ -625,13 +642,14 @@ export class PlayerView {
     sprite.width = PLAYER_SPRITE_SIZE;
     sprite.height = PLAYER_SPRITE_SIZE;
     // The body only, on both copies: the nameplate stays readable.
-    if (this.options.silhouette === true) sprite.tint = SILHOUETTE_TINT;
+    if (this.options.silhouette === true) sprite.tint = this.silhouetteTintOf(player.colour);
     root.addChild(sprite);
 
     const tag = new NameTag(seat, player.colour);
     tag.setFontFamily(this.fontFamily);
     if (this.tagResolution !== undefined) tag.setResolution(this.tagResolution);
     tag.setName(player.name);
+    tag.setSeatShown(this.seatNumbers);
     this.tags.addChild(tag.root);
     return { root, sprite, tag };
   }
@@ -672,6 +690,7 @@ export class PlayerView {
       ...(animations === undefined ? {} : { animations }),
       lastX: player.x,
       bodyAlpha: 1,
+      silhouetteTint: this.silhouetteTintOf(player.colour),
       rival: false,
       // A display is born with no direction of travel: the pose for its first
       // frame comes from that frame's own `vy`, and there is no earlier one to
@@ -748,6 +767,47 @@ export class PlayerView {
   }
 
   /** The body only: a flicker dims the racer and leaves its nameplate solid. */
+  /** Whether the other racers are dimmed as rivals: yes in a race, no in the story, where they are friends at your side. */
+  setDimRivals(on: boolean): void {
+    this.dimRivals = on;
+  }
+
+  /** Whether the tags carry seat numbers: off in the story, where they read as places. */
+  setSeatNumbers(on: boolean): void {
+    this.seatNumbers = on;
+    for (const display of this.displays.values()) for (const tag of [display.tag, display.wrapped.tag]) tag.setSeatShown(on);
+  }
+
+  private seatNumbers = true;
+
+  /** Whether a silhouetted body's rim is its racer's colour (the story) rather than the sky's. Set before the racers are drawn. */
+  setColourRims(on: boolean): void {
+    this.colourRims = on;
+  }
+
+  private colourRims = false;
+
+  /**
+   * A silhouetted body: black in a race; in the story (colour rims on), its
+   * racer's colour at `STORY_SILHOUETTE_SHADE` of its brightness, so each of
+   * the three still reads against the dawn sky and reads as itself.
+   */
+  private silhouetteTintOf(colour: PlayerSnapshot["colour"]): number {
+    if (!this.colourRims) return SILHOUETTE_TINT;
+    const tint = playerColorTint(colour);
+    const shade = (shift: number) => Math.round(((tint >> shift) & 0xff) * STORY_SILHOUETTE_SHADE) << shift;
+    return shade(16) | shade(8) | shade(0);
+  }
+
+  /** Whether racers drawn together fold their tags into one "×N" chip: yes in a race, no in the story, where a count reads like a score. */
+  setClusterChips(on: boolean): void {
+    this.clusterChips = on;
+  }
+
+  private clusterChips = true;
+
+  private dimRivals = true;
+
   setBodyAlpha(playerId: PlayerId, alpha: number): void {
     const display = this.displayFor(playerId);
     if (display === undefined) return;
@@ -757,8 +817,9 @@ export class PlayerView {
 
   /** The body's alpha and tint, on both copies: its flicker, dimmed for a rival. */
   private paintBody(display: PlayerDisplay): void {
-    const alpha = display.bodyAlpha * (display.rival ? RIVAL_BODY_ALPHA : 1);
-    const tint = this.options.silhouette === true ? SILHOUETTE_TINT : display.rival ? RIVAL_BODY_TINT : 0xffffff;
+    const dimmed = display.rival && !fullColourRivals();
+    const alpha = display.bodyAlpha * (dimmed ? RIVAL_BODY_ALPHA : 1);
+    const tint = this.options.silhouette === true ? display.silhouetteTint : dimmed ? RIVAL_BODY_TINT : 0xffffff;
     for (const sprite of [display.sprite, display.wrapped.sprite]) {
       sprite.alpha = alpha;
       sprite.tint = tint;

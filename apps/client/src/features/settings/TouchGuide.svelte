@@ -15,10 +15,10 @@
   let { mode = "swipe" }: { mode?: "swipe" | "buttons" } = $props();
 
   const SLIDES = [
-    { id: "steer", caption: m.tutorial_touch_steer },
-    { id: "fall", caption: m.tutorial_touch_fast_fall },
-    { id: "restart", caption: m.tutorial_touch_restart },
-    { id: "buttons", caption: m.tutorial_touch_buttons_hint },
+    { id: "steer", caption: m.touch_guide_steer },
+    { id: "fall", caption: m.touch_guide_fast_fall },
+    { id: "restart", caption: m.touch_guide_restart },
+    { id: "buttons", caption: m.touch_guide_buttons_hint },
   ] as const;
 
   let track: HTMLElement | undefined = $state();

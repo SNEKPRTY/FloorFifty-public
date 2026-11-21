@@ -183,8 +183,8 @@ export const TUNABLES = {
   SURVIVAL_BAND_BEHIND_MIN: { type: "float", min: 0.1, max: 1, default: 0.7 },
 
   /**
-   * The tutorial's own edge (first-race spec §1), on its last step only. It is
-   * the tutorial's, not the race's: its course stays finite. It starts
+   * The story's own edge (first-race spec §1), on its last step only. It is
+   * the story's, not the race's: its course stays finite. It starts
    * `TUTORIAL_EDGE_START_BELOW` units under the floor the step begins on (about
    * two floors, so an idle player has several seconds) and rises
    * `TUTORIAL_EDGE_RISE` units/s, about half of Survival's first rise.

@@ -327,7 +327,7 @@
   :global(.ff-picker__arrow--previous) { left: var(--ff-ring-room); }
   :global(.ff-picker__arrow--next) { right: var(--ff-ring-room); }
   :global(.ff-picker__arrow:disabled) { opacity: 0.4; }
-  .ff-picker__seconds { font: 600 var(--ff-type-hint) / 1 var(--ff-font-ui); color: var(--ff-text-2); white-space: nowrap; }
+  .ff-picker__seconds { font: 600 var(--ff-type-name) / 1 var(--ff-font-ui); color: var(--ff-text-2); white-space: nowrap; }
   :global(.ff-picker__lock) { flex: 1 1 auto; min-height: 44px; }
   /* Where the action shares the headline's line (sideways, and a short desk:
      SelectFrame), Lock in holds one width whatever it says. Sized to its

@@ -17,7 +17,15 @@ export function forbiddenInProduction(env: Readonly<Record<string, string | unde
   // on each) that lacks it must not start: it would be open to every origin,
   // with no room cap (production audit S5).
   const onFly = (env["FLY_APP_NAME"] ?? "") !== "";
-  if (env["NODE_ENV"] !== "production") return onFly ? ["NODE_ENV (not production on Fly)"] : [];
+  if (env["NODE_ENV"] !== "production") {
+    if (onFly) return ["NODE_ENV (not production on Fly)"];
+    // Not production by NODE_ENV, and not driven by the browser suite (the test
+    // driver is never mounted on a public server): it still answers the world,
+    // and with no origin list it would answer every origin (audit S5).
+    const driven = (env["FLOOR_FIFTY_TEST_DRIVER_TOKEN"] ?? "") !== "";
+    if (!driven && (env["FLOOR_FIFTY_ALLOWED_ORIGINS"] ?? "").trim() === "") return ["FLOOR_FIFTY_ALLOWED_ORIGINS (unset)"];
+    return [];
+  }
   const set: string[] = FORBIDDEN.filter((name) => (env[name] ?? "") !== "");
   if (env["FLOOR_FIFTY_TELEMETRY"] === "1") set.push("FLOOR_FIFTY_TELEMETRY");
   // A public server with no room cap or no origin list is wide open (§6.1, §6.5).

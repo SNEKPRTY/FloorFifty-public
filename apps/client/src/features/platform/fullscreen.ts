@@ -62,9 +62,10 @@ export function onFullscreenChange(listener: () => void, doc: Document = documen
 
 /**
  * Enters or leaves fullscreen. Entering also asks for a landscape lock, which
- * most phones refuse outside an installed app; a refusal changes nothing.
+ * most phones refuse outside an installed app; a refusal changes nothing. In a
+ * frame (Ruken) it never asks: the host owns the screen's direction.
  */
-export async function toggleFullscreen(doc: Document = document): Promise<void> {
+export async function toggleFullscreen(doc: Document = document, embedded: boolean = pageEmbedded()): Promise<void> {
   const hosting = currentHosting();
   if (hosting.hosted) {
     hostSupport.set(hosting, await hosting.setFullscreen(!hosting.isFullscreen()));
@@ -75,6 +76,7 @@ export async function toggleFullscreen(doc: Document = document): Promise<void> 
     return;
   }
   await doc.documentElement.requestFullscreen().catch(() => undefined);
+  if (embedded) return;
   const orientation = (globalThis.screen as Screen | undefined)?.orientation as
     | (ScreenOrientation & { lock?: (orientation: string) => Promise<void> })
     | undefined;

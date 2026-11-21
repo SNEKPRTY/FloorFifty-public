@@ -14,7 +14,7 @@
  */
 
 import { expect, test, type Page, type Request } from "@playwright/test";
-import { createRoom, expectScreen, passPhotosensitivity, passSplash } from "../e2e/support/room-driver";
+import { expectScreen, passPhotosensitivity, passSplash } from "../e2e/support/room-driver";
 
 const API = process.env["FF_SMOKE_API"] ?? "";
 const CLIENT = process.env["FF_SMOKE_URL"];
@@ -147,9 +147,11 @@ test.describe("the standalone client (release readiness §9.2)", () => {
 
     await page.getByTestId("title-play").click();
     await expectScreen(page, "lobby");
-    const offer = page.getByTestId("tutorial-offer-skip");
-    if (await offer.isVisible().catch(() => false)) await offer.click();
-    await createRoom(page, "Smoke");
+    // A fresh profile has not been shown how: the first press that starts a match is asked once, and Skip carries on with it.
+    await page.getByTestId("name-input").fill("Smoke");
+    await page.getByTestId("create-room").click();
+    await page.getByTestId("match-gate-skip").click();
+    await expect(page.getByTestId("room-code")).not.toBeEmpty({ timeout: 30_000 });
     await page.getByTestId("ready-toggle").click();
     await expectScreen(page, "gameplay");
 

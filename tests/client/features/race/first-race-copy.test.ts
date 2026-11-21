@@ -16,13 +16,6 @@ describe("a first race's words", () => {
     expect(m.race_hint_restart_touch()).toBe("Tap the timer to start again from the bottom.");
   });
 
-  it("says the tutorial's last step and its catch as the Owner approved them", () => {
-    expect(m.content_tutorial_survive_keyboard()).toBe("Stay above the lava.");
-    expect(m.content_tutorial_survive_gamepad()).toBe("Stay above the lava.");
-    expect(m.content_tutorial_survive_touch()).toBe("Stay above the lava.");
-    expect(m.tutorial_caught()).toBe("The lava caught you. Try again.");
-  });
-
   it("calls it lava on the Survival swipe coach, never the rising edge", () => {
     expect(m.shell_swipe_coach_survival()).toBe("Drag to steer · flick down to fast fall · stay above the lava");
     // The ready room's Survival rules are the Owner's own wording ("14. A", on main); mode-guidance.test.ts pins them.

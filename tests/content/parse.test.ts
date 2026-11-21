@@ -20,7 +20,6 @@ import {
   validSong,
   validStage,
   validTree,
-  validTutorial,
   validTreeWith, validFlow } from "./support";
 
 describe("diagnostics", () => {
@@ -155,7 +154,7 @@ describe("parseSources", () => {
       expect(result.parsed.stages.map((located) => located.value.id)).toEqual(["dawn", "rooftops"]);
       expect(result.parsed.stages[1]?.value.courseTuning).toEqual({ COURSE_FLOOR_COUNT: 24 });
       expect(result.parsed.songs.map((located) => located.value.id)).toEqual(["dawn-tutorial", "dusk-run"]);
-      expect(result.parsed.tutorial.value.songId).toBe("dawn-tutorial");
+      expect(result.parsed.story.value.chapters[0]!.songId).toBe("dawn-tutorial");
       expect(result.parsed.modes).toEqual([]);
     }
   });
@@ -174,69 +173,6 @@ describe("parseSources", () => {
     expect(result).toEqual(expect.objectContaining({ ok: false }));
     if (!result.ok)
       expect(result.diagnostics).toContainEqual(expect.objectContaining({ file, code }));
-  });
-
-  it.each([
-    ["a step kind twice", validTutorial.replace('kind = "land"', 'kind = "move"')],
-    // The first and last steps trade kinds, so `survive` leads.
-    [
-      "survive before the last step",
-      validTutorial
-        .replace('kind = "move"', "kind = FIRST")
-        .replace('kind = "survive"', 'kind = "move"')
-        .replace("kind = FIRST", 'kind = "survive"'),
-    ],
-  ])("refuses a tutorial with %s, naming content/tutorial.toml", (_, text) => {
-    const result = parseSources(validTreeWith("content/tutorial.toml", text));
-    expect(result.ok).toBe(false);
-    if (!result.ok)
-      expect(result.diagnostics).toContainEqual(
-        expect.objectContaining({ file: "content/tutorial.toml", keyPath: "steps" }),
-      );
-  });
-
-  it.each([
-    ["a restart step", "reset"],
-    ["a fill-the-counter step", "reach"],
-  ])("refuses %s, which the tutorial no longer teaches", (_, kind) => {
-    const result = parseSources(validTreeWith("content/tutorial.toml", validTutorial.replace('kind = "land"', `kind = "${kind}"`)));
-    expect(result.ok).toBe(false);
-    if (!result.ok)
-      expect(result.diagnostics).toContainEqual(
-        expect.objectContaining({ file: "content/tutorial.toml", keyPath: "steps.1.kind" }),
-      );
-  });
-
-  it("authors five tutorial steps, ending on Survival's lava", () => {
-    const result = parseSources(validTreeWith("content/tutorial.toml", validTutorial));
-    expect(result.ok).toBe(true);
-    if (result.ok)
-      expect(result.parsed.tutorial.value.steps.map((step) => step.kind)).toEqual([
-        "move",
-        "land",
-        "fastFall",
-        "landMoving",
-        "survive",
-      ]);
-  });
-
-  it("refuses a {glyph} slot anywhere but a gamepad prompt, and accepts a buttons prompt", () => {
-    const slotted = validTutorial.replace(
-      'prompt.keyboard = "Steer left, then right, with A and D."',
-      'prompt.keyboard = "Steer with {glyph}."',
-    );
-    expect(slotted).not.toBe(validTutorial);
-    const refused = parseSources(validTreeWith("content/tutorial.toml", slotted));
-    expect(refused.ok).toBe(false);
-    if (!refused.ok)
-      expect(refused.diagnostics).toContainEqual(expect.objectContaining({ file: "content/tutorial.toml" }));
-
-    const buttons = validTutorial.replace(
-      'prompt.touch = "Drag left, then right, to steer."',
-      'prompt.touch = "Drag left, then right, to steer."\nprompt.buttons = "Hold the left arrow, then the right."',
-    );
-    expect(buttons).not.toBe(validTutorial);
-    expect(parseSources(validTreeWith("content/tutorial.toml", buttons)).ok).toBe(true);
   });
 
   it("reports a TOML syntax error against the file that carries it", () => {

@@ -69,7 +69,7 @@ describe("pixel conformance", () => {
     //
     // Audio and cover rows are skipped rather than filtered by extension: a
     // track has no pixels to hold to a palette, a cover is smooth UI art kept
-    // off it (select spec §8), and reading either as a PNG fails with a
+    // off it (select spec §8), a demo is a recording of the game, and reading either as a PNG fails with a
     // decoder error that says nothing about what is actually wrong.
     const root = resolve(process.cwd(), "packages/asset-contract/assets");
     const manifest = JSON.parse(
@@ -78,7 +78,7 @@ describe("pixel conformance", () => {
 
     const offenders = Object.values(manifest.bundles)
       .flat()
-      .filter((asset) => asset.role !== "audio" && asset.role !== "cover")
+      .filter((asset) => asset.role !== "audio" && asset.role !== "cover" && asset.role !== "demo")
       .map((asset) => ({ alias: asset.alias, ...offPalettePixels(resolve(root, asset.file)) }))
       .filter((report) => report.count > 0);
 

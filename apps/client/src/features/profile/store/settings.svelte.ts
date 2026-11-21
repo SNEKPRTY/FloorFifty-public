@@ -43,6 +43,7 @@ export class SettingsStore {
       input: { ...current.input, ...patch.input },
       seen: { ...current.seen, ...patch.seen },
       profile: { ...current.profile, ...patch.profile },
+      story: { ...current.story, ...patch.story },
       // A scalar, not a section: `null` (Automatic) is a value, absent is "unchanged".
       locale: patch.locale === undefined ? current.locale : patch.locale,
     };

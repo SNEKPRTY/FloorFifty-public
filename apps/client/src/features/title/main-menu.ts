@@ -19,7 +19,8 @@ import { takeWordmark } from "../boot/wordmark-handoff";
 import { reducedMotion } from "../kit/motion";
 import { MENU_INTRO } from "../render/non-gameplay-backdrop";
 import { SPLASH_BARS_FADE_MS } from "../boot/splash";
-import { warmTutorialSong } from "../tutorial/tutorial-song";
+import { storyModeOn } from "../story/enabled";
+import { warmStorySong } from "../story/story-song";
 
 /**
  * How long the arrival from the splash takes, from the title's mount to its
@@ -67,7 +68,8 @@ export class MainMenuScreen extends BaseScreen {
         // And the splash's wordmark slides over to its place in the hero.
         wordmarkFrom: context.previousScreen === "Splash" ? takeWordmark() : undefined,
         onPlay: () => context.publishPresentationEvent("ui.play-requested", {}),
-        onTutorial: () => context.publishPresentationEvent("ui.tutorial-requested", {}),
+        // Story mode is hidden until it is redone (features/story/enabled.ts).
+        ...(storyModeOn() ? { onStory: () => context.publishPresentationEvent("ui.story-requested", {}) } : {}),
       },
     });
     // `openSettings` is the title's one export (TitleRoot.svelte).
@@ -110,8 +112,8 @@ export class MainMenuScreen extends BaseScreen {
     // news of a rebuild a player outside a room ever gets.
     const refresh = (): void => void context.content.refresh().catch(() => undefined);
     refresh();
-    // The tutorial's song decodes while the title is read, not when it opens.
-    warmTutorialSong(context);
+    // The story's song decodes while the title is read, not when it opens.
+    if (storyModeOn()) warmStorySong(context);
     this.bag.add(context.network.subscribe({ onContentRevision: refresh }));
   }
 }

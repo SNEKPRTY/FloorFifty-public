@@ -13,7 +13,7 @@ afterEach(() => {
 const icon = (() => {}) as never;
 const actions = [
   { id: "a-one", label: "Full screen", icon, kind: "utility" as const, onSelect: () => {} },
-  { id: "a-two", label: "Tutorial", icon, kind: "utility" as const, onSelect: () => {} },
+  { id: "a-two", label: "Story", icon, kind: "utility" as const, onSelect: () => {} },
 ];
 // A bar far too narrow for its one row: the level any measuring would choose is the last.
 const narrow = () => ({ available: 10, widths: [300, 200, 100] as [number, number, number] });

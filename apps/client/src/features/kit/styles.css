@@ -202,7 +202,7 @@
 }
 
 /* Layered, so a child's own `pointer-events-none` utility wins. Unlayered,
-   it beat every Tailwind utility: the tutorial's veil took the pointer and
+   it beat every Tailwind utility: the story's veil took the pointer and
    swallowed the swipes under it on a tablet. */
 @layer components {
   .ff-overlay > * {

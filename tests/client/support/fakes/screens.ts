@@ -20,7 +20,7 @@ import { GameplayScreen } from "../../../../apps/client/src/features/race/gamepl
 import { LobbyScreen } from "../../../../apps/client/src/features/lobby/lobby";
 import { MainMenuScreen } from "../../../../apps/client/src/features/title/main-menu";
 import { ReplayScreen } from "../../../../apps/client/src/features/replay/replay";
-import { TutorialScreen } from "../../../../apps/client/src/features/tutorial/tutorial";
+import { StoryScreen } from "../../../../apps/client/src/features/story/story";
 import { GENERATED_CONTENT } from "../../../../apps/server/src/content/generated-content";
 import { snapshotAt } from "../snapshots";
 import { ErrorChannel } from "../../../../apps/client/src/features/net/error-view";
@@ -93,7 +93,7 @@ export function screenManagerWithFakes(): {
       Lobby: () => new RecordingScreen("Lobby", log),
       Gameplay: () => new RecordingScreen("Gameplay", log),
       GameEnd: () => new RecordingScreen("GameEnd", log),
-      Tutorial: () => new RecordingScreen("Tutorial", log),
+      Story: () => new RecordingScreen("Story", log),
       Replay: () => new RecordingScreen("Replay", log),
     },
     context,
@@ -157,7 +157,8 @@ export async function lobbyWithFakeNetwork(
   const published = recordingPublisher();
 
   const errors = options.errors ?? new ErrorChannel();
-  const settings = options.settings ?? fakeSettings();
+  // A player already shown how to climb, so a press goes straight in; the match gate's own tests pass unseen settings.
+  const settings = options.settings ?? fakeSettings({ seen: { tutorial: true } });
   const audio = new FakeAudio();
   const assets = new FakeAssets();
   const screen = new LobbyScreen();
@@ -510,27 +511,27 @@ export async function gameplayWithFakeNetwork(
 }
 
 /**
- * The tutorial mounted on a fake stage whose ticker a test drives.
+ * The story mounted on a fake stage whose ticker a test drives.
  *
- * Served the shipped content, so its steps and prompts are the authored ones.
+ * Served the shipped content, so its chapters and prompts are the authored ones.
  * `frames(n)` ticks the stage as a display would; `key` holds a key for about
  * that long in frames, as a player does.
  */
-export async function tutorialWithFakes(
+export async function storyWithFakes(
   options: {
     method?: InputMethod;
     previousScreen?: ScreenId;
     settings?: SettingsStore;
-    /** Serves an artifact compiled before the tutorial had a stage of its own. */
-    withoutTutorialStage?: boolean;
-    /** Plays only these of the authored steps, in their authored order: a short tutorial to reach a late step. */
-    onlySteps?: readonly string[];
+    /** Serves an artifact compiled before the story existed. */
+    withoutStory?: boolean;
     audio?: FakeAudio;
     /** Ruken, for a screen that runs hosted (see `tests/client/ruken`). */
     hosting?: Hosting;
+    /** Stays on the hub the story opens on; otherwise "Play" is pressed there, for the focused chapter's cutscene. */
+    atHub?: boolean;
   } = {},
 ): Promise<{
-  screen: import("../../../../apps/client/src/features/tutorial/tutorial").TutorialScreen;
+  screen: import("../../../../apps/client/src/features/story/story").StoryScreen;
   settings: SettingsStore;
   audio: FakeAudio;
   ticker: FakeTicker;
@@ -558,34 +559,17 @@ export async function tutorialWithFakes(
   const countDisplayObjects = (): number => layers.reduce((sum, layer) => sum + count(layer), 0);
   const displayObjectsBefore = countDisplayObjects();
 
-  // The stale artifact the tutorial's fallback exists for: cast through
+  // The stale artifact the story's fallback exists for: cast through
   // `unknown`, because the current schema would refuse it.
-  const content = options.withoutTutorialStage
+  const served = options.withoutStory
     ? ({
         ...GENERATED_CONTENT,
-        content: {
-          ...GENERATED_CONTENT.content,
-          tutorial: (({ stage: _stage, song: _song, ...rest }) => rest)(GENERATED_CONTENT.content.tutorial),
-        },
+        content: (({ story: _story, ...rest }) => rest)(GENERATED_CONTENT.content),
       } as unknown as GameContent)
     : GENERATED_CONTENT;
-  const only = options.onlySteps;
-  const served =
-    only === undefined
-      ? content
-      : ({
-          ...content,
-          content: {
-            ...content.content,
-            tutorial: {
-              ...content.content.tutorial,
-              steps: content.content.tutorial.steps.filter((step) => only.includes(step.kind)),
-            },
-          },
-        } as GameContent);
   const audio = options.audio ?? new FakeAudio();
 
-  const screen = new TutorialScreen();
+  const screen = new StoryScreen();
   await screen.enter({
     stage,
     assets: new FakeAssets(),
@@ -604,6 +588,10 @@ export async function tutorialWithFakes(
 
   const query = <T extends Element>(testId: string): T | null =>
     stage.overlay.querySelector<T>(`[data-testid="${testId}"]`);
+  if (options.atHub !== true) {
+    query<HTMLButtonElement>("story-play")?.click();
+    settleUi();
+  }
   const frames = (count: number): void => {
     for (let index = 0; index < count; index += 1) ticker.tick(16.6667);
     settleUi();

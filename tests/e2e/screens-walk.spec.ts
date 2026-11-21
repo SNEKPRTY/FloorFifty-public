@@ -6,8 +6,9 @@ import { serverUpdatingMessage } from "../../packages/shared/src/common/refusals
 import { CLIENT_BOOT_MS, CLIENT_FOLLOWS_MS, RESULTS_TIMEOUT_MS, SCREEN_SETTLE_MS } from "./support/room-driver";
 import { SERVER_URL, RoomPatience, driveRoom, holdRoomClocks, waitForRoom, waitForServer } from "./support/server-fixture";
 import { startFrameHost, type FrameHost } from "./support/frame-host";
-import { MODES, Notes, Shots, TUTORIAL_STEPS, WalkDone, evaluateIn, partsOf, selectedViews, waitForIn, walkLocale, type Surface, type View } from "./support/screens-walk";
-import { authoredStepKinds, letGo, playTutorial } from "./support/tutorial-walk";
+import { MODES, Notes, Shots, WalkDone, evaluateIn, partsOf, selectedViews, waitForIn, walkLocale, type Surface, type View } from "./support/screens-walk";
+import { BRIEF, FRAME_CONTROL, stepUntil } from "./support/frame-control";
+import { keyHands, playChapter, stepFrames, takeFrames } from "./support/story-play";
 
 /**
  * The screens walk (owner, 2026-11-14: "make FloorFifty's screenshot walk a
@@ -24,9 +25,8 @@ import { authoredStepKinds, letGo, playTutorial } from "./support/tutorial-walk"
  * never a part of any suite.
  *
  * Every wait is on state: a screen's own marker, the room's tick, a button
- * enabled. The one place it lets time pass is the tutorial's input pacing
- * (`playTutorial`), where holding a key for a moment is the input itself and
- * never the wait before a photograph.
+ * enabled. The one place it lets time pass is a held key in the story, where holding
+ * it for a moment is the input itself and never the wait before a photograph.
  *
  * A step that fails is noted (`_notes-<part>.json`) and the walk goes on, so
  * one broken screen costs one screenshot and not the view. The check that
@@ -34,7 +34,7 @@ import { authoredStepKinds, letGo, playTutorial } from "./support/tutorial-walk"
  * screen a view needs is missing.
  *
  * The server is the e2e server, seeded (`FLOOR_FIFTY_TEST_SEED=13`); the
- * tutorial has its own fixed seed.
+ * story's chapters have their own fixed seeds.
  *
  * `SCREENS_VIEWS` and `SCREENS_HOSTS` narrow a run (`support/screens-walk.ts`).
  */
@@ -61,6 +61,8 @@ type OpenOptions = {
   automation?: boolean;
   /** Runs before the game loads: routes that make it fail. */
   beforeLoad?: (context: BrowserContext) => Promise<unknown>;
+  /** A player never shown how to climb, so the first Find a race meets the match gate (`support/test.ts` stores the opposite). */
+  neverShownHow?: true;
 };
 
 /** A browser context in the view's device, with the game loaded in it, standalone or framed by the Ruken host. */
@@ -90,6 +92,17 @@ async function open(browser: Browser, view: View, baseURL: string, options: Open
       },
       { key: SETTINGS_KEY, locale: walkLocale(), seen: options.seen },
     );
+  }
+  if (options.neverShownHow === true) {
+    // Runs after `support/test.ts`'s own script, which marks every client as shown how; only `seen.tutorial` changes.
+    await context.addInitScript((key) => {
+      try {
+        const stored = JSON.parse(localStorage.getItem(key) ?? "{}") as { seen?: Record<string, boolean> };
+        localStorage.setItem(key, JSON.stringify({ ...stored, seen: { ...stored.seen, tutorial: false } }));
+      } catch {
+        // A frame without storage starts as a first visit.
+      }
+    }, SETTINGS_KEY);
   }
   await options.beforeLoad?.(context);
   const page = await context.newPage();
@@ -185,12 +198,10 @@ async function passToTitle(game: Surface): Promise<void> {
   await expectScreen(game, "title");
 }
 
-/** From the title through Play into the lobby, declining a first tutorial offer. */
+/** From the title through Play into the lobby. */
 async function enterLobby(game: Surface): Promise<void> {
   await game.getByTestId("title-play").click();
   await expectScreen(game, "lobby");
-  const offer = game.getByTestId("tutorial-offer-skip");
-  if (await offer.waitFor({ state: "visible", timeout: 1_000 }).then(() => true, () => false)) await offer.click();
 }
 
 async function createRoom(game: Surface, name: string): Promise<string> {
@@ -352,7 +363,8 @@ for (const view of selectedViews()) {
     test.skip(!partsOf(view).includes("main"), "no screen of this part was asked for");
     const shots = new Shots(view, "main");
     const step = stepper(notes);
-    const opened = await open(browser, view, baseURL ?? "");
+    // A first visit: the walk meets the match gate on its first Find a race.
+    const opened = await open(browser, view, baseURL ?? "", { neverShownHow: true });
     const { page, game } = opened;
     const shoot = (screen: string): Promise<void> => shots.take(page, game, screen);
     const walk: Walk = { page, game, notes, step, shoot, noteTouch: () => shots.noteTouch(game) };
@@ -422,13 +434,21 @@ for (const view of selectedViews()) {
       await step("lobby", async () => {
         await press(game.getByTestId("title-play"), notes, "the title's Play");
         await expectScreen(game, "lobby");
-        const offer = game.getByTestId("tutorial-offer");
-        if (await expect(offer).toBeVisible({ timeout: 3_000 }).then(() => true, () => false)) {
-          await shoot("tutorial-offer");
-          await press(game.getByTestId("tutorial-offer-skip"), notes, "the tutorial offer's Skip");
-          await expect(offer).toBeHidden({ timeout: SCREEN_SETTLE_MS });
-        }
         await shoot("lobby");
+      });
+
+      // A first visit: the first press that starts a match is asked once. Show me how opens the Instructions, which count as being shown.
+      await step("the match gate and the Instructions", async () => {
+        await game.getByTestId("name-input").fill("Nana");
+        await press(game.getByTestId("find-race"), notes, "Find a race");
+        await expect(game.getByTestId("match-gate")).toBeVisible({ timeout: SCREEN_SETTLE_MS });
+        await shoot("match-gate");
+        await press(game.getByTestId("match-gate-show"), notes, "the gate's Show me how");
+        await expect(game.getByTestId("instructions")).toBeVisible({ timeout: SCREEN_SETTLE_MS });
+        await expect(game.getByTestId("instructions-image").or(game.getByTestId("instructions-caption")).first()).toBeVisible({ timeout: SCREEN_SETTLE_MS });
+        await shoot("instructions");
+        await page.keyboard.press("Escape");
+        await expect(game.getByTestId("instructions")).toBeHidden({ timeout: SCREEN_SETTLE_MS });
       });
 
       await step("join with a wrong code", async () => {
@@ -537,76 +557,151 @@ for (const view of selectedViews()) {
     }
   });
 
-  test(`${view.key} / tutorial`, async ({ browser, baseURL }) => {
+  test(`${view.key} / story`, async ({ browser, baseURL }) => {
     test.setTimeout(30 * 60_000);
-    const notes = new Notes(view, "tutorial");
-    test.skip(!partsOf(view).includes("tutorial"), "no screen of this part was asked for");
-    const shots = new Shots(view, "tutorial");
-    const opened = await open(browser, view, baseURL ?? "", { seen: { photosensitivity: true } });
+    const notes = new Notes(view, "story");
+    test.skip(!partsOf(view).includes("story"), "no screen of this part was asked for");
+    const shots = new Shots(view, "story");
+    const opened = await open(browser, view, baseURL ?? "", { seen: { photosensitivity: true, tutorial: true } });
     const { page, game } = opened;
     const shoot = (screen: string): Promise<void> => shots.take(page, game, screen);
-    // From the first key the walk presses, the game words its prompts for a keyboard, so a touch
-    // view puts a finger back first. Not for the swipe card or the frozen first step, which no key has touched.
-    const shootTouch = async (screen: string): Promise<void> => {
-      await shots.noteTouch(game);
-      await shoot(screen);
-    };
+    const words = game.getByTestId("story-line").or(game.getByTestId("story-chip")).first();
     try {
       const step = stepper(notes);
-      const kinds = authoredStepKinds();
-      if (kinds.length !== TUTORIAL_STEPS) {
-        notes.add(`the tutorial now has ${kinds.length} steps and the walk's catalogue names ${TUTORIAL_STEPS} (TUTORIAL_STEPS in support/screens-walk.ts)`);
-      }
 
-      // The first card, frozen, then let go and played, then the pause.
-      await step("the tutorial's first step", async () => {
+      // The first chapter: the swipe card where a finger plays, the first words, the climb, the pause.
+      await step("the story's first chapter", async () => {
         await passToTitle(game);
-        await press(game.getByTestId("quick-tutorial"), notes, "the title's Tutorial");
-        await expectScreen(game, "tutorial");
+        await press(game.getByTestId("quick-story"), notes, "the title's Story");
+        await expectScreen(game, "story");
+        await expect(game.getByTestId("story-hub")).toBeVisible({ timeout: 30_000 });
+        await shoot("story-hub");
+        await press(game.getByTestId("story-play"), notes, "the hub's Play");
+        await expect(game.getByTestId("story-cutscene-box")).toBeVisible({ timeout: 30_000 });
+        await shoot("story-cutscene");
+        await press(game.getByTestId("story-cutscene-skip"), notes, "the cutscene's Skip");
 
-        // The first-run swipe card, where a finger plays.
         const coach = game.getByTestId("swipe-coach");
         if (view.touch && (await expect(coach).toBeVisible({ timeout: 8_000 }).then(() => true, () => false))) {
-          await shoot("tutorial-swipe-coach");
+          await shoot("story-swipe-coach");
           await press(game.getByTestId("swipe-coach-dismiss"), notes, "the swipe card's dismiss");
         }
 
-        // Step 1, frozen, then played.
-        await expect(game.getByTestId("tutorial-prompt")).toBeVisible({ timeout: 30_000 });
-        await expect(game.getByTestId("tutorial-freeze")).toBeVisible({ timeout: SCREEN_SETTLE_MS });
-        await shoot("tutorial-step-1");
-        if (!(await letGo(page, game, kinds[0]))) throw new Error("the first step stayed frozen under its control");
-        await shootTouch("tutorial-playing");
+        await expect(words).toBeVisible({ timeout: 30_000 });
+        await shoot("story-line");
+        // A key is pressed: the climb is the player's, and the words are in the keyboard's wording from here.
+        await page.keyboard.down("KeyD");
+        await page.waitForTimeout(600);
+        await page.keyboard.up("KeyD");
+        await shots.noteTouch(game);
+        await shoot("story-playing");
 
-        // The pause button, pressed as a player does; a script's press if it will not take one. The key is for a view without the button.
-        if ((await game.getByTestId("pause-open").count()) > 0) await press(game.getByTestId("pause-open"), notes, "the tutorial's pause button");
+        if ((await game.getByTestId("pause-open").count()) > 0) await press(game.getByTestId("pause-open"), notes, "the story's pause button");
         else await page.keyboard.press("Escape");
         await expect(game.getByTestId("pause-resume")).toBeVisible({ timeout: SCREEN_SETTLE_MS });
-        await shootTouch("tutorial-paused");
+        await shoot("story-paused");
         await press(game.getByTestId("pause-resume"), notes, "the pause menu's Resume");
         await expect(game.getByTestId("pause-resume")).toBeHidden({ timeout: SCREEN_SETTLE_MS });
       });
+    } catch (error) {
+      if (!(error instanceof WalkDone)) throw error;
+    } finally {
+      notes.save();
+      await opened.close();
+    }
+  });
 
-      // The rest, by the step the card is on (`support/tutorial-walk.ts`).
-      await step("the tutorial's steps", async () => {
-        const outcome = await playTutorial({ page, game, notes, shoot: shootTouch }, kinds, [1]);
-        // The last step, let go and then left alone: the lava catches her, and OUT! and the try-again card are shot.
-        if (outcome !== "last-step") return;
-        if (!(await letGo(page, game, kinds.at(-1)))) {
-          notes.add("the last step stayed frozen under its control; tutorial-caught not photographed");
-          return;
-        }
-        const caught = await expect(game.getByTestId("out-banner")).toBeVisible({ timeout: 90_000 }).then(() => true, () => false);
-        if (caught) await shootTouch("tutorial-caught");
-        else notes.add("the lava did not catch the idle racer within 90 s; tutorial-caught not photographed");
+  // The lava needs a chapter that catches an idle racer: the content the game fetches is rewritten, nothing in the game is.
+  const rewritten = (change: (chapters: Record<string, unknown>[]) => Record<string, unknown>[]) => (context: BrowserContext) =>
+    context.route("**/content", async (route) => {
+      const response = await route.fetch();
+      const body = (await response.json()) as { content: { story: { chapters: Record<string, unknown>[] } } };
+      body.content.story.chapters = change(body.content.story.chapters);
+      await route.fulfill({ response, json: body });
+    });
+
+  test(`${view.key} / story end`, async ({ browser, baseURL }) => {
+    test.setTimeout(20 * 60_000);
+    const notes = new Notes(view, "story-end");
+    test.skip(!partsOf(view).includes("story"), "no screen of this part was asked for");
+    const shots = new Shots(view, "story");
+    // Four chapters done: the last is played to its goal by the story bot on the arrow keys, then the ending and the last card.
+    const opened = await open(browser, view, baseURL ?? "", {
+      seen: { photosensitivity: true, tutorial: true },
+      beforeLoad: async (context) => {
+        await context.addInitScript(FRAME_CONTROL);
+        await context.addInitScript((key) => {
+          try {
+            const stored = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, unknown>;
+            localStorage.setItem(key, JSON.stringify({ ...stored, version: 2, story: { chaptersDone: 4, chapters: {} } }));
+          } catch {
+            // A frame without storage starts at chapter 1, and the walk notes it.
+          }
+        }, SETTINGS_KEY);
+      },
+    });
+    const { page, game } = opened;
+    try {
+      const step = stepper(notes);
+      await step("the story's end", async () => {
+        await passToTitle(game);
+        await press(game.getByTestId("quick-story"), notes, "the title's Story");
+        await expectScreen(game, "story");
+        await expect(game.getByTestId("story-hub")).toHaveAttribute("data-selected", "4", { timeout: 30_000 });
+        await press(game.getByTestId("story-play"), notes, "the hub's Play");
+        await press(game.getByTestId("story-cutscene-skip"), notes, "the cutscene's Skip");
+        await expect(game.getByTestId("story-line").or(game.getByTestId("story-chip")).first()).toBeVisible({ timeout: 30_000 });
+        await takeFrames(game);
+        await playChapter(game, keyHands(page), 6_000, undefined, (line) => notes.add(line));
+        await stepFrames(game, 120);
+        await expect(game.getByTestId("story-results")).toBeVisible({ timeout: 30_000 });
+        await shots.take(page, game, "story-results");
+        await press(game.getByTestId("story-next"), notes, "the results' Next");
+        await press(game.getByTestId("story-cutscene-skip"), notes, "the ending's Skip");
+        await expect(game.getByTestId("story-finale")).toBeVisible({ timeout: 30_000 });
+        await stepFrames(game, 240);
+        await shots.take(page, game, "story-end");
       });
+    } catch (error) {
+      if (!(error instanceof WalkDone)) throw error;
+    } finally {
+      notes.save();
+      await opened.close();
+    }
+  });
 
-      // The end card: the last step cleared it, or it is skipped to.
-      await step("the tutorial's end card", async () => {
-        const done = game.getByTestId("tutorial-done");
-        if (!(await done.isVisible())) await press(game.getByTestId("tutorial-skip"), notes, "the tutorial's Skip");
-        await expect(done).toBeVisible({ timeout: 30_000 });
-        await shootTouch("tutorial-end-card");
+  test(`${view.key} / story caught`, async ({ browser, baseURL }) => {
+    test.setTimeout(20 * 60_000);
+    const notes = new Notes(view, "story-caught");
+    test.skip(!partsOf(view).includes("story"), "no screen of this part was asked for");
+    const shots = new Shots(view, "story");
+    // The lava's chapter alone, left to catch an idle racer.
+    const opened = await open(browser, view, baseURL ?? "", {
+      seen: { photosensitivity: true, tutorial: true },
+      // The snow chapter alone, its lava under the racer from the first tick: an idle racer is caught.
+      beforeLoad: async (context) => {
+        // Stepped frames: a software-drawn browser plays the lava's minutes at a tenth of real time.
+        await context.addInitScript(FRAME_CONTROL);
+        await rewritten((chapters) => {
+          const snow = chapters[3]! as { startFloor: number; phases: Record<string, unknown>[] };
+          const phases = snow.phases.map((phase, index) =>
+            index === 0 ? { ...phase, lava: { under: "player", startBelow: 40, rise: 32, grace: 0 }, safeSpots: (phase["safeSpots"] as number[] | undefined) ?? [snow.startFloor] } : phase,
+          );
+          return [{ ...snow, phases }];
+        })(context);
+      },
+    });
+    const { page, game } = opened;
+    try {
+      const step = stepper(notes);
+      await step("the lava catches the racer", async () => {
+        await passToTitle(game);
+        await press(game.getByTestId("quick-story"), notes, "the title's Story");
+        await expectScreen(game, "story");
+        await press(game.getByTestId("story-play"), notes, "the hub's Play");
+        await press(game.getByTestId("story-cutscene-skip"), notes, "the cutscene's Skip");
+        expect(await stepUntil(game, async () => (await game.getByTestId("out-banner").count()) > 0, 6_000, BRIEF.batch, BRIEF.frameMs), "the lava catches the racer").toBe(true);
+        await shots.take(page, game, "story-caught");
       });
     } catch (error) {
       if (!(error instanceof WalkDone)) throw error;

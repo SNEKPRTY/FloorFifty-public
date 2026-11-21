@@ -11,6 +11,7 @@ import { describe, expect, it, vi } from "vitest";
 import { installLocaleStrategy } from "../../../../apps/client/src/features/i18n/strategy";
 import * as m from "../../../../apps/client/src/paraglide/messages.js";
 import { TITLE_ARRIVAL_MS } from "../../../../apps/client/src/features/title/main-menu";
+import { STORY_FLAG_KEY } from "../../../../apps/client/src/features/story/enabled";
 import { requestRacerHop } from "../../../../apps/client/src/features/lobby/racer-hops";
 import { SettingsStore } from "../../../../apps/client/src/features/profile/store/settings.svelte";
 import { shippedContentPort } from "../../support/fakes/content";
@@ -29,7 +30,8 @@ describe("the title", () => {
     title.screen.exit();
   });
 
-  it("gets the tutorial's song ready while a player who has not done the tutorial reads the title", async () => {
+  it("gets the story's song ready while a player who has not done it reads the title", async () => {
+    localStorage.removeItem(STORY_FLAG_KEY);
     const title = await mainMenuWithFakeNetwork({ content: shippedContentPort() });
     await flush();
     expect(title.audio.calls).toContain("load:song-dawn-tutorial");
@@ -254,11 +256,23 @@ describe("the title", () => {
     title.screen.exit();
   });
 
-  it("the tutorial quick action asks the flow for the tutorial", async () => {
+  it("shows the Story button to every player, with no flag (Owner, 2026-11-20: on for every player)", async () => {
+    localStorage.removeItem(STORY_FLAG_KEY);
     const title = await mainMenuWithFakeNetwork();
-    title.click("quick-tutorial");
-    expect(title.published()).toEqual(["ui.tutorial-requested"]);
+    expect(title.query("quick-story")).not.toBeNull();
+    expect(title.query("quick-instructions")).not.toBeNull();
     title.screen.exit();
+  });
+
+  it("the Story quick action asks the flow for the story", async () => {
+    try {
+      const title = await mainMenuWithFakeNetwork();
+      title.click("quick-story");
+      expect(title.published()).toEqual(["ui.story-requested"]);
+      title.screen.exit();
+    } finally {
+      localStorage.removeItem(STORY_FLAG_KEY);
+    }
   });
 
   it("forms no room: no connect form, and nothing followed from a snapshot", async () => {

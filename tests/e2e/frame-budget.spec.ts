@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "./support/test";
 import type { LocaleTag } from "../../apps/client/src/features/i18n/locales";
+import { SETTINGS_KEY } from "../../apps/client/src/features/profile/settings";
 import { forceSetPiece, liveWords, peakParticlesDuring, stressJuice } from "./support/inspection";
 import { driveRoom, waitForServer } from "./support/server-fixture";
 import {
@@ -237,7 +238,7 @@ test("the liquid wipe holds the frame budget", async ({ browser }) => {
           observer.observe(document.body, { childList: true });
         }),
     );
-    await page.getByTestId("quick-tutorial").click();
+    await page.getByTestId("quick-story").click();
     const { median, p95 } = await pacing;
     console.log(`liquid-wipe median ${median.toFixed(2)}ms, p95 ${p95.toFixed(2)}ms, over 42 frames`);
     expect(median, "frame pacing looks software-rendered -- run this spec headed, on a machine with a GPU").toBeLessThan(100);
@@ -410,5 +411,79 @@ test("a Survival race mid-climb holds the frame budget", async ({ browser }) => 
     climbing = false;
     await keepClimbing.catch(() => undefined);
     await host.context().close().catch(() => undefined);
+  }
+});
+
+// Story mode v2, criterion 25: the story's last chapter, Floor Fifty, with its three racers, the
+// glims, the lamps' layer and the lava, measured from its first climb to its last, played on the keys
+// by the story bot inside the page (an inspection build) in real time while the frames are measured.
+test("the story's last chapter holds the frame budget from its first climb to its last", async ({ browser }) => {
+  test.slow();
+  const context = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+  await context.addInitScript((key) => {
+    try {
+      const stored = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, unknown>;
+      localStorage.setItem(key, JSON.stringify({ ...stored, version: 2, story: { chaptersDone: 4, chapters: {} } }));
+    } catch {
+      // Without storage the hub opens on chapter 1, and the selected check below fails.
+    }
+  }, SETTINGS_KEY);
+  const page = await context.newPage();
+  type Hook = { step: string | undefined; doneAtTick?: number; want: { left: boolean; right: boolean; fastFall: boolean } };
+  let doneSeenAtMs: number | undefined;
+  const keys = { left: "KeyA", right: "KeyD", fastFall: "KeyS" } as const;
+  let playing = true;
+  let play: Promise<void> = Promise.resolve();
+  try {
+    await openTitle(page);
+    await page.getByTestId("quick-story").click();
+    await expectScreen(page, "story");
+    await expect(page.getByTestId("story-hub")).toHaveAttribute("data-selected", "4", { timeout: 30_000 });
+    await page.getByTestId("story-play").click();
+    await page.getByTestId("story-cutscene-skip").click({ timeout: 30_000 });
+    await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible({ timeout: 30_000 });
+    // The bot's advice pressed on the keys as fast as the page answers, until the results.
+    play = (async () => {
+      const held = new Set<keyof typeof keys>();
+      while (playing) {
+        const now = await page.evaluate(() => (window as unknown as { __ffStory?: () => Hook }).__ffStory?.());
+        if (now === undefined || now.step === "results") break;
+        if (now.doneAtTick !== undefined) doneSeenAtMs ??= Date.now();
+        for (const name of Object.keys(keys) as (keyof typeof keys)[]) {
+          if (now.want[name] && !held.has(name)) {
+            held.add(name);
+            await page.keyboard.down(keys[name]);
+          } else if (!now.want[name] && held.has(name)) {
+            held.delete(name);
+            await page.keyboard.up(keys[name]);
+          }
+        }
+      }
+      for (const name of held) await page.keyboard.up(keys[name]);
+    })();
+    await page.bringToFront();
+    const samples: { median: number; p95: number }[] = [];
+    // Three windows of 120 frames: the first climb, the middle and the end, while the chapter lasts.
+    for (let window = 0; window < 3; window += 1) {
+      if ((await page.getByTestId("story-results").count()) > 0) break;
+      const pacing = await framePacing(page);
+      samples.push(pacing);
+      console.log(`story-fifty window ${window + 1}: median ${pacing.median.toFixed(2)}ms, p95 ${pacing.p95.toFixed(2)}ms, over 120 frames`);
+      await page.waitForTimeout(3000);
+    }
+    expect(samples.length, "at least one window was measured in the climb").toBeGreaterThan(0);
+    await expect(page.getByTestId("story-results"), "the chapter was played to its results").toBeVisible({ timeout: 120_000 });
+    // The top is the end: the results follow the goal within a breath, with no dead stand (review 2, R2).
+    const standMs = Date.now() - (doneSeenAtMs ?? Date.now());
+    console.log(`story-fifty: results ${standMs} ms after the goal (seen by polling)`);
+    expect(standMs, "the results follow the goal at the top").toBeLessThan(3500);
+    for (const pacing of samples) {
+      expect(pacing.median, "frame pacing looks software-rendered -- run this spec headed, on a machine with a GPU").toBeLessThan(100);
+      expect(pacing.p95).toBeLessThan(GAMEPLAY_P95_MS);
+    }
+  } finally {
+    playing = false;
+    await play.catch(() => undefined);
+    await context.close().catch(() => undefined);
   }
 });

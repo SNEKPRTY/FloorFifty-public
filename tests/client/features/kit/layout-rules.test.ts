@@ -58,12 +58,13 @@ describe("the shell's scale (UI overhaul spec, \"Layout by form factor\")", () =
   const block = (css: string, selector: string): string | undefined =>
     [...css.matchAll(/([^{}]+)\{([^{}]*)\}/g)].find((match) => match[1]!.trim() === selector)?.[2];
 
-  it("grows the shell by a quarter on tablets and desktops, not on a short desktop window", async () => {
+  it("grows the shell by a quarter on desktops and by half on an upright iPad, not on a short desktop window", async () => {
     const css = await tokens();
-    expect(block(css, '[data-form-factor="tablet-portrait"]')).toMatch(/--ff-ui-zoom:\s*1\.25;/);
+    // An upright iPad draws the phone layout at 1.5, so its menus and dialogs fill the tall screen (R9).
+    expect(block(css, '[data-form-factor="tablet-portrait"]')).toMatch(/--ff-ui-zoom:\s*1\.5;/);
     expect(block(css, '[data-form-factor="desktop"]:not([data-height="short"])')).toMatch(/--ff-ui-zoom:\s*1\.25;/);
     // The old 1.2 / 1.4 tablet steps, and the 960 px block that raised it, are gone.
-    expect(css).not.toMatch(/--ff-ui-zoom:\s*1\.[24];/);
+    expect(css).not.toMatch(/--ff-ui-zoom:\s*1\.(2|4);/);
     expect(css).not.toMatch(/@media \(min-width: 960px\)/);
     expect(css).not.toMatch(/\[data-form-factor="desktop"\]\[data-height="short"\][^}]*--ff-ui-zoom/);
   });
@@ -103,7 +104,7 @@ describe("the shell's scale (UI overhaul spec, \"Layout by form factor\")", () =
     // One block for both, so the two cannot drift; the tablet's own block holds its zoom and the race HUD's floors number (the HUD sits outside the zoom).
     expect(block(css, '[data-form-factor="phone-portrait"], [data-form-factor="tablet-portrait"]')).toMatch(/--ff-touch-size:\s*76px;/);
     const tablet = block(css, '[data-form-factor="tablet-portrait"]')!;
-    expect(tablet.match(/--[a-z-]+:/g)).toEqual(["--ff-ui-zoom:", "--ff-hud-numeral:"]);
+    expect(tablet.match(/--[a-z-]+:/g)).toEqual(["--ff-ui-zoom:", "--ff-dialog-max-width:", "--ff-panel-max:", "--ff-row-name:", "--ff-hud-numeral:"]);
   });
 });
 

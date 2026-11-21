@@ -40,9 +40,9 @@ committed.
 | --- | --- | --- | --- |
 | `fraunces-latin-var.woff2` | `fonts.gstatic.com/s/fraunces/v38/6NUV8FyLNQOQZAnv9ZwIlOkuy91B.woff2` | 2026-09-20 | `94bb7e04bb1a32237a67935c72526e42a3e52ee4aebd50299802b18a93114251` |
 | `ff-pixel-latin.woff2` | cut from `fusion-pixel-12px-proportional-sc.woff2` | 2026-11-18 | `f66a1a1bc3f95934de4d14e3882218f78aa4f706726dab282c1061aa7658d2c8` |
-| `ff-pixel-jp-subset.woff2` | cut from `fusion-pixel-12px-proportional-jp.woff2` | 2026-11-18 | `07894ff0d67de446433b3cdac45996aa73bd3a416a47be1bde59cac45016fc5b` |
-| `ff-pixel-kr-subset.woff2` | cut from `fusion-pixel-12px-proportional-kr.woff2` | 2026-11-18 | `975c56ccc29936f91e2b3fa862385c1f730f14eda571a88c25c04f040c9a0f6a` |
-| `ff-pixel-sc-subset.woff2` | cut from `fusion-pixel-12px-proportional-sc.woff2` | 2026-11-18 | `d9683cc4088f33f17342aaf6b67ffeb1c91c6cb6cf0c240d7ba04d91895d1ecd` |
+| `ff-pixel-jp-subset.woff2` | cut from `fusion-pixel-12px-proportional-jp.woff2` | 2026-11-21 | `51e3dcb066e9e1c142541b805ca83e7fafcb776941723ff57094a1cd364c55d4` |
+| `ff-pixel-kr-subset.woff2` | cut from `fusion-pixel-12px-proportional-kr.woff2` | 2026-11-21 | `3646bbec33761fe091cb3ceab24eda938310b2ac67aa09e73fb03b11a4806b40` |
+| `ff-pixel-sc-subset.woff2` | cut from `fusion-pixel-12px-proportional-sc.woff2` | 2026-11-21 | `9fa79e890a52484ccc39d6b105f50b195cf563417f63db7b79fa53f90cba495f` |
 | `ff-pixel-jp-endonym.woff2` | cut from the JP source | 2026-11-18 | `67dee2358d97f77073c785373a179f0d9ceabf80268d4c6cd91ab1732abeeeca` |
 | `ff-pixel-kr-endonym.woff2` | cut from the KR source | 2026-11-18 | `1946f934fb455b4bf97379b0e037406a109f5056120aa2d9e3f6f5c09b1983f4` |
 | `ff-pixel-sc-endonym.woff2` | cut from the SC source | 2026-11-18 | `987332d19e925abc468859bf2465b5c2ea144770b7fc68561aa022a7fa308fff` |

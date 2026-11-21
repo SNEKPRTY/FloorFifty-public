@@ -119,6 +119,17 @@ describe("a name tag", () => {
     expect(parts(tag).name.text).toBe("Wolfgang-Ama…");
   });
 
+  it("hides the seat number in the story, where it would read as a place, and closes the gap it left", () => {
+    const tag = new NameTag(1, "cyan");
+    tag.setName("Frog");
+    const withSeat = parts(tag).name.x;
+    tag.setSeatShown(false);
+    expect(parts(tag).badge.visible).toBe(false);
+    expect(parts(tag).name.x).toBeLessThan(withSeat);
+    tag.setSeatShown(true);
+    expect(parts(tag).name.x).toBe(withSeat);
+  });
+
   it("sits on an opaque plate in the chip fill", () => {
     const tag = new NameTag(1, "cyan");
     tag.setName("Sable");

@@ -2,7 +2,7 @@
  * The select screen's still.
  *
  * A stage offered in the select screen needs its preview (select spec §4.5).
- * Only catalogued stages are held to it: a draft, or the tutorial's own
+ * Only catalogued stages are held to it: a draft, or the story's own
  * stage, is never offered, so it may go without.
  */
 

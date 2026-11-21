@@ -148,11 +148,12 @@ export class LetterboxFrame {
    * window; Floor Fifty halves that (`LETTERBOX_CROP_FRACTION`). It crops the
    * play field on every device, deliberately.
    *
-   * Landscape no longer draws the bars: the play layer's own mask does the
-   * cropping, and the strips show the scenery instead of black, with a 2 px
-   * line on the cut (`edges`). The bars are drawn in landscape only while the
-   * splash asks for its true black (`setBarBlack`). The rest is how they are
-   * placed.
+   * In landscape the bars frame a race's picture (`setCutLine`: a race, a
+   * replay, the story) in the palette's black, as solid bars (Owner,
+   * 2026-11-20). The menus show the scenery in the strips instead, and draw the
+   * bars only while the splash asks for its true black (`setBarBlack`). The
+   * play layer's own mask does the cropping either way. The rest is how they
+   * are placed.
    *
    * It is a sibling of `root` rather than a child of it, and it is drawn in
    * canvas pixels rather than logical units. That distinction is the whole of
@@ -210,10 +211,10 @@ export class LetterboxFrame {
   /** The last layout's canvas and field, so a new line can be drawn without one. */
   private last: { viewWidth: number; viewHeight: number; fieldFoot: number; phonePortrait: boolean; landscape: boolean } | undefined;
 
-  /** The 2 px cut line belongs to the field (a race, a replay, the tutorial); menus fill the window and have none. */
+  /** The 2 px cut line belongs to the field (a race, a replay, the story); menus fill the window and have none. */
   private cutLine = true;
 
-  /** Takes effect at the next `layout`. */
+  /** The cut line, and the solid bars of a race's picture in landscape. Takes effect at the next `layout`. */
   setCutLine(on: boolean): void {
     this.cutLine = on;
   }
@@ -412,15 +413,18 @@ export class LetterboxFrame {
 
   private applyBarLook(): void {
     const landscape = this.last?.landscape ?? false;
+    // A race's picture (a race, a replay, the story) is framed by solid bars in landscape, in the palette's
+    // black (Owner, 2026-11-20: "Bring back black bars"); the menus fill the window and show the scenery.
+    const framed = landscape && this.cutLine;
     const keep = Math.round(255 * (1 - this.blackness));
-    const tint = landscape ? 0x000000 : (keep << 16) | (keep << 8) | keep;
-    const alpha = landscape ? this.blackness : 1;
+    const tint = landscape && !framed ? 0x000000 : (keep << 16) | (keep << 8) | keep;
+    const alpha = landscape && !framed ? this.blackness : 1;
     for (const bar of [this.topBar, this.bottomBar]) {
       bar.tint = tint;
       bar.alpha = alpha;
     }
     if (landscape) {
-      this.bars.visible = this.blackness > 0;
+      this.bars.visible = framed || this.blackness > 0;
     } else if (this.last !== undefined) {
       this.bars.visible = false;
       this.drawSkirtBar();

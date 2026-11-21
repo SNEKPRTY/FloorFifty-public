@@ -7,7 +7,7 @@ import { evidenceDir } from "./support/evidence";
 import { SWEEP, walkFlow, type FlowScreen, type Sweep } from "./support/layout";
 import { expectScreen, openTitle, seedSettings } from "./support/room-driver";
 import { waitForServer } from "./support/server-fixture";
-import { noteTouch } from "./support/tutorial";
+import { enterStory, noteTouch } from "./support/story";
 
 /**
  * The visual audit (2026-10-05): screen-catalogue's walk at every SWEEP size,
@@ -53,7 +53,7 @@ function done(sweep: Sweep, locale: LocaleTag, tutorial: boolean): boolean {
   const dir = resolve(OUT, locale);
   if (!existsSync(dir)) return false;
   const mine = readdirSync(dir).filter((f) => f.startsWith(prefix(sweep)));
-  return tutorial ? mine.some((f) => f.endsWith("tutorial-done.png")) : mine.some((f) => f.endsWith("-replay-end.png"));
+  return tutorial ? mine.some((f) => f.endsWith("story-paused.png")) : mine.some((f) => f.endsWith("-replay-end.png"));
 }
 function shooter(sweep: Sweep, locale: LocaleTag) {
   return async (page: Page, state: string): Promise<void> => {
@@ -141,37 +141,25 @@ for (const locale of LOCALE_TAGS) for (const sweep of SWEEP) {
     await test.step("corner controls agree", () => expectSameCorner(corners));
   });
 
-  test(`audit tutorial ${locale} ${sweep.factor} ${size}`, async ({ browser }) => {
+  test(`audit story ${locale} ${sweep.factor} ${size}`, async ({ browser }) => {
     test.skip(done(sweep, locale, true), "already shot");
     test.slow();
-    const page = await openTutorial(browser, sweep, locale);
+    const page = await openStory(browser, sweep, locale);
     try {
-      // Played: the veil lifts. Pressed once the step has frozen, as
-      // tutorial-evidence.spec.ts does; pressed at once, the veil stayed up.
-      await expect(page.getByTestId("tutorial-freeze")).toBeVisible();
-      await page.waitForTimeout(500);
-      await page.keyboard.down("KeyA");
-      await expect(page.getByTestId("tutorial-freeze")).toBeHidden();
-      await page.waitForTimeout(250);
-      await page.keyboard.up("KeyA");
       await noteTouch(page, sweep);
-      await visitState(page, sweep, locale, "tutorial playing");
+      await visitState(page, sweep, locale, "story line");
 
       await page.keyboard.press("Escape");
       await expect(page.getByTestId("pause-resume")).toBeVisible();
-      await visitState(page, sweep, locale, "tutorial paused");
+      await visitState(page, sweep, locale, "story paused");
       await page.getByTestId("pause-resume").click();
-
-      await page.getByTestId("tutorial-skip").click();
-      await expect(page.getByTestId("tutorial-done")).toBeVisible();
-      await visitState(page, sweep, locale, "tutorial done");
     } finally {
       await page.context().close();
     }
   });
 }
 
-async function openTutorial(browser: import("@playwright/test").Browser, sweep: Sweep, locale: LocaleTag): Promise<Page> {
+async function openStory(browser: import("@playwright/test").Browser, sweep: Sweep, locale: LocaleTag): Promise<Page> {
   const context = await browser.newContext({
     viewport: { width: sweep.width, height: sweep.height },
     hasTouch: sweep.touch,
@@ -182,10 +170,6 @@ async function openTutorial(browser: import("@playwright/test").Browser, sweep: 
   const page = await context.newPage();
   await openTitle(page);
   await page.evaluate(() => document.fonts.ready);
-  await page.getByTestId("quick-tutorial").click();
-  await expectScreen(page, "tutorial");
-  await expect(page.getByTestId("tutorial-prompt")).toBeVisible({ timeout: 20_000 });
-  const coach = page.getByTestId("swipe-coach-dismiss");
-  if (await coach.isVisible().catch(() => false)) await coach.click();
+  await enterStory(page);
   return page;
 }

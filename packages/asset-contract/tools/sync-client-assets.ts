@@ -47,6 +47,7 @@ function assetData(asset: ArtAsset): Record<string, unknown> {
 
   // A cover carries its size and nothing else: it has no palette roles.
   if (asset.role === "cover") return { role: asset.role, frameWidth: asset.width, frameHeight: asset.height };
+  if (asset.role === "demo") return { role: asset.role, kind: asset.kind, frameWidth: asset.width, frameHeight: asset.height };
 
   const common = {
     frameWidth: asset.width,

@@ -6,7 +6,7 @@ import { evidenceDir } from "./support/evidence";
 import { SWEEP, walkFlow, type FlowScreen, type Sweep } from "./support/layout";
 import { expectScreen } from "./support/room-driver";
 import { waitForServer } from "./support/server-fixture";
-import { noteTouch, openTutorial } from "./support/tutorial";
+import { noteTouch, openStory } from "./support/story";
 
 /**
  * The screen catalogue (UI layout system spec §8.1): every screen and every
@@ -143,29 +143,17 @@ for (const sweep of SWEEP) {
     await test.step("corner controls agree", () => expectSameCorner(corners));
   });
 
-  test(`catalogue tutorial ${sweep.factor} ${size}`, async ({ browser }) => {
+  test(`catalogue story ${sweep.factor} ${size}`, async ({ browser }) => {
     test.slow();
-    const page = await openTutorial(browser, sweep);
+    const page = await openStory(browser, sweep);
     try {
-      // Played: the veil lifts. Pressed once the step has frozen, as
-      // tutorial-evidence.spec.ts does; pressed at once, the veil stayed up.
-      await expect(page.getByTestId("tutorial-freeze")).toBeVisible();
-      await page.waitForTimeout(500);
-      await page.keyboard.down("KeyA");
-      await expect(page.getByTestId("tutorial-freeze")).toBeHidden();
-      await page.waitForTimeout(250);
-      await page.keyboard.up("KeyA");
       await noteTouch(page, sweep);
-      await visitState(page, sweep, "tutorial playing");
+      await visitState(page, sweep, "story line");
 
       await page.keyboard.press("Escape");
       await expect(page.getByTestId("pause-resume")).toBeVisible();
-      await visitState(page, sweep, "tutorial paused");
+      await visitState(page, sweep, "story paused");
       await page.getByTestId("pause-resume").click();
-
-      await page.getByTestId("tutorial-skip").click();
-      await expect(page.getByTestId("tutorial-done")).toBeVisible();
-      await visitState(page, sweep, "tutorial done");
     } finally {
       await page.context().close();
     }

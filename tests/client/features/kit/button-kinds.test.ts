@@ -62,7 +62,6 @@ const GO: Array<[string, string]> = [
   [clientFile("CharacterPage.svelte"), "character-pick"],
   [clientFile("PhotosensitivityWarning.svelte"), "photosensitivity-continue"],
   [clientFile("LanguageFirst.svelte"), "language-first-continue"],
-  [clientFile("TutorialPrompt.svelte"), "tutorial-race-now"],
   [clientFile("PauseOverlay.svelte"), "pause-resume"],
   [clientFile("LandscapeGate.svelte"), "landscape-gate-fullscreen"],
 ];
@@ -73,8 +72,6 @@ const STOP: Array<[string, string]> = [
 /** Everything else that is not a step forward or a way out, which stays blue. */
 const PLAIN: Array<[string, string]> = [
   [clientFile("ConnectPanel.svelte"), '{hasCode ? "join-room" : "create-room"}'],
-  [clientFile("LobbyRoot.svelte"), "tutorial-offer-accept"],
-  [clientFile("LobbyRoot.svelte"), "tutorial-offer-skip"],
   [clientFile("PauseOverlay.svelte"), "pause-leave-cancel"],
   [clientFile("TitleRoot.svelte"), "title-settings"],
   [clientFile("TitleRoot.svelte"), "title-character"],

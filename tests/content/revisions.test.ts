@@ -135,24 +135,24 @@ describe("buildArtifact", () => {
     expect(b.rulesetRevision).toBe(a.rulesetRevision);
   });
 
-  it("moves the content revision and not the ruleset revision for a tutorial edit", () => {
+  it("moves the content revision and not the ruleset revision for a story edit", () => {
     const a = buildArtifact(payload());
-    const b = buildArtifact(payload({ change: "tutorial" }));
+    const b = buildArtifact(payload({ change: "story" }));
     expect(b.contentRevision).not.toBe(a.contentRevision);
     expect(b.rulesetRevision).toBe(a.rulesetRevision);
   });
 
-  it("keeps the tutorial's stage out of the race", () => {
+  it("keeps the story's stage out of the race", () => {
     const built = payload();
     expect(built.stages.map((stage) => stage.id)).not.toContain("dawn");
     expect(built.songs.map((song) => song.id)).not.toContain("dawn-tutorial");
-    expect(built.tutorial.stage.id).toBe("dawn");
-    expect(built.tutorial.song.audioAlias).toBe("music.tutorial");
+    expect(built.story.chapters[0]!.stage.id).toBe("dawn");
+    expect(built.story.chapters[0]!.song.audioAlias).toBe("music.tutorial");
   });
 
-  it("moves the content revision and not the ruleset revision for a tutorial stage edit", () => {
+  it("moves the content revision and not the ruleset revision for a story stage edit", () => {
     const a = buildArtifact(payload());
-    const b = buildArtifact(payload({ change: "tutorialStage" }));
+    const b = buildArtifact(payload({ change: "storyStage" }));
     expect(b.contentRevision).not.toBe(a.contentRevision);
     expect(b.rulesetRevision).toBe(a.rulesetRevision);
   });

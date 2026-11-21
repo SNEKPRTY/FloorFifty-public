@@ -256,7 +256,7 @@
     display: block;
   }
 
-  /* A short hero (a small phone held upright, with the tutorial offer over
+  /* A short hero (a small phone held upright, with a note over
      the form): "Floor Fifty" on one line and no inset from the top, so the
      wordmark and the racers fit the cell instead of running under the offer
      (visual audit, 2026-10-05). The cell is a container only where its

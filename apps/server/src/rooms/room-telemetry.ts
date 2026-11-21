@@ -272,6 +272,16 @@ export class RoomTelemetry {
     this.anomaly("command-throttled", "command budget exhausted; commands dropped");
   }
 
+  /**
+   * One line for a moment in a room's or a seat's life, by the room's serial
+   * (audit S24). Counts and words only: never an address, a name or a room code,
+   * so a line can be matched to a report by the clock and the serial, and to
+   * nothing about a person.
+   */
+  lifecycle(event: "room" | "seat", op: string, detail: Readonly<Record<string, string | number | boolean>> = {}): void {
+    this.log?.(JSON.stringify({ event, op, room: this.serial, ...detail }));
+  }
+
   /** What the last racing step asked of the solver. */
   physics(stats: StepStats): void {
     if (stats.steps === this.physicsSteps) return;

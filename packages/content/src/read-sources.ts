@@ -20,7 +20,7 @@ const REQUIRED_FILES = {
   flow: "flow.toml",
   eventRouting: "events.toml",
   catalog: "catalog.toml",
-  tutorial: "tutorial.toml",
+  story: "story.toml",
   unlocks: "unlocks.toml",
   blockedNames: "blocked-names.toml",
   juice: "juice.toml",
@@ -74,13 +74,13 @@ async function readItems(sourceRoot: string, directory: string): Promise<SourceF
 export async function readSources(sourceRoot: string): Promise<RawSourceTree> {
   // Written out rather than mapped over a directory list: a tuple keeps each
   // result's type, and the required names are already part of the tree's shape.
-  const [tuning, flow, eventRouting, catalog, tutorial, unlocks, blockedNames, juice, characters, stages, songs, modes] =
+  const [tuning, flow, eventRouting, catalog, story, unlocks, blockedNames, juice, characters, stages, songs, modes] =
     await Promise.all([
       readRequired(sourceRoot, REQUIRED_FILES.tuning),
       readRequired(sourceRoot, REQUIRED_FILES.flow),
       readRequired(sourceRoot, REQUIRED_FILES.eventRouting),
       readRequired(sourceRoot, REQUIRED_FILES.catalog),
-      readRequired(sourceRoot, REQUIRED_FILES.tutorial),
+      readRequired(sourceRoot, REQUIRED_FILES.story),
       readRequired(sourceRoot, REQUIRED_FILES.unlocks),
       readRequired(sourceRoot, REQUIRED_FILES.blockedNames),
       readRequired(sourceRoot, REQUIRED_FILES.juice),
@@ -90,5 +90,5 @@ export async function readSources(sourceRoot: string): Promise<RawSourceTree> {
       readItems(sourceRoot, "modes"),
     ]);
 
-  return { tuning, flow, eventRouting, catalog, tutorial, unlocks, blockedNames, juice, characters, stages, songs, modes };
+  return { tuning, flow, eventRouting, catalog, story, unlocks, blockedNames, juice, characters, stages, songs, modes };
 }

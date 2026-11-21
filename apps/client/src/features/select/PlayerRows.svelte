@@ -87,8 +87,8 @@
   }
   /* A bust's frame is `AsyncImage`'s, outside this scope; the empty one is ours. */
   :global(.ff-rows__row .ff-rows__art) { grid-column: art; width: 36px; height: 36px; }
-  .ff-rows__name { grid-column: name; font: 600 var(--ff-type-hint) / 1.2 var(--ff-font-ui); color: var(--ff-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .ff-rows__item { grid-column: item; text-align: end; font: 400 var(--ff-type-hint) / 1.2 var(--ff-font-ui); color: var(--ff-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ff-rows__name { grid-column: name; font: 600 var(--ff-type-name) / 1.2 var(--ff-font-ui); color: var(--ff-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .ff-rows__item { grid-column: item; text-align: end; font: 400 var(--ff-type-name) / 1.2 var(--ff-font-ui); color: var(--ff-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .ff-rows__lock { grid-column: lock; font: 600 var(--ff-type-hint) / 1 var(--ff-font-ui); letter-spacing: 0.06em; color: var(--ff-text); text-transform: uppercase; }
   /* The winner's row, filled with its player's colour, opaque (spec §6.5; the
      palette lock allows no mix of two swatches), and ringed in ink. */

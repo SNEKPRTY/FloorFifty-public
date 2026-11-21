@@ -850,11 +850,21 @@ describe("the tutorial's OUT! and Floors chip (first-race spec §1)", () => {
     view.destroy();
   });
 
-  it("shows no Floors counter in the tutorial, and keeps it in a race", () => {
-    const solo = new RaceHudView(fakeStage(), { solo: true });
+  it("never counts past the chapter's goal floor", () => {
+    const solo = new RaceHudView(fakeStage(), { solo: true, floorGoal: 5 });
+    // Six of twenty floors climbed: past the goal of five.
+    solo.update(snapshotAt(300, { raceStartedAtTick: 0, floorCount: 20, players: [playerSnapshot({ id: LOCAL_ID, name: "Kite", progress: 6 / 20 })] }), LOCAL_ID, 0);
+    settle();
+    expect(solo["stage"].overlay.querySelector('[data-testid="hud-floors"]')?.textContent).toMatch(/05 \/ 05/);
+    solo.destroy();
+  });
+
+  it("shows the Floors counter in the story, counting to the chapter's goal floor", () => {
+    const solo = new RaceHudView(fakeStage(), { solo: true, floorGoal: 5 });
     solo.update(finite(), LOCAL_ID, 0);
     settle();
-    expect(solo["stage"].overlay.querySelector('[data-testid="hud-floors"]')).toBeNull();
+    expect(solo["stage"].overlay.querySelector('[data-testid="hud-floors"]')?.textContent).toContain("/ 05");
+    expect(solo["stage"].overlay.querySelector('[data-testid="hud-lap"]')).toBeNull();
     solo.destroy();
     const { stage, view } = mount();
     view.update(finite(), LOCAL_ID, 0);

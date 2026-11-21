@@ -35,7 +35,16 @@ export const opsEventSchema = z.discriminatedUnion("event", [
     })
     .strict(),
   z.object({ event: z.literal("phase"), phase: name, ...common }).strict(),
-  z.object({ event: z.literal("fatal"), class: name, screen: name, ...common }).strict(),
+  z
+    .object({
+      event: z.literal("fatal"),
+      class: name,
+      screen: name,
+      /** The first line of the error's message, scrubbed by the client and cut to 120 characters (audit S27). */
+      reason: z.string().max(120).regex(/^[^\r\n]*$/).optional(),
+      ...common,
+    })
+    .strict(),
   /**
    * A refusal the player was shown, by its code (`VERSION_MISMATCH`, `ROOM_FULL`, ...), so that after a release "I
    * cannot join" can be told from mistyped codes (audit S23). The code is an identifier; the server's own words never

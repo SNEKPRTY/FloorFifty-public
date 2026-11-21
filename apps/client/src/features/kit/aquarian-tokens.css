@@ -159,7 +159,7 @@
   /* The title's secondary choices (Character, Settings). */
   --ff-title-tile-height: var(--ff-aq-control-height);
   /* A menu card's gap and padding: the title's panel and the connect card.
-     16 / 20, so the connect card and the tutorial offer fit the band at
+     16 / 20, so the connect card and the story offer fit the band at
      1280 x 720. */
   --ff-panel-gap: 16px;
   --ff-panel-pad: 24px;
@@ -234,7 +234,13 @@
    stays at 1. The desktop's content is held to 880 px, which the zoom draws as
    1100. */
 [data-form-factor="tablet-portrait"] {
-  --ff-ui-zoom: 1.25;
+  --ff-ui-zoom: 1.5;
+  /* A dialog fills the band's width, as a menu does: the phone's 380 px cap, zoomed, left the pause menu at 70%. */
+  --ff-dialog-max-width: none;
+  /* The results headline and standings share one column; it takes the width, as a menu does. */
+  --ff-panel-max: 100%;
+  /* A big row's name takes the button step (24 on the glass, divided by the zoom as every step is). */
+  --ff-row-name: calc(var(--ff-step-button) / var(--ff-ui-zoom));
   /* The race HUD sits outside the zoom, so its floors number takes the grid's next step here. */
   --ff-hud-numeral: 36px;
 }
@@ -401,6 +407,8 @@
   --ff-type-hero: calc(var(--ff-step-hero) / var(--ff-ui-zoom, 1));
   --ff-type-display: calc(var(--ff-step-display) / var(--ff-ui-zoom, 1));
   --ff-type-tag: var(--ff-type-hint);
+  /* A row's name: the hint step, or the button step on a form factor that sets --ff-row-name. */
+  --ff-type-name: var(--ff-row-name, var(--ff-type-hint));
   --text-xs: var(--ff-type-hint);
 }
 

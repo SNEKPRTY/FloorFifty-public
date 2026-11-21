@@ -11,6 +11,9 @@ export type LogCounts = {
   buildSkew: number;
   refusedByLimit: Record<string, number>;
   peakRooms: number;
+  peakSockets: number;
+  peakRssMb: number;
+  peakLoopP99Ms: number;
   ticks: TickMinute[];
 };
 export function emptyCounts(): LogCounts;
