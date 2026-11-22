@@ -2,15 +2,13 @@
  * `pnpm demos:encode`: turns the frames `demo-capture.spec.ts` wrote (`evidence/demos/<slide>/NNNN.png`, a
  * frame every fourth tick of sixty) into the Instructions carousel's clips and stills, and writes their rows
  * into the art manifest. Run by hand; nothing in a build or in CI runs it (story-mode spec, "How the demos
- * are made"). Each clip gets an even share of the set's budget, or its own budget if that is smaller.
- * `DEMO_SLIDE=<slide>` encodes that slide alone and keeps the other rows and files as they are; its
- * clip then gets whatever the set's budget leaves after the others.
+ * are made"). Only the race demo can be recorded now: the other five clips came from the story's scene,
+ * which is cut, so they are kept as they are and the race's clip gets whatever the set's budget leaves.
  */
 import { execFileSync } from "node:child_process";
 import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { DEMO_CLIP_BYTES, DEMO_SET_BYTES, RECORDED_SLIDES, DEMO_STILL_BYTES } from "../../packages/asset-contract/src/validate-assets";
-import { DEMO_SLIDE_PLANS } from "../../tests/e2e/support/demo-slides";
 
 const ROOT = resolve(import.meta.dirname, "../..");
 const FRAMES = resolve(ROOT, "evidence/demos");
@@ -43,9 +41,9 @@ mkdirSync(OUT, { recursive: true });
 const commit = execFileSync("git", ["rev-parse", "--short", "HEAD"], { cwd: ROOT, encoding: "utf8" }).trim();
 const manifestPath = resolve(ASSETS, "art-manifest.json");
 const manifest = JSON.parse(readFileSync(manifestPath, "utf8"));
-const only = process.env["DEMO_SLIDE"];
-if (only !== undefined && !(RECORDED_SLIDES as readonly string[]).includes(only)) throw new Error(`DEMO_SLIDE=${only} is not a slide`);
-const slides = only === undefined ? RECORDED_SLIDES : [only];
+const only: string = process.env["DEMO_SLIDE"] ?? "race";
+if (only !== "race") throw new Error(`DEMO_SLIDE=${only}: only the race demo can be recorded; the others came from the cut story scene`);
+const slides = [only];
 /** The rows kept as they are: every other slide's, when one slide is encoded alone. */
 const kept = (manifest.bundles.demos as { alias: string; file: string; kind: string }[]).filter(
   (row) => only !== undefined && row.alias !== `demo.${only}` && row.alias !== `demo.${only}Still`,
@@ -56,7 +54,6 @@ const fresh = new Map<string, unknown[]>();
 for (const slide of slides) {
   const dir = resolve(FRAMES, slide);
   const frames = readdirSync(dir).filter((name) => name.endsWith(".png")).sort();
-  const plan = DEMO_SLIDE_PLANS.find((candidate) => candidate.slide === slide);
   const clip = resolve(OUT, `${slideFile(slide)}.webp`);
   const still = resolve(OUT, `${slideFile(slide)}-still.webp`);
   // The whole set shares its budget evenly; one slide alone gets what the others leave.
@@ -68,10 +65,7 @@ for (const slide of slides) {
   console.log(`${slide}: ${frames.length} frames, clip ${clipFit.bytes} B (q${clipFit.quality}, ${clipFit.fps} fps), still ${stillFit.bytes} B (q${stillFit.quality})`);
   const provenance = {
     tool: "tests/e2e/demo-capture.spec.ts, tools/demos/encode.ts (ffmpeg libwebp_anim)",
-    prompt:
-      plan === undefined
-        ? `recorded from the replay of a four-seat race on the real server (floors-20, driven by the server's test driver), ninja in scarlet watching, rivals at full colour in a closer view that follows the ninja (capture only), 15 frames a second of 60 ticks`
-        : `recorded from the story scene on Rooftops, ninja in scarlet, seed ${plan.seed}, script "${slide}", 15 frames a second of 60 ticks`,
+    prompt: `recorded from the replay of a four-seat race on the real server (floors-20, driven by the server's test driver), ninja in scarlet watching, rivals at full colour in a closer view that follows the ninja (capture only), 15 frames a second of 60 ticks`,
     source: `commit ${commit}`,
     license: "own work (a recording of Floor Fifty)",
   };

@@ -45,7 +45,6 @@ import { interceptBackGesture, sendBack } from "./features/platform/back-gesture
 import { suppressPageGestures } from "./features/platform/suppress-page-gestures";
 import { sleepOnHostLifecycle, sleepWhenHidden } from "./features/platform/sleep-when-hidden";
 import { GameEndScreen } from "./features/results/game-end";
-import { StoryScreen } from "./features/story/story";
 import { ReplayScreen } from "./features/replay/replay";
 import { GameplayScreen } from "./features/race/gameplay";
 import { MainMenuScreen } from "./features/title/main-menu";
@@ -380,7 +379,6 @@ export async function boot(host: HTMLElement): Promise<void> {
       Lobby: () => new LobbyScreen(),
       Gameplay: () => new GameplayScreen(),
       GameEnd: () => new GameEndScreen(),
-      Story: () => new StoryScreen(),
       Replay: () => new ReplayScreen(),
     },
     { stage, assets, audio, network, content, errors, settings, gamepad, access, progress, raceVideo, hosting, loads },

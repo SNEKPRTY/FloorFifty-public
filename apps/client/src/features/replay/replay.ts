@@ -2,7 +2,7 @@
  * Replay: the race just finished, watched again (race-options spec §7).
  *
  * The same scene a race draws, fed by a `ReplayRun` re-simulating the room's
- * record here rather than by the room, as the story is fed by its run. The
+ * record here rather than by the room. The
  * viewer is the client's own (D-O6): it keeps playing whatever the room does,
  * says so when the room is back in the ready room, and leaves for the room
  * when the room moves past it.

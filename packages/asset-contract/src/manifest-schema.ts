@@ -29,11 +29,9 @@ import { PLAYER_COLORS, ROLES } from "./roles";
  * fetched by URL for the one song a reveal lands on, so ten large covers
  * never sit in texture memory. `demos` is the Instructions carousel's looping
  * clips and their stills, fetched by URL when the carousel opens and in no
- * boot, menu or gameplay bundle. `story` is the story's cutscene panels and
- * chapter-card pictures (`story.*` images), fetched by URL when the story
- * opens, never loaded as a bundle.
+ * boot, menu or gameplay bundle.
  */
-export const CORE_BUNDLES = ["splash", "menu", "shell", "gameplay", "audio", "reveal", "demos", "story"] as const;
+export const CORE_BUNDLES = ["splash", "menu", "shell", "gameplay", "audio", "reveal", "demos"] as const;
 export type CoreBundle = (typeof CORE_BUNDLES)[number];
 /** A core bundle, one stage's layer art, or one song's audio. */
 export type BundleName = CoreBundle | `stage-${string}` | `song-${string}`;
@@ -287,7 +285,7 @@ export const artManifestSchema = z
         z
           .string()
           .regex(
-            /^(splash|menu|shell|gameplay|audio|reveal|demos|story|stage-[a-z0-9-]+|song-[a-z0-9-]+)$/,
+            /^(splash|menu|shell|gameplay|audio|reveal|demos|stage-[a-z0-9-]+|song-[a-z0-9-]+)$/,
             "a bundle is a core bundle, stage-<id> or song-<id>",
           ),
         z.array(assetSchema),
@@ -310,20 +308,6 @@ export const artManifestSchema = z
                 path: [name],
                 message: asset.role === "demo" ? `demo ${asset.alias} is in ${name}; demos are fetched by URL, in the demos bundle only` : `${asset.alias} is in the demos bundle, which holds demo rows only`,
               });
-      })
-      // The story's pictures are fetched by URL, so a `story.*` alias lives in
-      // the `story` bundle and nowhere else, and that bundle holds only them.
-      .superRefine((bundles, context) => {
-        for (const [name, assets] of Object.entries(bundles))
-          for (const asset of assets) {
-            const panel = asset.alias.startsWith("story.");
-            if (panel !== (name === "story") || (panel && asset.role !== "image"))
-              context.addIssue({
-                code: "custom",
-                path: [name],
-                message: panel ? `${asset.alias} is in ${name}; story pictures are images in the story bundle only` : `${asset.alias} is in the story bundle, which holds story.* images only`,
-              });
-          }
       })
       .transform(
         (bundles) =>

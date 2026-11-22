@@ -14,12 +14,11 @@ test.beforeAll(async () => {
   await waitForServer();
 });
 
-/** Title → Tutorial → Title: a liquid edge each way (race-flow spec §7.1). */
-async function tutorialRoundTrip(page: Page): Promise<void> {
-  await page.getByTestId("quick-story").click();
-  await expectScreen(page, "story");
-  await expect(page.getByTestId("story-hub")).toBeVisible({ timeout: 20_000 });
-  await page.getByTestId("story-hub-back").click();
+/** Title → Lobby → Title: a liquid edge each way (race-flow spec §7.1). */
+async function lobbyRoundTrip(page: Page): Promise<void> {
+  await page.getByTestId("title-play").click();
+  await expectScreen(page, "lobby");
+  await page.getByTestId("lobby-back").click();
   await expectScreen(page, "title");
 }
 
@@ -55,10 +54,10 @@ test.describe("ten liquid wipes", () => {
     test.slow();
     await openTitle(page);
     // One warm-up round trip makes the veil, which is kept from then on.
-    await tutorialRoundTrip(page);
+    await lobbyRoundTrip(page);
     const before = await settledCounters(page);
     expect(before.displayObjects, "a title that drew nothing makes the comparison vacuous").toBeGreaterThan(0);
-    for (let round = 0; round < 5; round += 1) await tutorialRoundTrip(page);
+    for (let round = 0; round < 5; round += 1) await lobbyRoundTrip(page);
 
     // A GL context is counted only once its program links, so this is also
     // the wipe's shader compiling on a real GPU.

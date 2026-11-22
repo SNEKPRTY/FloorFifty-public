@@ -211,7 +211,7 @@ export const DEMO_SLIDES = ["steer", "bounce", "dropFast", "movingFloors", "lava
  * four-seat race on stepped frames (`demo-capture.spec.ts`, "records the race demo").
  */
 export const RECORDED_SLIDES = DEMO_SLIDES;
-/** The most bytes one clip may weigh, one still, and the six clips together (story spec, "Size budget"). */
+/** The most bytes one clip may weigh, one still, and the six clips together (story-mode spec, "Size budget"). */
 export const DEMO_CLIP_BYTES = 350 * 1024;
 export const DEMO_STILL_BYTES = 30 * 1024;
 export const DEMO_SET_BYTES = 1.8 * 1024 * 1024;
@@ -264,29 +264,6 @@ function validateDemoSet(root: string, demos: readonly DemoAsset[]): AssetIssue[
   }
   if (clipBytes > DEMO_SET_BYTES)
     issues.push({ alias: "demo.*", file: "-", problem: `the clips are ${clipBytes} bytes, over the ${(DEMO_SET_BYTES / 1024 / 1024).toFixed(1)} MB the set may be` });
-  return issues;
-}
-
-/** The most bytes one story picture may weigh, and all of them together (story mode v2 spec, "The contract"). */
-export const STORY_PANEL_BYTES = 90 * 1024;
-export const STORY_SET_BYTES = 1000 * 1024;
-
-/** The story's pictures as a set: each inside its own budget and all of them inside theirs. */
-function validateStorySet(root: string, rows: readonly ArtAsset[]): AssetIssue[] {
-  const issues: AssetIssue[] = [];
-  let total = 0;
-  for (const row of rows) {
-    let bytes = 0;
-    try {
-      bytes = statSync(resolve(root, row.file)).size;
-    } catch {
-      continue; // Unreadable: the row's own check says so.
-    }
-    total += bytes;
-    if (bytes > STORY_PANEL_BYTES) issues.push({ alias: row.alias, file: row.file, problem: `${bytes} bytes, over the ${STORY_PANEL_BYTES / 1024} KB a story picture may be` });
-  }
-  if (total > STORY_SET_BYTES)
-    issues.push({ alias: "story.*", file: "-", problem: `the story's pictures are ${total} bytes, over the ${STORY_SET_BYTES / 1024} KB they may be together` });
   return issues;
 }
 
@@ -409,7 +386,6 @@ export function validateAssets(root: string, manifest: ArtManifest): AssetValida
     ),
   );
 
-  issues.push(...validateStorySet(root, manifest.bundles.story ?? []));
 
   return { ok: issues.length === 0, checked: entries.length, issues };
 }

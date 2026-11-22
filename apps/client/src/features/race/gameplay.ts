@@ -173,7 +173,7 @@ export class GameplayScreen extends BaseScreen {
    */
   private drewFirstFrame = false;
   /**
-   * The race as drawn: scenery, world, HUD and song. Shared with the story,
+   * The race as drawn: scenery, world, HUD and song. Shared with the replay,
    * which draws a race it steps itself.
    */
   private scene: RaceScene | undefined;

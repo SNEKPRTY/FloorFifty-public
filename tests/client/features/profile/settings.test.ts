@@ -216,7 +216,6 @@ describe("settings version 2 (languages spec §3.3)", () => {
       locale: null,
       display: { ...v1.display, characterEffects: true, stageEffects: true, trajectoryGuide: true },
       seen: { ...v1.seen, photosensitivity: false, edgeLine: false, climbHints: false },
-      story: { chaptersDone: 0, chapters: {} },
     });
   });
 

@@ -1,8 +1,5 @@
 import { expect, test } from "./support/test";
 import { readRoom, waitForRoom, waitForServer } from "./support/server-fixture";
-import { FRAME_CONTROL, GPU_LIKE } from "./support/frame-control";
-import { enterStory, openHub, storyWords } from "./support/story";
-import { buttonHands, playChapterOne, swipeHands } from "./support/story-play";
 import {
   createRoom,
   roomOf,
@@ -12,8 +9,6 @@ import {
   joinRoom,
   openClient,
   openClients,
-  openTitle,
-  seedSettings,
   readyAll,
 } from "./support/room-driver";
 
@@ -185,44 +180,3 @@ test("the menu is usable and unclipped at this viewport", async ({ page }) => {
   expect(box!.x + box!.width).toBeLessThanOrEqual(viewport.width + 1);
   await expect(page.getByTestId("name-input")).toBeVisible();
 });
-
-/** A cutscene by a finger: a tap finishes the line, the next tap goes on, and Skip ends it. */
-test("a tap goes on through the story's cutscene, and Skip ends it", async ({ page }) => {
-  await seedSettings(page.context(), { seen: { tutorial: true } });
-  await openTitle(page);
-  await openHub(page);
-  await page.getByTestId("story-play").tap();
-  const advance = page.getByTestId("story-cutscene-advance");
-  await expect(advance).toBeVisible({ timeout: 30_000 });
-  const line = page.getByTestId("story-cutscene-line");
-  await advance.tap();
-  const first = await line.textContent();
-  await page.waitForTimeout(1_500);
-  expect(await line.textContent(), "the line waits for the player").toBe(first);
-  await advance.tap();
-  await expect.poll(() => line.textContent(), { message: "a tap goes on to the next line" }).not.toBe(first);
-  await page.getByTestId("story-cutscene-skip").tap();
-  await expect(storyWords(page)).toBeVisible({ timeout: 30_000 });
-});
-
-/** The story's first chapter, finished by a finger: a swipe, or the on-screen buttons. */
-for (const mode of ["swipe", "buttons"] as const) {
-  test(`the story's first chapter is finished by ${mode}`, async ({ page }) => {
-    // A software-drawn browser plays a stepped tick in most of a second: the chapter is minutes of it.
-    test.setTimeout(900_000);
-    await seedSettings(page.context(), { input: { touchMode: mode }, seen: { tutorial: true } });
-    await page.addInitScript(GPU_LIKE);
-    await page.addInitScript(FRAME_CONTROL);
-    await openTitle(page);
-    await enterStory(page);
-    const session = await page.context().newCDPSession(page);
-    try {
-      const viewport = page.viewportSize()!;
-      const hands = mode === "swipe" ? swipeHands(session, { x: viewport.width * 0.35, y: viewport.height * 0.8 }) : buttonHands(session, page);
-      const ticks = await playChapterOne(page, hands);
-      expect(ticks, "the chapter's goal was reached inside the limit").toBeLessThan(2_400);
-    } finally {
-      await session.detach();
-    }
-  });
-}

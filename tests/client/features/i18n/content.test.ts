@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import { describe, expect, it, vi } from "vitest";
-import { characterName, packTitle, stageName, storyPrompt, unlockHint } from "../../../../apps/client/src/features/i18n/content";
-import { chipWords } from "../../../../apps/client/src/features/story/control-chip";
+import { characterName, controlPrompt, packTitle, stageName, unlockHint } from "../../../../apps/client/src/features/i18n/content";
+import { chipWords } from "../../../../apps/client/src/features/lobby/control-chip";
 import { GLYPH_MARKER, promptWordsFromText } from "../../../../apps/client/src/features/race/prompt-words";
 
 describe("authored words in the active locale (languages spec §4.2)", () => {
@@ -22,13 +22,13 @@ describe("authored words in the active locale (languages spec §4.2)", () => {
 
   it("resolves every key the content build generates", async () => {
     const generated = JSON.parse(await readFile("apps/client/messages/content/en.json", "utf8")) as Record<string, string>;
-    const keys = Object.keys(generated).filter((key) => key.startsWith("content_story_prompt_"));
+    const keys = Object.keys(generated).filter((key) => key.startsWith("content_prompt_"));
     expect(keys.length).toBeGreaterThan(0);
     for (const key of keys) {
-      const [, , , ...rest] = key.split("_");
+      const [, , ...rest] = key.split("_");
       const method = rest.pop()!;
       const kind = rest.join("_").replace(/_([a-z])/g, (_, letter: string) => letter.toUpperCase());
-      expect(storyPrompt(kind, method, "authored", GLYPH_MARKER), key).toBe(generated[key]!.replaceAll("{glyph}", GLYPH_MARKER));
+      expect(controlPrompt(kind, method, "authored", GLYPH_MARKER), key).toBe(generated[key]!.replaceAll("{glyph}", GLYPH_MARKER));
     }
   });
 });

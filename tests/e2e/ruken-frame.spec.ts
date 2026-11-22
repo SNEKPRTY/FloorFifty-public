@@ -12,7 +12,7 @@ import { driveRoom, waitForServer } from "./support/server-fixture";
  * (`support/frame-host.ts`). The game speaks no host protocol: it boots at
  * once on the browser's own storage, and nothing waits for a host. These specs
  * pin what that frame must still allow: the game boots, plays from the title
- * through the story and a race, and keeps its settings, in the frame.
+ * through a race, and keeps its settings, in the frame.
  * (Before 2026-11-13 this spec ran the game inside the SDK's fake host; that
  * handshake, and what it carried, are gone.)
  *
@@ -115,7 +115,7 @@ async function startRace(page: Page, game: FrameLocator): Promise<string> {
   return code;
 }
 
-test("the game boots in the sandboxed frame without a host, and plays from the title through the story", async ({ page, baseURL }) => {
+test("the game boots in the sandboxed frame without a host, and plays from the title", async ({ page, baseURL }) => {
   test.slow();
   host = await startFrameHost({ gameUrl: baseURL ?? "" });
   const game = await openHost(page, host);
@@ -145,26 +145,6 @@ test("the game boots in the sandboxed frame without a host, and plays from the t
     await game.getByTestId("modal-close").click();
     await expect(copyList).toHaveCount(0);
   });
-
-  await test.step("the story starts and its pause overlay opens and closes", async () => {
-    await game.getByTestId("quick-story").click();
-    await expectScreen(game, "story");
-    await game.getByTestId("story-play").click({ timeout: 30_000 });
-    await game.getByTestId("story-cutscene-skip").click({ timeout: 30_000 });
-    await expect(game.getByTestId("story-line").or(game.getByTestId("story-chip")).first()).toBeVisible({ timeout: SCREEN_TIMEOUT_MS });
-    await game.getByTestId("pause-open").click();
-    await expect(game.getByTestId("pause-overlay")).toBeVisible();
-    await game.getByTestId("pause-resume").click();
-    await expect(game.getByTestId("pause-overlay")).toHaveCount(0);
-  });
-
-  await test.step("leaving the story goes to the hub, and its Back to the title", async () => {
-    await game.getByTestId("pause-open").click();
-    await game.getByTestId("pause-leave").click();
-    await expect(game.getByTestId("story-hub")).toBeVisible({ timeout: SCREEN_TIMEOUT_MS });
-    await game.getByTestId("story-hub-back").click();
-    await expectScreen(game, "title");
-  });
 });
 
 test("a race in the frame runs to the results and back to the title", async ({ page, baseURL }) => {
@@ -174,6 +154,11 @@ test("a race in the frame runs to the results and back to the title", async ({ p
 
   await passToTitle(game);
   const code = await startRace(page, game);
+  // The race's pause overlay opens and closes in the frame.
+  await game.getByTestId("pause-open").click();
+  await expect(game.getByTestId("pause-overlay")).toBeVisible();
+  await game.getByTestId("pause-resume").click();
+  await expect(game.getByTestId("pause-overlay")).toHaveCount(0);
 
   const outcome = await driveRoom(code, { ticks: 60 * 240 });
   expect(outcome.phase, "the driver finishes the race").toBe("finished");

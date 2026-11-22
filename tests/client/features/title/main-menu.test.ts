@@ -11,7 +11,6 @@ import { describe, expect, it, vi } from "vitest";
 import { installLocaleStrategy } from "../../../../apps/client/src/features/i18n/strategy";
 import * as m from "../../../../apps/client/src/paraglide/messages.js";
 import { TITLE_ARRIVAL_MS } from "../../../../apps/client/src/features/title/main-menu";
-import { STORY_FLAG_KEY } from "../../../../apps/client/src/features/story/enabled";
 import { requestRacerHop } from "../../../../apps/client/src/features/lobby/racer-hops";
 import { SettingsStore } from "../../../../apps/client/src/features/profile/store/settings.svelte";
 import { shippedContentPort } from "../../support/fakes/content";
@@ -30,23 +29,13 @@ describe("the title", () => {
     title.screen.exit();
   });
 
-  it("gets the story's song ready while a player who has not done it reads the title", async () => {
-    localStorage.removeItem(STORY_FLAG_KEY);
-    const title = await mainMenuWithFakeNetwork({ content: shippedContentPort() });
-    await flush();
-    expect(title.audio.calls).toContain("load:song-dawn-tutorial");
-    expect(title.audio.calls).toContain("preload:music.tutorial");
-    title.screen.exit();
-  });
-
-  it("leaves the tutorial's song alone for a player who has done it", async () => {
-    const title = await mainMenuWithFakeNetwork({
-      content: shippedContentPort(),
-      settings: fakeSettings({ seen: { tutorial: true } }),
-    });
-    await flush();
-    expect(title.audio.calls.filter((call) => call.includes("tutorial"))).toEqual([]);
-    title.screen.exit();
+  it("gets no tutorial song ready, for a new player or a returning one: the story is cut (Owner, 2026-11-22)", async () => {
+    for (const settings of [fakeSettings({ seen: { tutorial: false } }), fakeSettings({ seen: { tutorial: true } })]) {
+      const title = await mainMenuWithFakeNetwork({ content: shippedContentPort(), settings });
+      await flush();
+      expect(title.audio.calls.filter((call) => call.includes("tutorial"))).toEqual([]);
+      title.screen.exit();
+    }
   });
 
   it("gets nothing ready, and says nothing, before the content has arrived", async () => {
@@ -256,23 +245,11 @@ describe("the title", () => {
     title.screen.exit();
   });
 
-  it("shows the Story button to every player, with no flag (Owner, 2026-11-20: on for every player)", async () => {
-    localStorage.removeItem(STORY_FLAG_KEY);
+  it("shows no Story button: the story is cut (Owner, 2026-11-22)", async () => {
     const title = await mainMenuWithFakeNetwork();
-    expect(title.query("quick-story")).not.toBeNull();
+    expect(title.query("quick-story")).toBeNull();
     expect(title.query("quick-instructions")).not.toBeNull();
     title.screen.exit();
-  });
-
-  it("the Story quick action asks the flow for the story", async () => {
-    try {
-      const title = await mainMenuWithFakeNetwork();
-      title.click("quick-story");
-      expect(title.published()).toEqual(["ui.story-requested"]);
-      title.screen.exit();
-    } finally {
-      localStorage.removeItem(STORY_FLAG_KEY);
-    }
   });
 
   it("forms no room: no connect form, and nothing followed from a snapshot", async () => {

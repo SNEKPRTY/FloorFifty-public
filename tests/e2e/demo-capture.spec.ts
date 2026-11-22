@@ -1,15 +1,13 @@
 import { mkdirSync, rmSync } from "node:fs";
 import { resolve } from "node:path";
-import { expect, test, type Page } from "./support/test";
+import { expect, test } from "./support/test";
 import { evidenceDir } from "./support/evidence";
-import { SCREEN_SETTLE_MS, chooseMode, createRoom, expectScreen, joinRoom, openClient, openTitle, readyAll, seedSettings, RESULTS_TIMEOUT_MS } from "./support/room-driver";
+import { SCREEN_SETTLE_MS, chooseMode, createRoom, expectScreen, joinRoom, openClient, readyAll, seedSettings, RESULTS_TIMEOUT_MS } from "./support/room-driver";
 import { driveRoom, waitForServer } from "./support/server-fixture";
-import { DEMO_SLIDE_PLANS, type SlidePlan } from "./support/demo-slides";
-import { Mirror } from "./support/demo-mirror";
 import { FRAME_CONTROL } from "./support/frame-control";
 
 /**
- * Records the Instructions carousel's demos from the real race scene
+ * Records the Instructions carousel's race demo from the real race scene
  * (story-mode spec, "How the demos are made"). Not a test of the game: it runs
  * by hand (`pnpm demos:capture`), outside the gate's sets, and writes frames to
  * `evidence/demos/<slide>/`, which `pnpm demos:encode` turns into the clips.
@@ -21,9 +19,8 @@ import { FRAME_CONTROL } from "./support/frame-control";
  * the page says which tick it drew (`__ffRacer().tick`), so what the script
  * presses for a tick is pressed before that tick, never by a guess.
  *
- * It borrows the story screen as the scene: the content the page fetches is
- * rewritten here, so the first chapter is Rooftops on the slide's own course
- * seed with no talk and no goal. Nothing in the game is changed for it.
+ * The other five clips were recorded on the story's scene, which is cut; they
+ * stay as they are, and this records only the race's.
  */
 
 const SIZE = { width: 960, height: 540 };
@@ -40,45 +37,8 @@ const KEEP_EVERY = 4;
 const OUT = evidenceDir("demos");
 const only = process.env["DEMO_SLIDE"];
 
-/** The game's fetched content with its first chapter replaced by the slide's course. */
-function courseFor(plan: SlidePlan, body: Record<string, any>): Record<string, any> {
-  const story = body["content"]["story"];
-  const rooftops = story.chapters.find((chapter: { stage: { id: string } }) => chapter.stage.id === "rooftops");
-  const lavaBeats = story.chapters[story.chapters.length - 1].beats;
-  story.chapters = [
-    {
-      ...rooftops,
-      id: `demo-${plan.slide}`,
-      seed: plan.seed,
-      goalFloor: 999,
-      beats: plan.lava === undefined ? [] : lavaBeats,
-    },
-  ];
-  return body;
-}
-
-async function openScene(page: Page, plan: SlidePlan): Promise<void> {
-  await page.route("**/content", async (route) => {
-    const response = await route.fetch();
-    await route.fulfill({ response, json: courseFor(plan, await response.json()) });
-  });
-  await openTitle(page);
-  await page.getByTestId("quick-story").click();
-  await expect(page.locator('[data-screen="story"]')).toBeVisible({ timeout: 60_000 });
-  await page.getByTestId("story-play").click({ timeout: 60_000 });
-  await page.getByTestId("story-cutscene-skip").click({ timeout: 60_000 });
-  await expect.poll(() => page.evaluate(() => window.__ffRacer?.().local !== undefined), { timeout: 120_000 }).toBe(true);
-  // The story's talk and controls stay out of a recording of the scene.
-  await page.addStyleTag({ content: '[data-screen="story"], [data-testid="pause-open"] { visibility: hidden !important; }' });
-}
-
-/** The tick the page last drew. */
-const tickOf = (page: Page): Promise<number> => page.evaluate(() => window.__ffRacer?.().tick ?? -1);
-
 /** The race demo's racers, the viewer first: short names that read the same in every language. */
 const RACE_NAMES = ["Koi", "Sunny", "Moth", "Pip"] as const;
-
-const KEYS = { left: "KeyA", right: "KeyD", fastFall: "KeyS" } as const;
 
 /**
  * Sets up a context the way every recording is: GPU-like renderer name, no scene text, stepped frames. The
@@ -223,77 +183,3 @@ test("records the race demo", async ({ browser }) => {
   expect(kept, "frames kept").toBeGreaterThan(30);
 });
 
-for (const plan of DEMO_SLIDE_PLANS) {
-  test(`records the ${plan.slide} demo`, async ({ browser }) => {
-    test.skip(only !== undefined && only !== plan.slide, `DEMO_SLIDE=${only}`);
-    test.setTimeout(30 * 60_000);
-    const context = await browser.newContext({ viewport: SIZE, deviceScaleFactor: 1 });
-    await seedSettings(context, { seen: { tutorial: true }, profile: { lastCharacter: "ninja", lastColour: "scarlet" } } as never);
-    // A GPU-less browser names itself, and the client then draws a frame a second at half density. The
-    // recording steps its own frames, so it asks to be drawn as a GPU's would be.
-    await context.addInitScript(() => {
-      for (const proto of [WebGLRenderingContext.prototype, WebGL2RenderingContext.prototype]) {
-        const getParameter = proto.getParameter;
-        proto.getParameter = function (this: WebGLRenderingContext, parameter: number) {
-          return parameter === 0x9246 ? "ANGLE (Demo capture, Vulkan 1.3)" : getParameter.call(this, parameter);
-        };
-      }
-    });
-    // No word is drawn into the scene: the racer's name tag would say "You" in one language only. (Page
-    // text is HTML; only the scene's own text goes through a canvas, and it is drawn once, early.)
-    await context.addInitScript(() => {
-      for (const proto of [CanvasRenderingContext2D.prototype, OffscreenCanvasRenderingContext2D.prototype]) {
-        proto.fillText = () => undefined;
-        proto.strokeText = () => undefined;
-      }
-    });
-    await context.addInitScript(FRAME_CONTROL);
-    const page = await context.newPage();
-    const dir = resolve(OUT, plan.slide);
-    rmSync(dir, { recursive: true, force: true });
-    mkdirSync(dir, { recursive: true });
-
-    await openScene(page, plan);
-    await page.evaluate(() => (window as unknown as { __capture: { start(): void } }).__capture.start());
-    const step = (frames: number): Promise<void> =>
-      page.evaluate(([count, ms]) => (window as unknown as { __capture: { step(c: number, m: number): void } }).__capture.step(count as number, ms as number), [frames, FRAME_MS]);
-    // One real frame lets the callbacks queued before the takeover fall into the queue.
-    await page.waitForTimeout(1500);
-    await step(2);
-
-    const held = new Set<string>();
-    const press = async (want: ReadonlySet<keyof typeof KEYS>): Promise<void> => {
-      for (const [name, key] of Object.entries(KEYS)) {
-        const should = want.has(name as keyof typeof KEYS);
-        if (should && !held.has(key)) {
-          held.add(key);
-          await page.keyboard.down(key);
-        } else if (!should && held.has(key)) {
-          held.delete(key);
-          await page.keyboard.up(key);
-        }
-      }
-    };
-
-    // The page is on tick `startTick`; the mirror is brought to the same tick, with nothing pressed, as the page's run was.
-    const startTick = await tickOf(page);
-    const mirror = new Mirror(plan.seed, plan.lava === undefined ? [] : []);
-    for (let tick = 0; tick < startTick; tick += 1) mirror.step([]);
-    const take = plan.take(mirror);
-    console.log(`${plan.slide}: ${take.inputs.length} ticks pressed, frames from ${take.from} to ${take.to}`);
-    let kept = 0;
-    for (let index = 0; index < take.to; index += 1) {
-      const tick = (await tickOf(page)) - startTick;
-      expect(tick, "the page keeps pace with the mirror").toBe(index);
-      await press(new Set(take.inputs[index] ?? []));
-      await step(1);
-      if (index >= take.from && (index - take.from) % KEEP_EVERY === 0) {
-        await page.screenshot({ path: resolve(dir, `${String(kept).padStart(4, "0")}.png`), clip: FIELD });
-        kept += 1;
-      }
-    }
-    await press(new Set());
-    expect(kept, "frames kept").toBeGreaterThan(30);
-    await context.close();
-  });
-}

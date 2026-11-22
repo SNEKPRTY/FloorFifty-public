@@ -133,16 +133,6 @@ export class NameTag {
     return this.isFocused;
   }
 
-  /**
-   * Shows or hides the seat number. The story hides it: there is no race, and
-   * "1 You", "2 Frog" read as places (story mode v2 review, R6).
-   */
-  setSeatShown(shown: boolean): void {
-    if (this.badge.visible === shown) return;
-    this.badge.visible = shown;
-    this.redraw();
-  }
-
   setName(name: string): void {
     const text = nameTagText(name);
     if (text === this.shown) return;
@@ -181,7 +171,7 @@ export class NameTag {
   /** Lays the plate out around its contents, anchored bottom-centre at (0, 0). */
   private redraw(): void {
     const height = NAME_TAG_FONT_SIZE + PAD_Y * 2;
-    const seat = this.badge.visible ? this.badge.width + GAP : 0;
+    const seat = this.badge.width + GAP;
     const width = PAD_X + DOT + GAP + seat + this.name.width + PAD_X;
     const left = -width / 2;
     this.plate

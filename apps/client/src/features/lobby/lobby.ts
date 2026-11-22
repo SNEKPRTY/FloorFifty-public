@@ -36,7 +36,6 @@ import { BaseScreen, type ScreenContext } from "../screen/screen";
 import { claimMenuBackdrop } from "../boot/menu-backdrop";
 import { claimMenuBed, claimMenuMusic } from "../boot/menu-music";
 import { afterSeeing } from "../select/menu-lineup";
-import { storyModeOn } from "../story/enabled";
 
 export class LobbyScreen extends BaseScreen {
   readonly name: ScreenId = "Lobby";
@@ -127,8 +126,6 @@ export class LobbyScreen extends BaseScreen {
         // panel changes.
         heroRises: context.previousScreen !== "MainMenu",
         onBack: () => context.publishPresentationEvent("ui.back-requested", {}),
-        // Story mode is hidden until it is redone (features/story/enabled.ts).
-        ...(storyModeOn() ? { onStory: () => context.publishPresentationEvent("ui.story-requested", {}) } : {}),
       },
     });
     this.bag.add(() => void unmount(app));

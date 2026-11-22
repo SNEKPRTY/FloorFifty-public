@@ -8,7 +8,7 @@ import { installLocaleStrategy } from "../../../../apps/client/src/features/i18n
 import { fakeSettings } from "../../support/fakes/settings";
 import * as m from "../../../../apps/client/src/paraglide/messages.js";
 
-const prompts = JSON.parse(readFileSync("content/generated/content.json", "utf8")).content.story.prompts;
+const prompts = JSON.parse(readFileSync("content/generated/content.json", "utf8")).content.prompts;
 
 const cleanup: (() => void)[] = [];
 beforeEach(() => {

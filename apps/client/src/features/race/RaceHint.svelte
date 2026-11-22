@@ -1,8 +1,7 @@
 <script lang="ts">
   /**
    * One one-time hint in the HUD's toast slot (first-race spec parts 4 and 5):
-   * the lava line, or the floors and restart lessons the story no longer
-   * teaches. Words only, in the swipe coach's look but with no button: it goes
+   * the lava line, or the floors and restart lessons. Words only, in the swipe coach's look but with no button: it goes
    * on its own, six seconds after her first input (`race-hints.ts`).
    *
    * The restart hint names the control in the player's hand: R, the pad's own
@@ -20,7 +19,7 @@
     if (kind === "floors") return { before: m.race_hint_floors(), after: "" };
     if (inputMethod.method === "touch") return { before: m.race_hint_restart_touch(), after: "" };
     if (inputMethod.method === "keyboard") return { before: m.race_hint_restart_keyboard(), after: "" };
-    // The glyph goes where the translation put its marker, as in the story's prompts.
+    // The glyph goes where the translation put its marker, as in the control prompts.
     return promptWordsFromText(m.race_hint_restart_gamepad({ glyph: GLYPH_MARKER }), GLYPHS[inputMethod.family].restart());
   });
 </script>

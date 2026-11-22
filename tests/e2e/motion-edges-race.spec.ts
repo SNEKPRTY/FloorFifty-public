@@ -22,7 +22,6 @@ import {
   findRace,
   openClient,
   openClients,
-  openTitle,
   passSelect,
 } from "./support/room-driver";
 
@@ -79,7 +78,7 @@ async function crossFade(page: Page, trigger: string, scope: string, leaving: st
 }
 
 for (const motion of MOTIONS) {
-  test.describe(`race and story, motion ${motion}`, () => {
+  test.describe(`race, motion ${motion}`, () => {
     test("pause: menu to settings to leave is a cross-fade, not a cut", async ({ browser }) => {
       test.slow();
       const page = await raceCpus(browser, motion, "floors-20");
@@ -190,43 +189,6 @@ for (const motion of MOTIONS) {
         expect(arrival!.opacity, "reduced motion lands it at once").toBe(1);
       }
       await page.context().close();
-    });
-
-    test("the story's words are a glass panel that rise in", async ({ browser }) => {
-      test.slow();
-      const context = await browser.newContext({ reducedMotion: motion });
-      await context.addInitScript(() => {
-        const seen: number[] = [];
-        Object.assign(window, { __ffCards: seen });
-        const watch = new MutationObserver((records) => {
-          for (const record of records) {
-            for (const node of record.addedNodes) {
-              if (!(node instanceof Element)) continue;
-              const card = node.matches('[data-testid="story-line"], [data-testid="story-chip"]') ? node : node.querySelector('[data-testid="story-line"], [data-testid="story-chip"]');
-              if (card !== null) seen.push(Number(getComputedStyle(card).opacity));
-            }
-          }
-        });
-        const start = (): void => watch.observe(document, { subtree: true, childList: true });
-        if (document.documentElement !== null) start();
-        else document.addEventListener("DOMContentLoaded", start);
-      });
-      const page = await context.newPage();
-      await openTitle(page);
-      await page.getByTestId("quick-story").click();
-      await expectScreen(page, "story");
-      await page.getByTestId("story-play").click({ timeout: 30_000 });
-      await page.getByTestId("story-cutscene-skip").click({ timeout: 30_000 });
-      await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible({ timeout: 20_000 });
-      const card = page.getByTestId("story-line").or(page.getByTestId("story-chip")).first();
-      // The words sit on the kit's HUD glass, and arrives by the kit's rise.
-      await expect(card).toHaveClass(/ff-aq-hud/);
-      await expect(card).toHaveClass(/ff-panel-arrive/);
-      const seen = await page.evaluate(() => (window as unknown as { __ffCards: number[] }).__ffCards);
-      expect(seen.length, "the first card was caught arriving").toBeGreaterThan(0);
-      if (motion === "no-preference") expect(seen[0], "it rises in from nothing").toBeLessThan(1);
-      else expect(seen[0], "reduced motion lands it at once").toBe(1);
-      await context.close();
     });
   });
 }

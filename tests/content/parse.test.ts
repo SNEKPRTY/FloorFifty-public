@@ -154,7 +154,7 @@ describe("parseSources", () => {
       expect(result.parsed.stages.map((located) => located.value.id)).toEqual(["dawn", "rooftops"]);
       expect(result.parsed.stages[1]?.value.courseTuning).toEqual({ COURSE_FLOOR_COUNT: 24 });
       expect(result.parsed.songs.map((located) => located.value.id)).toEqual(["dawn-tutorial", "dusk-run"]);
-      expect(result.parsed.story.value.chapters[0]!.songId).toBe("dawn-tutorial");
+      expect(Object.keys(result.parsed.prompts.value.prompts).sort()).toEqual(["fastFall", "move"]);
       expect(result.parsed.modes).toEqual([]);
     }
   });

@@ -1,0 +1,11 @@
+[prompts.move]
+keyboard = "A D to steer"
+gamepad = "{glyph} to steer"
+touch = "Drag to steer"
+buttons = "Hold an arrow to steer"
+
+[prompts.fastFall]
+keyboard = "S to drop fast"
+gamepad = "{glyph} to drop fast"
+touch = "Flick down to drop fast"
+buttons = "Hold the down arrow to drop fast"

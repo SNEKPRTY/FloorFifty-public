@@ -5,9 +5,8 @@ import { LOCALE_TAGS, type LocaleTag } from "../../apps/client/src/features/i18n
 import { cornerRect, expectSameCorner, expectScreenContract, type Rect } from "./support/contract";
 import { evidenceDir } from "./support/evidence";
 import { SWEEP, walkFlow, type FlowScreen, type Sweep } from "./support/layout";
-import { expectScreen, openTitle, seedSettings } from "./support/room-driver";
+import { expectScreen } from "./support/room-driver";
 import { waitForServer } from "./support/server-fixture";
-import { enterStory, noteTouch } from "./support/story";
 
 /**
  * The visual audit (2026-10-05): screen-catalogue's walk at every SWEEP size,
@@ -49,11 +48,11 @@ test.beforeAll(async () => {
 });
 
 const prefix = (sweep: Sweep) => `${sweep.factor}-${sweep.width}x${sweep.height}${sweep.touch ? "" : "-mouse"}-`;
-function done(sweep: Sweep, locale: LocaleTag, tutorial: boolean): boolean {
+function done(sweep: Sweep, locale: LocaleTag): boolean {
   const dir = resolve(OUT, locale);
   if (!existsSync(dir)) return false;
   const mine = readdirSync(dir).filter((f) => f.startsWith(prefix(sweep)));
-  return tutorial ? mine.some((f) => f.endsWith("story-paused.png")) : mine.some((f) => f.endsWith("-replay-end.png"));
+  return mine.some((f) => f.endsWith("-replay-end.png"));
 }
 function shooter(sweep: Sweep, locale: LocaleTag) {
   return async (page: Page, state: string): Promise<void> => {
@@ -95,7 +94,7 @@ for (const locale of LOCALE_TAGS) for (const sweep of SWEEP) {
   const size = `${sweep.width}x${sweep.height}`;
 
   test(`audit ${locale} ${sweep.factor} ${size}`, async ({ browser }) => {
-    test.skip(done(sweep, locale, false), "already shot");
+    test.skip(done(sweep, locale), "already shot");
     test.setTimeout(480_000);
     const corners = new Map<string, Rect>();
     await walkFlow(browser, sweep, async (screen, page) => {
@@ -140,36 +139,4 @@ for (const locale of LOCALE_TAGS) for (const sweep of SWEEP) {
     }, { settings: { locale } });
     await test.step("corner controls agree", () => expectSameCorner(corners));
   });
-
-  test(`audit story ${locale} ${sweep.factor} ${size}`, async ({ browser }) => {
-    test.skip(done(sweep, locale, true), "already shot");
-    test.slow();
-    const page = await openStory(browser, sweep, locale);
-    try {
-      await noteTouch(page, sweep);
-      await visitState(page, sweep, locale, "story line");
-
-      await page.keyboard.press("Escape");
-      await expect(page.getByTestId("pause-resume")).toBeVisible();
-      await visitState(page, sweep, locale, "story paused");
-      await page.getByTestId("pause-resume").click();
-    } finally {
-      await page.context().close();
-    }
-  });
-}
-
-async function openStory(browser: import("@playwright/test").Browser, sweep: Sweep, locale: LocaleTag): Promise<Page> {
-  const context = await browser.newContext({
-    viewport: { width: sweep.width, height: sweep.height },
-    hasTouch: sweep.touch,
-    isMobile: sweep.touch && sweep.factor !== "desktop",
-    reducedMotion: "reduce",
-  });
-  await seedSettings(context, { locale });
-  const page = await context.newPage();
-  await openTitle(page);
-  await page.evaluate(() => document.fonts.ready);
-  await enterStory(page);
-  return page;
 }

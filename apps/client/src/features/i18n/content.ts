@@ -46,22 +46,6 @@ export const packTitle = (pack: { readonly id: string; readonly title: string })
 export const unlockHint = (unlock: { readonly id: string; readonly hint: string }): string =>
   lookup(`content_unlock_${snake(unlock.id)}_hint`, unlock.hint);
 
-/** A story prompt with its `{glyph}` slot filled by `marker`, for the chip to split on. */
-export const storyPrompt = (kind: string, method: string, authored: string, marker: string): string =>
-  lookup(`content_story_prompt_${snake(kind)}_${method}`, authored.replaceAll("{glyph}", marker), { glyph: marker });
-
-/** One line of a chapter's beat, or of the end when `chapter` is `end`. */
-/** A bark in a climb: moment `moment`'s line `line` of chapter `chapter`. */
-export const storyBark = (chapter: string, moment: number, line: number, authored: string): string =>
-  lookup(`content_story_${snake(chapter)}_bark_${moment}_${line}`, authored);
-/** A cutscene's line: panel `panel`'s line `line`. */
-export const storyCutLine = (cutscene: string, panel: number, line: number, authored: string): string =>
-  lookup(`content_story_cut_${snake(cutscene)}_${panel}_${line}`, authored);
-export const storyCutTitle = (cutscene: { readonly id: string; readonly title: string }): string =>
-  lookup(`content_story_cut_${snake(cutscene.id)}_title`, cutscene.title);
-/** The thesis card's line `line`, and the story's last line. */
-export const storyThesis = (line: number, authored: string): string => lookup(`content_story_thesis_${line}`, authored);
-export const storyLast = (authored: string): string => lookup("content_story_last", authored);
-
-export const storyTitle = (chapter: { readonly id: string; readonly title: string }): string =>
-  lookup(`content_story_${snake(chapter.id)}_title`, chapter.title);
+/** A control prompt with its `{glyph}` slot filled by `marker`, for the words to split on. */
+export const controlPrompt = (kind: string, method: string, authored: string, marker: string): string =>
+  lookup(`content_prompt_${snake(kind)}_${method}`, authored.replaceAll("{glyph}", marker), { glyph: marker });

@@ -64,8 +64,6 @@ import {
 import {
   cloudBand,
   cloudPlate,
-  dawnMist,
-  dawnSky,
   fishPlate,
   stageSky,
   sunPlate,
@@ -153,8 +151,6 @@ function main(): void {
     ["menu-ledge-slab.png", "menu-ledge.png", menuLedgeSlab],
     ["menu-facade.png", "menu-facade.png", menuFacadeTile],
     ["menu-backdrop.png", "menu-backdrop.png", menuBackdrop],
-    ["world-dawn-sky.png", "dawn-sky.png", withRepeatingBands(dawnSky)],
-    ["world-dawn-mist.png", "dawn-mist.png", dawnMist],
     ["world-snow-shrine-sky.png", "snow-shrine-sky.png", withRepeatingBands(stageSky(SNOW_SHRINE_SKY_GRADIENTS))],
     ["world-rooftops-sky.png", "rooftops-sky.png", withRepeatingBands(stageSky(ROOFTOPS_SKY_GRADIENTS))],
     ["world-sunken-dome-sky.png", "sunken-dome-sky.png", withRepeatingBands(stageSky(SUNKEN_DOME_SKY_GRADIENTS))],

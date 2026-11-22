@@ -83,7 +83,8 @@ SURVIVAL_BAND_AHEAD_MAX = 1.5
 SURVIVAL_BAND_BEHIND_STEP = 0.05
 SURVIVAL_BAND_BEHIND_MIN = 0.7
 
-# The story's own edge, on its last step: how fast it rises, in units per
+# The cut story mode's edge: nothing reads it now; kept so the ruleset
+# revision does not change. How fast it rose, in units per
 # second (Survival's first rise is 55).
 TUTORIAL_EDGE_RISE = 30.0
 

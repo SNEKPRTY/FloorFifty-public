@@ -4,7 +4,6 @@ import { flushSync } from "svelte";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { lobbyWithFakeNetwork } from "../../support/fakes/screens";
 import { fakeSettings } from "../../support/fakes/settings";
-import { STORY_FLAG_KEY } from "../../../../apps/client/src/features/story/enabled";
 
 beforeAll(async () => {
   await import("../../../../apps/client/src/features/lobby/lobby");
@@ -98,29 +97,18 @@ describe("the match gate (story-mode spec, criterion 21)", () => {
     lobby.screen.exit();
   });
 
-  it("offers Play story to every player, with no flag (Owner, 2026-11-20: on for every player)", async () => {
-    localStorage.removeItem(STORY_FLAG_KEY);
+  it("offers Show me how and Skip, and no Play story: the story is cut (Owner, 2026-11-22)", async () => {
     const lobby = await unseenLobby();
     await press(lobby, "create-room");
     expect(lobby.query("match-gate")).not.toBeNull();
-    expect(lobby.query("match-gate-story")).not.toBeNull();
     expect(lobby.query("match-gate-show")).not.toBeNull();
+    expect(lobby.query("match-gate-skip")).not.toBeNull();
+    expect(lobby.query("match-gate-story")).toBeNull();
     lobby.screen.exit();
   });
 
-  it("Play story publishes the story's event and makes no call", async () => {
-    localStorage.removeItem(STORY_FLAG_KEY);
-    const lobby = await unseenLobby();
-    await press(lobby, "create-room");
-    lobby.click("match-gate-story");
-    await settleAfter();
-    expect(lobby.published()).toContain("ui.story-requested");
-    expect(lobby.network.calls).toEqual([]);
-    lobby.screen.exit();
-  });
-
-  it("never opens for a player already shown how, or one who finished a chapter", async () => {
-    for (const seed of [{ seen: { tutorial: true } }, { story: { chaptersDone: 1 } }] as const) {
+  it("never opens for a player already shown how", async () => {
+    for (const seed of [{ seen: { tutorial: true } }] as const) {
       for (const way of Object.keys(WAYS) as (keyof typeof WAYS)[]) {
         // A fresh lobby each time: a press that goes in seats the player and the panel gives way to the room.
         const lobby = await lobbyWithFakeNetwork({ settings: fakeSettings(seed) });

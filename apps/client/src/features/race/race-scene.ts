@@ -2,14 +2,14 @@
  * A race, drawn: the scenery, the world, the HUD and the song.
  *
  * Shared by everything that shows a race. Gameplay draws one it follows over
- * the network; the story draws one it steps itself. Neither owns a rule
+ * the network; the replay draws one it steps itself. Neither owns a rule
  * here -- this draws whatever snapshot it is handed, and the screen decides
  * where that snapshot came from.
  *
  * Built after the screen has loaded the `gameplay` and `audio` bundles
  * (`loadRaceAssets`) and unlocked audio. The stage's song starts at GO
- * (`startSong`), or at once in the story, which has no countdown -- unless
- * the song reveal already started it, and then it plays on.
+ * (`startSong`), unless the song reveal already started it, and then it
+ * plays on.
  * `mountTouchInput` is the other half both screens share: the player's
  * fingers, feeding the screen's own `InputManager`.
  */
@@ -21,7 +21,7 @@ import type { RaceEvent, RoomSnapshot } from "@floor-fifty/shared/common/protoco
 import type { ResolvedTuning } from "@floor-fifty/shared/common/tuning";
 import { sheetAliasFor } from "../profile/character-art";
 import type { StageContent } from "@floor-fifty/shared/content/game-content";
-import { Texture, type Container } from "pixi.js";
+import { Texture } from "pixi.js";
 import { mount, unmount } from "svelte";
 import { LOGICAL_VIEWPORT, PLAYER_SPRITE_SIZE } from "../../lib/constants";
 import { DisposeBag } from "../../lib/dispose";
@@ -237,9 +237,6 @@ export function mountTouchInput(context: ScreenContext, input: InputManager): To
   };
 }
 
-/** A story moment, as the scene plays it (`playMoment`). */
-export type StoryFeelMoment = Parameters<JuiceDirector["storyMoment"]>[0] & { readonly shake?: number; readonly punch?: number };
-
 /** What the HUD needs from the screen that owns the race. */
 export type RaceHudOptions = ConstructorParameters<typeof RaceHudView>[1];
 
@@ -308,12 +305,6 @@ export class RaceScene {
   private floorCount = 20;
   /** The pop-up words' rules and their texts (Wonder spec §5). */
   private readonly words: WordDirector;
-  /**
-   * A story chapter: no race words pop ("1ST!", a streak's "NICE", "SLAM!"),
-   * since the story's own lines and feel speak there (story mode v2 spec:
-   * the race's places and call-outs stay off).
-   */
-  private isStory = false;
   private readonly wordPool: WordPool;
   /** The HUD's top band's bottom in field units, which no word or bark goes above; re-measured a few times a second. */
   private hudCeiling = 0;
@@ -339,13 +330,12 @@ export class RaceScene {
       localPlayerId: () => PlayerId | undefined;
       /**
        * The stage to draw and the song to play, chosen by the caller: a race
-       * passes the catalog's first, the story its own. Undefined draws the
+       * passes the catalog's first. Undefined draws the
        * legacy scenery, and plays nothing.
        */
       stage: StageContent | undefined;
       song: SongLike | undefined;
       hud?: RaceHudOptions;
-      isStory?: boolean;
       /**
        * Put before the juice's own sound keys: a replay's `replay:{playthrough}:`,
        * so a replayed slam or wrap sounds though the live race played it.
@@ -392,8 +382,6 @@ export class RaceScene {
     const content = context.content.current()?.content;
     const view = new GameplayView(presentation, loadedTextures, options.tuning, options.localPlayerId, undefined, {
       sheetAliasFor: (characterId, colour) => sheetAliasFor(content, characterId, colour),
-      // The story's last step has an edge of its own on its finite course.
-      storyEdge: options.isStory === true,
     });
     this.view = view;
     // The same song the mixer plays drives the world's pulse, and the view
@@ -401,8 +389,6 @@ export class RaceScene {
     // simply does not breathe. Set after the view exists, not when the track
     // starts -- the track starts earlier, and setting it then reached nothing.
     view.setSong(this.song);
-    view.setStory(options.isStory === true);
-    this.isStory = options.isStory === true;
     view.setTrajectoryGuide(context.settings.value.display.trajectoryGuide);
 
     // The field is the letterbox's flat backdrop colour, and it is opaque over
@@ -547,7 +533,7 @@ export class RaceScene {
     // The line where the scenery starts stretching is reported every frame;
     // on exit it is let go, so no other screen inherits the bar.
     this.bag.add(() => context.stage.setSkirtLine?.(undefined));
-    // A race, a replay and the story keep the 16:9 field; the menus after
+    // A race and a replay keep the 16:9 field; the menus after
     // them have the whole window back.
     context.stage.setBandMode?.("field");
     this.bag.add(() => context.stage.setBandMode?.("menu"));
@@ -637,7 +623,7 @@ export class RaceScene {
   }
 
   /**
-   * Events the juice answers, from a run with no room: the story's own
+   * Events the juice answers, from a run with no room: the replay's own
    * world is its authority (polish spec §4.1).
    */
   noteRoomEvents(events: readonly RaceEvent[]): void {
@@ -652,52 +638,6 @@ export class RaceScene {
   /** Lines for the race's polite region (race-flow spec §6). */
   announce(lines: readonly string[]): void {
     this.hud.announce(lines);
-  }
-
-  /** The story's layer in the world (story mode v2): made on the first ask; a race never asks. */
-  storyLayer(): Container {
-    return this.view.storyLayer();
-  }
-
-  /**
-   * Plays a moment the story names through the race's own paths: dust and
-   * the hit-stop and kick (the juice), the shake and the punch (the feel).
-   * A race never calls it.
-   */
-  playMoment(moment: StoryFeelMoment): void {
-    this.juice.storyMoment(moment);
-    this.feel.jolt(moment.shake ?? 0, moment.punch ?? 0);
-  }
-
-  /**
-   * Where a world point is drawn, in viewport pixels, and whether its height is
-   * on screen: for the story's DOM that points at or flies from the world.
-   */
-  pagePoint(point: { readonly x: number; readonly y: number }): { left: number; top: number; onScreen: boolean } {
-    const field = this.view.camera.logicalToScreen(point);
-    const frame = this.context.stage.overlay.getBoundingClientRect();
-    const scale = frame.width === 0 ? 1 : frame.width / LOGICAL_VIEWPORT.width;
-    return { left: frame.left + field.x * scale, top: frame.top + field.y * scale, onScreen: this.view.camera.showsY(point.y) };
-  }
-
-  /** Points the camera at a racer for a while, or back at the player with undefined (the story's `lookAt`). */
-  lookAt(playerId: PlayerId | undefined): void {
-    this.view.focusOn(playerId ?? this.options.localPlayerId(), false);
-  }
-
-  /** The story's floor reading on the Floors chip (the tower's floor, and its goal); undefined is the race's own. */
-  setFloorReading(reading: { readonly floor: number; readonly goal: number } | undefined): void {
-    this.hud.setFloorReading(reading);
-  }
-
-  /** The story's edge this frame, or undefined off its last step (`GameplayView.setStoryEdge`). */
-  setStoryEdge(edge: { y: number; rise: number } | undefined): void {
-    this.view.setStoryEdge(edge);
-  }
-
-  /** Shows "OUT!" while the story's edge has caught her, with no line under it: the card carries the words. */
-  showOut(on: boolean): void {
-    this.hud.showOut(on);
   }
 
   /** The hint in the HUD's toast slot, or none (`features/race/race-hints.ts`). */
@@ -729,7 +669,7 @@ export class RaceScene {
   private sayWords(sample: RoomSnapshot, localId: PlayerId | undefined, predicted: PredictedState | undefined, deltaMs: number): void {
     const juice = this.lastJuice;
     const tuning = this.juiceTuning.juice();
-    if (juice === undefined || tuning === undefined || this.isStory) return;
+    if (juice === undefined || tuning === undefined) return;
     if (juice.restarted) {
       this.words.clear();
       this.wordPool.clear();

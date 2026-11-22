@@ -131,15 +131,7 @@ export const SOUND_PROMPTS: readonly SoundPrompt[] = [
     influence: 0.4,
     loop: true,
   },
-  {
-    alias: "ambience.dawn",
-    file: "ambience/dawn",
-    kind: "effect",
-    prompt: "misty dawn on a hilltop above sleeping rooftops, soft cool breeze, waking birdsong far off, a distant bell now and then, calm, no music, no voice, seamless",
-    seconds: 20,
-    influence: 0.4,
-    loop: true,
-  },
+
   // Each stage's own air (stage ascent spec §6), on the rooftop bed's settings
   // so the three sit together when a room changes stage.
   {

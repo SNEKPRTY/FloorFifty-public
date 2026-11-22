@@ -6,14 +6,14 @@
  */
 
 import * as m from "../../paraglide/messages.js";
-import type { ChipKind } from "@floor-fifty/shared/level/tutorial";
+import type { ChipKind } from "./control-chip";
 
 export type InstructionsSlide = {
   readonly id: "steer" | "bounce" | "dropFast" | "movingFloors" | "lava" | "race";
   /** The demo clip's alias, and its still's. */
   readonly clip: string;
   readonly still: string;
-  /** A slide that names a control reads the story's own prompt for the hand in use. */
+  /** A slide that names a control reads its control prompt for the hand in use. */
   readonly prompt?: ChipKind;
   /** The words of a slide that names no control. */
   readonly caption?: () => string;

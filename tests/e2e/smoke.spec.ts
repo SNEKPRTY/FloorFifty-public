@@ -14,9 +14,6 @@
 import type { BrowserContextOptions, BrowserType, Page, TestInfo } from "@playwright/test";
 import { expect, test } from "./support/test";
 import { driveRoom, holdRoomClocks, waitForServer } from "./support/server-fixture";
-import { FRAME_CONTROL, GPU_LIKE } from "./support/frame-control";
-import { enterStory } from "./support/story";
-import { keyHands, playChapterOne, stepFrames } from "./support/story-play";
 import {
   seedSettings,
   CLIENT_BOOT_MS,
@@ -158,46 +155,20 @@ test("pause during the countdown, resume, then leave for the title", async ({ pa
   await enterLobby(page);
 });
 
-test("the story: the hub, the first cutscene skipped, chapter 1 finished on the keys, and its results", async ({ page, isMobile }) => {
-  // A phone drawn whole (GPU_LIKE) at its own pixel density boots past the splash's wait in software WebGL;
-  // the GPU gate plays it on the phone too.
-  test.skip(isMobile && process.env["FLOOR_FIFTY_NO_GPU"] === "1", "a phone's stepped frames need a GPU");
-  // About 450 ticks stepped one at a time: seconds on a GPU, several minutes in software WebGL.
-  test.setTimeout(720_000);
-  // A smaller window draws each stepped frame faster where WebGL is software (a phone's is already small).
-  if (!isMobile) await page.setViewportSize({ width: 800, height: 450 });
-  await page.addInitScript(GPU_LIKE);
-  await page.addInitScript(FRAME_CONTROL);
-  await openTitle(page);
-  await enterStory(page);
-  const ticks = await playChapterOne(page, keyHands(page));
-  expect(ticks, "the chapter's goal was reached inside the limit").toBeLessThan(2_400);
-  await expect.poll(() => page.evaluate(() => JSON.parse(localStorage.getItem("floor-fifty.settings.v1") ?? "{}").story?.chaptersDone ?? 0)).toBeGreaterThanOrEqual(1);
-  // The results stand over the frozen climb; their stars pop in on the frames stepped.
-  await stepFrames(page, 90);
-  await expect(page.getByTestId("story-results")).toBeVisible();
-  await expect(page.getByTestId("story-results-star").first()).toHaveAttribute("data-earned", "true");
-  await expect(page.getByTestId("story-next")).toBeVisible();
-});
-
-test("Leave story in the pause goes to the hub, and the hub's Back to the title", async ({ page }) => {
-  await openTitle(page);
-  await enterStory(page);
-  await page.keyboard.press("Escape");
-  await follows(page.getByTestId("pause-restart")).toBeVisible();
-  await page.getByTestId("pause-leave").click();
-  await follows(page.getByTestId("story-hub")).toBeVisible();
-  await page.getByTestId("story-hub-back").click();
-  await expectScreen(page, "title", SCREEN_SETTLE_MS);
-});
-
 test("a first visit's Create room asks to be shown how, and Skip goes on into the room", async ({ page }) => {
   await seedSettings(page.context(), { seen: { tutorial: false } });
   await openTitle(page);
+  // Story mode is cut (Owner, 2026-11-22): the title offers no way into it.
+  await expect(page.getByTestId("title-play")).toBeVisible();
+  await expect(page.getByTestId("quick-story")).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Story", exact: true })).toHaveCount(0);
   await enterLobby(page);
   await page.getByTestId("name-input").fill("Granny");
   await page.getByTestId("create-room").click();
   await follows(page.getByTestId("match-gate")).toBeVisible();
+  // The gate offers Show me how and Skip, and no Play story.
+  await expect(page.getByTestId("match-gate-show")).toBeVisible();
+  await expect(page.getByTestId("match-gate-story")).toHaveCount(0);
   await page.getByTestId("match-gate-skip").click();
   await expect(page.getByTestId("room-code")).not.toBeEmpty({ timeout: SCREEN_SETTLE_MS });
 });

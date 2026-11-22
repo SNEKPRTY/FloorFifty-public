@@ -22,10 +22,6 @@ import {
 } from "./support/room-driver";
 import { ROOM_CODE_ALPHABET } from "../../packages/shared/src/common/schemas";
 import { driveRoom, holdRoomClocks, waitForRoom, waitForServer } from "./support/server-fixture";
-import { FRAME_CONTROL, GPU_LIKE } from "./support/frame-control";
-import { SETTINGS_KEY } from "../../apps/client/src/features/profile/settings";
-import { storyWords } from "./support/story";
-import { padHands, playChapter, playChapterOne, stepFrames, takeFrames } from "./support/story-play";
 
 test.beforeAll(async () => {
   await waitForServer();
@@ -38,18 +34,6 @@ async function padOnTitle(page: Page): Promise<FakePad> {
   await page.evaluate(() => ((window as unknown as { __ffStillHere: boolean }).__ffStillHere = true));
   await pad.connect();
   return pad;
-}
-
-/** From the title to the first unfinished chapter's climb, pad only: Story, Play on the hub, the cutscene skipped by the pad's back. */
-async function padIntoChapter(page: Page, pad: FakePad): Promise<void> {
-  await pad.walkTo("quick-story", "dpad");
-  await pad.tap("south");
-  await expectScreen(page, "story");
-  await expect(page.getByTestId("story-play")).toBeFocused({ timeout: 30_000 });
-  await pad.tap("south");
-  await expect(page.getByTestId("story-cutscene")).toBeVisible({ timeout: 30_000 });
-  await pad.tap("east");
-  await expect(storyWords(page)).toBeVisible({ timeout: 30_000 });
 }
 
 /** From the title into a solo race, pad only. Returns the room code. */
@@ -404,75 +388,4 @@ test("B leaves the room code's cells without joining", async ({ page }) => {
   await expect(page.getByTestId("code-editor")).toHaveCount(0);
   await expectPadOn(page, "code-input");
   await expectScreen(page, "lobby");
-});
-
-test("the story's first chapter is finished with the pad", async ({ page }) => {
-  // A software-drawn browser plays a stepped tick in most of a second: the chapter is minutes of it, on a small screen.
-  test.setTimeout(900_000);
-  await page.setViewportSize({ width: 800, height: 450 });
-  await page.addInitScript(GPU_LIKE);
-  await page.addInitScript(FRAME_CONTROL);
-  const pad = await padOnTitle(page);
-  await padIntoChapter(page, pad);
-  const ticks = await playChapterOne(page, padHands(page));
-  expect(ticks, "the chapter's goal was reached inside the limit").toBeLessThan(2_400);
-  await stepFrames(page, 90);
-  await expect(page.getByTestId("story-results")).toBeVisible();
-  await expect(page.getByTestId("story-next"), "the results' main action has the pad's focus").toBeFocused();
-});
-
-test("the story's second chapter: the pad's A slams a lamp open", async ({ page }) => {
-  test.setTimeout(900_000);
-  await page.setViewportSize({ width: 800, height: 450 });
-  await page.addInitScript(GPU_LIKE);
-  await page.addInitScript(FRAME_CONTROL);
-  await page.addInitScript((key) => {
-    const stored = JSON.parse(localStorage.getItem(key) ?? "{}") as Record<string, unknown>;
-    if (stored["story"] === undefined) localStorage.setItem(key, JSON.stringify({ ...stored, version: 2, story: { chaptersDone: 1, chapters: {} } }));
-  }, SETTINGS_KEY);
-  const pad = await padOnTitle(page);
-  await padIntoChapter(page, pad);
-  await takeFrames(page);
-  await playChapter(page, padHands(page), 2_000, (now) => now.lamps > 0);
-  const lamps = await page.evaluate(() => (window as unknown as { __ffStory: () => { lamps: number } }).__ffStory().lamps);
-  expect(lamps, "a lamp was opened by a fast fall on the pad").toBeGreaterThan(0);
-});
-
-test("on the hub the pad moves along the chapters, and in the pause it reaches Start again, then Leave to the hub, and Back to the title", async ({ page }) => {
-  const pad = await padOnTitle(page);
-  await pad.walkTo("quick-story", "dpad");
-  await pad.tap("south");
-  await expectScreen(page, "story");
-  const hub = page.getByTestId("story-hub");
-  await expect(hub).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByTestId("story-play"), "Play has the pad's focus on arrival").toBeFocused();
-  await pad.step("up", "dpad");
-  await expect(page.locator('[data-testid="story-chapter-card"][data-chapter="1"]')).toBeFocused();
-  await pad.step("right", "dpad");
-  await expect(hub).toHaveAttribute("data-selected", "1");
-  await expect(page.getByTestId("story-play"), "chapter 2 waits for chapter 1").toBeDisabled();
-  await pad.step("left", "dpad");
-  await expect(hub).toHaveAttribute("data-selected", "0");
-  await pad.step("down", "dpad");
-  await expect(page.getByTestId("story-play")).toBeFocused();
-  await pad.tap("south");
-  await expect(page.getByTestId("story-cutscene")).toBeVisible({ timeout: 30_000 });
-  // A tap finishes the line, the next goes on to the next line: nothing goes on by itself.
-  const line = page.getByTestId("story-cutscene-line");
-  await pad.tap("south");
-  const first = await line.textContent();
-  await page.waitForTimeout(1_500);
-  expect(await line.textContent(), "the line waits for the player").toBe(first);
-  await pad.tap("south");
-  await expect.poll(() => line.textContent(), { message: "the pad's A goes on to the next line" }).not.toBe(first);
-  await pad.tap("east");
-  await expect(storyWords(page), "the pad's back skips the cutscene").toBeVisible({ timeout: 30_000 });
-  await pad.tap("start");
-  await expect(page.getByTestId("pause-overlay")).toBeVisible();
-  await pad.walkTo("pause-restart", "dpad");
-  await pad.walkTo("pause-leave", "dpad");
-  await pad.tap("south");
-  await expect(hub).toBeVisible({ timeout: 30_000 });
-  await pad.tap("east");
-  await expectScreen(page, "title", SCREEN_SETTLE_MS);
 });

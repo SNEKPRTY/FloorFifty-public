@@ -116,26 +116,5 @@ export function validateReferences(parsed: ParsedContent): readonly Diagnostic[]
       refuse("missingField", "coverAlias", `${songId} is in a pack, and a song in a pack needs a cover`, song.file);
   }
 
-  // A chapter's stage and song are found among every file of their kind,
-  // catalogued or not: `buildPayload` emits both inside the chapter. A song
-  // that earns its place by an unlock is not the story's to hand out, and a
-  // line's speaker is the hero or a character that exists.
-  const story = parsed.story;
-  story.value.chapters.forEach((chapter, index) => {
-    const at = `chapters.${index}`;
-    if (!parsed.stages.some((stage) => stage.value.id === chapter.stageId))
-      refuse("unknownReference", `${at}.stageId`, `no stage declares the id ${chapter.stageId}`, story.file);
-    const song = parsed.songs.find((entry) => entry.value.id === chapter.songId);
-    if (song === undefined)
-      refuse("unknownReference", `${at}.songId`, `no song declares the id ${chapter.songId}`, story.file);
-    else if (song.value.unlock !== undefined)
-      refuse("wrongKind", `${at}.songId`, `${chapter.songId} is earned by an unlock; a chapter's song must be open`, story.file);
-  });
-  // An actor is a character that exists; the speakers are checked against the actors by the schema.
-  for (const [actorId, actor] of Object.entries(story.value.actors)) {
-    if (!parsed.characters.some((entry) => entry.value.id === actor.characterId))
-      refuse("unknownReference", `actors.${actorId}.characterId`, `no character declares the id ${actor.characterId}`, story.file);
-  }
-
   return sortDiagnostics(diagnostics);
 }

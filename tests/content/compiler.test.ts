@@ -193,21 +193,12 @@ describe("the repository's own content", () => {
     if (result.ok) expect(result.artifact.content.baseTuning.SURVIVAL_START_WAIT_TICKS).toBe(600);
   });
 
-  it("ships the five-chapter story on its measured seeds (story mode v2 spec)", async () => {
+  it("ships the control prompts the Instructions name, and no story (Owner, 2026-11-22)", async () => {
     const result = await compile(paths);
     expect(result.ok).toBe(true);
     if (result.ok) {
-      const { chapters, cutscenes, actors } = result.artifact.content.story;
-      expect(chapters.map((chapter) => [chapter.id, chapter.stage.id, chapter.song.id, chapter.seed])).toEqual([
-        ["lowtown", "dawn", "dawn-tutorial", 862],
-        ["city", "rooftops", "moving-on", 139],
-        ["deep", "sunken-dome", "farther-from-home", 8],
-        ["snow", "snow-shrine", "whats-next", 354],
-        ["fifty", "dawn", "we-outside", 70],
-      ]);
-      expect(cutscenes.map((cutscene) => cutscene.id)).toEqual(["lowtown", "the-city", "the-deep", "together", "the-ledge", "the-top"]);
-      expect(Object.keys(actors).sort()).toEqual(["frog", "oni"]);
-      expect(chapters.flatMap((chapter) => chapter.teaches)).toEqual(["move", "fastFall"]);
+      expect(Object.keys(result.artifact.content.prompts).sort()).toEqual(["fastFall", "move"]);
+      expect(result.artifact.content).not.toHaveProperty("story");
     }
   });
 

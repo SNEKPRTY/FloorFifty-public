@@ -11,7 +11,7 @@ import { expect, test, type Page } from "./support/test";
 import { LOCALE_TAGS, type LocaleTag } from "../../apps/client/src/features/i18n/locales";
 import { evidenceDir } from "./support/evidence";
 import { walkFlow, type FlowScreen, type Sweep, type WalkOptions } from "./support/layout";
-import { expectScreen, finishRace, openTitle, passSplash, seedSettings, type ClientShape } from "./support/room-driver";
+import { createRoom, enterLobby, expectScreen, finishRace, openTitle, passSelect, passSplash, seedSettings, type ClientShape } from "./support/room-driver";
 import { waitForServer } from "./support/server-fixture";
 
 test.beforeAll(async () => {
@@ -239,7 +239,7 @@ for (const locale of LOCALE_TAGS) {
       );
     });
 
-    test(`${locale} on ${viewport.name}: the photosensitivity warning, error panel, settings, story and pause fit`, async ({ browser }) => {
+    test(`${locale} on ${viewport.name}: the photosensitivity warning, error panel, settings and pause fit`, async ({ browser }) => {
       test.slow();
       const context = await browser.newContext({
         viewport: { width: viewport.sweep.width, height: viewport.sweep.height },
@@ -294,18 +294,12 @@ for (const locale of LOCALE_TAGS) {
         await capture(page, locale, viewport.name, "language");
         await page.keyboard.press("Escape");
 
-        await page.getByTestId("quick-story").click();
-        await expectScreen(page, "story");
-        await expect(page.getByTestId("story-hub")).toBeVisible({ timeout: 20_000 });
-        await expectNothingClipped(page, where("story hub"));
-        await capture(page, locale, viewport.name, "story-hub");
-        await page.getByTestId("story-play").click();
-        await expect(page.getByTestId("story-cutscene")).toBeVisible({ timeout: 30_000 });
-        await expectNothingClipped(page, where("story cutscene"));
-        await page.getByTestId("story-cutscene-skip").click();
-        await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible({ timeout: 20_000 });
-        await expectNothingClipped(page, where("story"));
-        await capture(page, locale, viewport.name, "story-words");
+        // Into a race of one, for its pause.
+        await enterLobby(page);
+        await createRoom(page, "Nana");
+        await page.getByTestId("ready-toggle").click();
+        await passSelect([page]);
+        await expectScreen(page, "gameplay");
 
         await page.getByTestId("pause-open").click();
         await expect(page.getByTestId("pause-overlay")).toBeVisible();
