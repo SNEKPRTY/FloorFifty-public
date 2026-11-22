@@ -1,0 +1,15 @@
+# The prompts the Instructions carousel names for steering and for dropping
+# fast, one per input method. A gamepad prompt may name {glyph}, where the
+# pad's own button goes.
+
+[prompts.move]
+keyboard = "A D or ← → to steer"
+gamepad = "{glyph} to steer"
+touch = "Drag left or right"
+buttons = "Hold an arrow to steer"
+
+[prompts.fastFall]
+keyboard = "S or ↓ to drop fast"
+gamepad = "{glyph} to drop fast"
+touch = "Flick down to drop fast"
+buttons = "Hold the down arrow to drop fast"

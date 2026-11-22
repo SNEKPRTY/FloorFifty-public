@@ -183,11 +183,8 @@ export const TUNABLES = {
   SURVIVAL_BAND_BEHIND_MIN: { type: "float", min: 0.1, max: 1, default: 0.7 },
 
   /**
-   * The story's own edge (first-race spec §1), on its last step only. It is
-   * the story's, not the race's: its course stays finite. It starts
-   * `TUTORIAL_EDGE_START_BELOW` units under the floor the step begins on (about
-   * two floors, so an idle player has several seconds) and rises
-   * `TUTORIAL_EDGE_RISE` units/s, about half of Survival's first rise.
+   * The cut story mode's own edge. Nothing reads these any more; they stay
+   * so the ruleset revision and the room's tuning schema do not change.
    */
   TUTORIAL_EDGE_RISE: { type: "float", min: 5, max: 200, default: 30 },
   TUTORIAL_EDGE_START_BELOW: { type: "float", min: 60, max: 600, default: 240 },

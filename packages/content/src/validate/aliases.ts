@@ -67,12 +67,5 @@ export function validateAliases(
     if (coverAlias !== undefined) for (const size of ["", "Large", "Full"]) check(song.file, "coverAlias", `${coverAlias}${size}`);
   }
 
-  // The story's pictures and the beds under its cutscenes.
-  const story = parsed.story;
-  story.value.cutscenes.forEach((cutscene, index) => {
-    check(story.file, `cutscenes.${index}.bed`, cutscene.bed);
-    cutscene.panels.forEach((panel, panelIndex) => check(story.file, `cutscenes.${index}.panels.${panelIndex}.art`, panel.art));
-  });
-
   return sortDiagnostics(diagnostics);
 }

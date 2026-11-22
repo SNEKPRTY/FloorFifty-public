@@ -28,7 +28,6 @@ import type { CountLabel } from "./countdown-clock";
 import type { SettingsStore } from "../profile/store/settings.svelte";
 import type { RaceHintKind } from "./race-hints";
 import { BARK_MS } from "./juice/cpu-barks";
-import * as m from "../../paraglide/messages.js";
 
 /**
  * Where the HUD may draw, per orientation.
@@ -135,10 +134,6 @@ export class RaceHudView {
   private recoveryHint = $state(false);
   /** The hint in the toast slot now; the screen changes it as the race runs (`race-hints.ts`). */
   private hint = $state<RaceHintKind | undefined>(undefined);
-  /** The story's catch: "OUT!" laid over the model, since its snapshot never says the racer is out. */
-  private showingOut = $state(false);
-  /** The story's Floors reading: the tower's floor and the goal, over the model's count. */
-  private floorReading = $state.raw<{ readonly floor: number; readonly goal: number } | undefined>(undefined);
   /** Each CPU's mood word while it lasts (CPU banding spec §4), by racer. */
   private barks = $state<Readonly<Record<string, string>>>({});
   private readonly barkUntil = new Map<string, number>();
@@ -154,10 +149,8 @@ export class RaceHudView {
       settings?: SettingsStore;
       hint?: RaceHintKind;
       onCoachDismiss?: () => void;
-      /** One racer and one lap, as the story is: no Lap chip, no standings. */
+      /** One racer and one lap, as a solo replay is: no Lap chip, no standings. */
       solo?: boolean;
-      /** The goal floor the Floors chip counts to, where it is not the course's last (a story chapter). */
-      floorGoal?: number;
       /** A replay, not a race: the timer carries a Replay chip (ui layout spec §4.5). */
       replay?: boolean;
     } = {},
@@ -168,7 +161,7 @@ export class RaceHudView {
       target: stage.overlay,
       props: {
         get model() {
-          return view.showingOut ? { ...view.model, outBanner: m.race_out() } : view.model;
+          return view.model;
         },
         get placement() {
           return view.placement;
@@ -187,9 +180,6 @@ export class RaceHudView {
         get barks() {
           return view.barks;
         },
-        get floorReading() {
-          return view.floorReading;
-        },
         get popSpring() {
           return view.popSpring;
         },
@@ -199,7 +189,6 @@ export class RaceHudView {
         ...(options.onPause === undefined ? {} : { onPause: options.onPause }),
         ...(options.onRestart === undefined ? {} : { onRestart: options.onRestart }),
         ...(options.solo === undefined ? {} : { solo: options.solo }),
-        ...(options.floorGoal === undefined ? {} : { floorGoal: options.floorGoal }),
         ...(options.replay === undefined ? {} : { replay: options.replay }),
       },
     });
@@ -260,17 +249,6 @@ export class RaceHudView {
    * it is, so nothing is read twice.
    */
   setRecoveryHint(active: boolean): void { this.recoveryHint = active; }
-  /**
-   * Lays "OUT!" over the model while the story's edge has caught her. There
-   * is no line under it: the story card says what happened.
-   */
-  showOut(on: boolean): void { this.showingOut = on; }
-  /** The story's Floors reading, or undefined for the race's own count. A no-op when unchanged. */
-  setFloorReading(reading: { readonly floor: number; readonly goal: number } | undefined): void {
-    const last = this.floorReading;
-    if (last?.floor === reading?.floor && last?.goal === reading?.goal) return;
-    this.floorReading = reading;
-  }
   /** The hint to show in the toast slot, or none. */
   setHint(kind: RaceHintKind | undefined): void { this.hint = kind; }
 

@@ -1,72 +1,9 @@
 import { PNG } from "pngjs";
 import { ROLES, type RoleName } from "../../src/roles";
 import { swatchRgb } from "../../src/swatches";
-import { contentBounds, contentBox, crop, quantizeDithered, quantizeNearest, resample } from "../source-raster";
+import { contentBox, crop, quantizeDithered, quantizeNearest, resample } from "../source-raster";
 import { powderFinishAtGrid } from "../powder";
-import { BAYER, clearAlphaIslands, coarsen, despeckle } from "./cleanup";
-
-/**
- * The gradients the tutorial's dawn is stippled along (`dawn-concept.png`).
- *
- * The sky is not one ramp by value: it runs violet to grey-teal to the pale
- * glow at the sun, and grey-teal to teal down through the fog, so a rank by
- * luma put violet bands in the middle of it. Each pair here is a fade the
- * picture actually makes.
- */
-export const DAWN_SKY_GRADIENTS: readonly (readonly [RoleName, RoleName])[] = [
-  ["dawnHaze", "dawnHigh"],
-  ["dawnHigh", "dawnGlow"],
-  ["dawnGlow", "dawnSun"],
-  // The glow fades out into the grey-teal around it, not only into the pale
-  // haze. Not into the violet: that pair mixes to pink, a colour the dawn has not.
-  ["dawnHigh", "dawnSun"],
-  ["dawnSun", "dawnSunCore"],
-  ["dawnHigh", "dawnTeal"],
-  ["dawnGlow", "dawnTeal"],
-  ["dawnTeal", "dawnFog"],
-  ["dawnHigh", "dawnFog"],
-];
-
-/** The mist's: the paler half of the fog, so the hills stay behind the haze, not in front of it. */
-export const DAWN_MIST_GRADIENTS: readonly (readonly [RoleName, RoleName])[] = [
-  ["dawnGlow", "dawnHigh"],
-  ["dawnGlow", "dawnTeal"],
-  ["dawnHigh", "dawnTeal"],
-];
-
-/**
- * How much of each dawn gradient stipples: flat bands with dithered seams, so
- * the LCD mesh and the refraction have broad areas and edges to show on.
- */
-export const DAWN_STIPPLE_SPREAD = 0.35;
-
-/** How much of the mist plate the hills take, from its foot; the rest is headroom. */
-export const DAWN_MIST_SHARE = 0.55;
-
-/** The tutorial's sky (`IMAGE_PROMPTS["dawn-sky"]`): full frame at the source's aspect, opaque, stippled. */
-export function dawnSky(source: PNG): PNG {
-  const out = resample(source, 0, source.height - 1, 960, 640);
-  quantizeDithered(out, DAWN_SKY_GRADIENTS, 2, DAWN_STIPPLE_SPREAD);
-  for (let i = 0; i < out.data.length; i += 4) out.data[i + 3] = 255;
-  return out;
-}
-
-/**
- * The tutorial's misty hills (`IMAGE_PROMPTS["dawn-mist"]`): keyed, cropped to
- * the hills, stippled like the sky they fade into. Not a skyline plate: those
- * are despeckled and snapped to a grid, which would strip the stipple.
- */
-export function dawnMist(source: PNG): PNG {
-  const { top, bottom } = contentBounds(source);
-  // The hills keep their aspect and stand in the plate's lower part: filling
-  // the whole strip put them over the pyramid, which is the picture's subject.
-  const hills = resample(source, top, bottom, 960, Math.round(360 * DAWN_MIST_SHARE) & ~1);
-  quantizeDithered(hills, DAWN_MIST_GRADIENTS, 2, DAWN_STIPPLE_SPREAD);
-  clearAlphaIslands(hills, 64, true);
-  const out = new PNG({ width: 960, height: 360 });
-  hills.data.copy(out.data, (360 - hills.height) * 960 * 4);
-  return out;
-}
+import { BAYER, coarsen, despeckle } from "./cleanup";
 
 /**
  * Snow Shrine's night sky: navy through blue and lavender to a pale snow haze,
@@ -119,11 +56,17 @@ export const ROOFTOPS_SKY_GRADIENTS: readonly (readonly [RoleName, RoleName])[] 
   ["skyLow", "cloud"],
 ];
 
-/** A stage's full-frame sky: 960 x 640, opaque, stippled like the dawn's. */
+/**
+ * How much of each sky gradient stipples: flat bands with dithered seams, so
+ * the LCD mesh and the refraction have broad areas and edges to show on.
+ */
+export const SKY_STIPPLE_SPREAD = 0.35;
+
+/** A stage's full-frame sky: 960 x 640, opaque, stippled. */
 export function stageSky(gradients: readonly (readonly [RoleName, RoleName])[]): (source: PNG) => PNG {
   return (source) => {
     const out = resample(source, 0, source.height - 1, 960, 640);
-    quantizeDithered(out, gradients, 2, DAWN_STIPPLE_SPREAD);
+    quantizeDithered(out, gradients, 2, SKY_STIPPLE_SPREAD);
     for (let i = 0; i < out.data.length; i += 4) out.data[i + 3] = 255;
     return out;
   };

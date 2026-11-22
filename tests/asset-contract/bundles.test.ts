@@ -20,9 +20,8 @@ describe("bundles", () => {
     expect(aliasesOf("stage-sunken-dome")).toContain("world.sunkenDomeMantas");
   });
 
-  it("keeps the shared platform and the tutorial's stage in gameplay", () => {
+  it("keeps the shared platform in gameplay", () => {
     expect(aliasesOf("gameplay")).toContain("world.platform");
-    expect(aliasesOf("gameplay")).toContain("world.dawnSky");
   });
 
   it("carries every stage's select still in the shell", () => {

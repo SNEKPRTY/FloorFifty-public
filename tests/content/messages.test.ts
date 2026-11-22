@@ -18,11 +18,11 @@ beforeAll(async () => {
 const shipped = async () => compiled;
 
 describe("content messages (languages spec §4.2)", () => {
-  it("keys every named item except songs, every pack title, every hint, and every story prompt and line", async () => {
+  it("keys every named item except songs, every pack title, every hint, and every control prompt", async () => {
     const payload = (await shipped()).artifact.content;
     const messages = JSON.parse(renderContentMessages(payload).json) as Record<string, string>;
 
-    for (const stage of [...payload.stages, ...payload.story.chapters.map((chapter) => chapter.stage)]) {
+    for (const stage of payload.stages) {
       expect(messages[`content_stage_${snake(stage.id)}_name`]).toBe(stage.displayName);
     }
     for (const character of payload.characters) expect(messages[`content_character_${snake(character.id)}_name`]).toBe(character.displayName);
@@ -31,14 +31,9 @@ describe("content messages (languages spec §4.2)", () => {
     // The floor-count options a room races (phase 4): shown in the ready room and on results.
     expect(payload.modes.length).toBeGreaterThan(0);
     for (const mode of payload.modes) expect(messages[`content_mode_${snake(mode.id)}_name`]).toBe(mode.displayName);
-    expect(messages["content_story_prompt_fast_fall_gamepad"]).toContain("{glyph}");
-    expect(messages["content_story_prompt_move_buttons"]).toBeDefined();
-    expect(messages["content_story_lowtown_title"]).toBe("Lowtown");
-    expect(messages["content_story_lowtown_bark_0_0"]).toBe("Up we go! Follow me!");
-    expect(messages["content_story_cut_lowtown_title"]).toBe("Lowtown");
-    expect(messages["content_story_cut_lowtown_1_0"]).toBe("Wake up! The lava is coming up!");
-    expect(messages["content_story_thesis_0"]).toBe("The best climbers look down.");
-    expect(messages["content_story_last"]).toBe("Now let's race! First one up waits for the others.");
+    expect(messages["content_prompt_fast_fall_gamepad"]).toContain("{glyph}");
+    expect(messages["content_prompt_move_buttons"]).toBeDefined();
+    expect(Object.keys(messages).some((key) => key.startsWith("content_story_"))).toBe(false);
     expect(Object.keys(messages).some((key) => key.startsWith("content_tutorial_"))).toBe(false);
     expect(Object.keys(messages).some((key) => key.startsWith("content_song_"))).toBe(false);
     expect(Object.keys(messages).filter((key) => key !== "$schema").every((key) => /^content_[a-z0-9_]+$/.test(key))).toBe(true);

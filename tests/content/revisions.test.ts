@@ -135,26 +135,17 @@ describe("buildArtifact", () => {
     expect(b.rulesetRevision).toBe(a.rulesetRevision);
   });
 
-  it("moves the content revision and not the ruleset revision for a story edit", () => {
+  it("moves the content revision and not the ruleset revision for a control prompt edit", () => {
     const a = buildArtifact(payload());
-    const b = buildArtifact(payload({ change: "story" }));
+    const b = buildArtifact(payload({ change: "prompts" }));
     expect(b.contentRevision).not.toBe(a.contentRevision);
     expect(b.rulesetRevision).toBe(a.rulesetRevision);
   });
 
-  it("keeps the story's stage out of the race", () => {
+  it("keeps the uncatalogued dawn stage and its song out of the race", () => {
     const built = payload();
     expect(built.stages.map((stage) => stage.id)).not.toContain("dawn");
     expect(built.songs.map((song) => song.id)).not.toContain("dawn-tutorial");
-    expect(built.story.chapters[0]!.stage.id).toBe("dawn");
-    expect(built.story.chapters[0]!.song.audioAlias).toBe("music.tutorial");
-  });
-
-  it("moves the content revision and not the ruleset revision for a story stage edit", () => {
-    const a = buildArtifact(payload());
-    const b = buildArtifact(payload({ change: "storyStage" }));
-    expect(b.contentRevision).not.toBe(a.contentRevision);
-    expect(b.rulesetRevision).toBe(a.rulesetRevision);
   });
 
   it("keeps authored course phrases presentation-only", () => {

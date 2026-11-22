@@ -15,7 +15,7 @@ import type {
   UnlockContent,
 } from "@floor-fifty/shared/content/game-content";
 import type { AuthoredJuice } from "./schema/juice";
-import type { AuthoredStory } from "./schema/story";
+import type { AuthoredPrompts } from "./schema/prompts";
 import type {
   PresentationFlow,
   PresentationRouting,
@@ -31,7 +31,7 @@ export type RawSourceTree = {
   readonly flow: SourceFile;
   readonly eventRouting: SourceFile;
   readonly catalog: SourceFile;
-  readonly story: SourceFile;
+  readonly prompts: SourceFile;
   readonly unlocks: SourceFile;
   readonly blockedNames: SourceFile;
   readonly juice: SourceFile;
@@ -72,7 +72,7 @@ export type ParsedContent = {
   /** Racer juice (polish spec §4.1): presentation only. */
   readonly juice: Located<AuthoredJuice>;
   /** As authored, naming its stage; `buildPayload` resolves it. */
-  readonly story: Located<AuthoredStory>;
+  readonly prompts: Located<AuthoredPrompts>;
   readonly characters: readonly Located<CharacterContent>[];
   readonly stages: readonly Located<StageContent>[];
   readonly songs: readonly Located<SongContent>[];

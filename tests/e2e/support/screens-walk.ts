@@ -93,15 +93,6 @@ export const SCREENS: readonly string[] = [
     `replay-${mode}-end`,
     `replay-${mode}-share`,
   ]),
-  // The story: the hub, a cutscene, a chapter's first words and chip, the climb, the pause, a chapter's results, and the last card after the ending.
-  "story-hub",
-  "story-cutscene",
-  "story-swipe-coach",
-  "story-line",
-  "story-playing",
-  "story-paused",
-  "story-results",
-  "story-end",
   // What goes wrong.
   "error-server-unreachable",
   "error-boot-failed",
@@ -112,8 +103,6 @@ export const SCREENS: readonly string[] = [
   "turn-upright-cover",
   // The first-visit language step once the walk's language has been picked on it.
   "first-language-chosen",
-  // The story's last chapter after the lava caught her: OUT! over the climb.
-  "story-caught",
 ];
 
 /** The two-digit number a screen is filed under. */
@@ -281,7 +270,7 @@ export const SCREENS_OUT = evidenceDir(`screens/${walkLocale()}`);
  * something to scroll, or only to a finger.
  */
 export function isOptional(view: View, screen: string): boolean {
-  if (["splash-loading", "settings-scrolled", "story-swipe-coach"].includes(screen)) return true;
+  if (["splash-loading", "settings-scrolled"].includes(screen)) return true;
   // Inside Ruken's frame the host owns the page and its fullscreen, so the game is meant to
   // raise no cover there (S9, #113). Until that lands the cover is shown; after it, it is
   // not. The standalone phone views carry it either way, and that is where it is audited.
@@ -306,7 +295,7 @@ export function expectedScreens(view: View, only: readonly string[] | undefined 
 
 /** The parts a view's walk is made of; each writes its own notes, so a part that never ran is known. */
 export function partsOf(view: View, only: readonly string[] | undefined = wantedScreens()): string[] {
-  const all = ["main", "story", "errors", ...(view.phoneLandscape ? ["cover"] : [])];
+  const all = ["main", "errors", ...(view.phoneLandscape ? ["cover"] : [])];
   if (only === undefined) return all;
   const { required, optional } = expectedScreens(view, only);
   return all.filter((part) => [...required, ...optional].some((screen) => partOf(screen) === part));
@@ -334,7 +323,6 @@ export function sampledColours(screenshot: Buffer | Uint8Array, grid = 64): numb
 export function partOf(screen: string): string {
   if (screen === "turn-upright-cover") return "cover";
   if (screen.startsWith("error-")) return "errors";
-  if (screen.startsWith("story-")) return "story";
   return "main";
 }
 
@@ -437,8 +425,7 @@ export class Shots {
    * prompts for the input method the player used last, and the walk drives
    * the tutorial and the replay with keys, which flips it to the keyboard's
    * wording; a phone player's own taps never would. So the walk puts the
-   * game back in a finger's wording before it looks, as the evidence specs
-   * do (`noteTouch` in `support/story.ts`). The event reaches the game's
+   * game back in a finger's wording before it looks. The event reaches the game's
    * own window, which is the frame's inside the Ruken host.
    *
    * Only where keys have driven the screen (the tutorial's steps and the

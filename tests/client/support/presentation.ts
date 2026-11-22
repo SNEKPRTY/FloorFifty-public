@@ -147,7 +147,6 @@ export async function presentationHarness(options: {
       GameEnd: () => track(new GameEndScreen()),
       // Recorded, never loaded: the flow tests ask where the tutorial goes,
       // not what it draws (tests/client/features/tutorial/tutorial.test.ts does that).
-      Story: () => track({ name: "Story", enter: async () => {}, exit: () => {} }),
       // As the tutorial: where the replay goes, not what it draws
       // (tests/client/features/replay/replay.test.ts does that).
       Replay: () => track({ name: "Replay", enter: async () => {}, exit: () => {} }),

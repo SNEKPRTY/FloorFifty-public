@@ -60,7 +60,7 @@ export const validEvents = read("events.toml");
 export const validCatalog = read("catalog.toml");
 export const validStage = read("stages/rooftops.toml");
 export const validSong = read("songs/dusk-run.toml");
-export const validStory = read("story.toml");
+export const validPrompts = read("prompts.toml");
 
 /** Every authored file of the valid tree, exactly as `readSources` yields it. */
 export function validTree(): RawSourceTree {
@@ -69,7 +69,7 @@ export function validTree(): RawSourceTree {
     flow: sourceFile("flow.toml"),
     eventRouting: sourceFile("events.toml"),
     catalog: sourceFile("catalog.toml"),
-    story: sourceFile("story.toml"),
+    prompts: sourceFile("prompts.toml"),
     unlocks: sourceFile("unlocks.toml"),
     blockedNames: sourceFile("blocked-names.toml"),
     juice: sourceFile("juice.toml"),
@@ -99,7 +99,7 @@ export function validTreeWith(file: string, text: string): RawSourceTree {
     flow: swap(tree.flow),
     eventRouting: swap(tree.eventRouting),
     catalog: swap(tree.catalog),
-    story: swap(tree.story),
+    prompts: swap(tree.prompts),
     unlocks: swap(tree.unlocks),
     blockedNames: swap(tree.blockedNames),
     juice: swap(tree.juice),
@@ -131,23 +131,24 @@ export function validParsed(): ParsedContent {
 }
 
 /**
- * The race's stage and song ahead of the story's.
+ * The race's stage and song ahead of the drafts.
  *
  * The builders here edit `stages[0]` and `songs[0]` and mean the race's. The
- * read order is alphabetical, which puts `dawn` first; parsed order carries no
- * meaning (`buildPayload` follows the catalog), so reordering changes nothing.
+ * read order is alphabetical, which puts the draft `dawn` first; parsed order
+ * carries no meaning (`buildPayload` follows the catalog), so reordering
+ * changes nothing.
  */
 function raceFirst(parsed: ParsedContent): ParsedContent {
-  const storyStages = new Set(parsed.story.value.chapters.map((chapter) => chapter.stageId));
-  const storySongs = new Set(parsed.story.value.chapters.map((chapter) => chapter.songId));
-  const race = <T,>(isStory: (item: T) => boolean, items: readonly T[]): T[] => [
-    ...items.filter((item) => !isStory(item)),
-    ...items.filter(isStory),
+  const stages = new Set<string>(parsed.catalog.value.stages);
+  const songs = new Set<string>(parsed.catalog.value.songs);
+  const race = <T,>(isRaced: (item: T) => boolean, items: readonly T[]): T[] => [
+    ...items.filter(isRaced),
+    ...items.filter((item) => !isRaced(item)),
   ];
   return {
     ...parsed,
-    stages: race((stage) => storyStages.has(stage.value.id), parsed.stages),
-    songs: race((song) => storySongs.has(song.value.id), parsed.songs),
+    stages: race((stage) => stages.has(stage.value.id), parsed.stages),
+    songs: race((song) => songs.has(song.value.id), parsed.songs),
   };
 }
 
@@ -331,7 +332,6 @@ export function manifestWithAliases(aliases: readonly string[]): ArtManifest {
       audio: [],
       reveal: [],
       demos: [],
-      story: [],
     },
   };
 }
@@ -369,10 +369,8 @@ export type PayloadChange =
   // The two halves of an authored course, which fall on opposite sides.
   | "courseSeed"
   | "coursePhrase"
-  // Teaching the game changes nothing about how a race is decided.
-  | "story"
-  // The story's own stage is cosmetic too: no room races it.
-  | "storyStage"
+  // The control prompts' words change nothing about how a race is decided.
+  | "prompts"
   // Racer juice is presentation only (polish spec §4.1).
   | "juice";
 
@@ -471,28 +469,12 @@ const withChange = (parsed: ParsedContent, change: PayloadChange): ParsedContent
           transitions: parsed.flow.value.transitions.slice(0, -1),
         }),
       };
-    case "story":
+    case "prompts":
       return {
         ...parsed,
-        story: located(parsed.story.file, {
-          ...parsed.story.value,
-          chapters: parsed.story.value.chapters.map((chapter) => ({ ...chapter, parSeconds: chapter.parSeconds + 1 })),
+        prompts: located(parsed.prompts.file, {
+          prompts: { ...parsed.prompts.value.prompts, move: { ...parsed.prompts.value.prompts.move, keyboard: "A D or arrows to steer" } },
         }),
-      };
-    case "storyStage":
-      return {
-        ...parsed,
-        stages: parsed.stages.map((located_) =>
-          parsed.story.value.chapters.some((chapter) => chapter.stageId === located_.value.id)
-            ? located(located_.file, {
-                ...located_.value,
-                theme: {
-                  ...located_.value.theme,
-                  presentation: { ...located_.value.theme.presentation!, refractionIntensity: 0.2 },
-                },
-              })
-            : located_,
-        ),
       };
     case "eventRoute":
       return {
@@ -510,8 +492,7 @@ const withChange = (parsed: ParsedContent, change: PayloadChange): ParsedContent
  * Carries forward every stage and song an edit left out.
  *
  * The builders above replace `stages` and `songs` with the one item they edit,
- * which would drop the story's stages and songs; the payload cannot be built
- * without them.
+ * which would drop the others; the payload cannot be built without them.
  */
 const withUntouchedItems = (edited: ParsedContent, original: ParsedContent): ParsedContent => {
   const missing = <T extends { readonly id: string }>(
@@ -522,18 +503,6 @@ const withUntouchedItems = (edited: ParsedContent, original: ParsedContent): Par
     ...edited,
     stages: [...edited.stages, ...missing(edited.stages, original.stages)],
     songs: [...edited.songs, ...missing(edited.songs, original.songs)],
-  };
-};
-
-/** The valid tree with its one chapter naming this stage and song (by default its own). */
-export const parsedWithStory = (names: { stageId?: string; songId?: string }): ParsedContent => {
-  const parsed = validParsed();
-  return {
-    ...parsed,
-    story: located(parsed.story.file, {
-      ...parsed.story.value,
-      chapters: parsed.story.value.chapters.map((chapter) => ({ ...chapter, ...names })),
-    }),
   };
 };
 

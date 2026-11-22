@@ -42,7 +42,6 @@
 
   let {
     onPlay,
-    onStory,
     settings,
     heroRises = true,
     racersDrop = false,
@@ -52,7 +51,6 @@
     access = NO_ACCESS,
   }: {
     onPlay: () => void;
-    onStory?: () => void;
     settings: SettingsStore;
     /** Off when arriving from the lobby, whose hero is already on screen. */
     heroRises?: boolean;
@@ -155,7 +153,6 @@
                  card; the bar measures what the card gives it and gives way. -->
             <div class="min-w-0 phone-l:col-span-2">
               <QuickActions
-                {...onStory === undefined ? {} : { onStory }}
                 onInstructions={() => (open = "instructions")}
                 onContact={() => (open = "contact")}
                 onHomeScreen={() => (open = "home-screen")}
@@ -214,7 +211,7 @@
     />
   </Modal>
 {:else if open === "instructions"}
-  <Instructions {settings} prompts={content()?.story?.prompts} {artSrc} onClose={() => (open = undefined)} />
+  <Instructions {settings} prompts={content()?.prompts} {artSrc} onClose={() => (open = undefined)} />
 {:else if open === "contact"}
   <Modal title={m.title_contact()} testId="contact-modal" onClose={() => (open = undefined)}>
     <ContactPanel />

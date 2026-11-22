@@ -49,21 +49,6 @@ order = 10
 source = "app.splash-ready"
 
 [[routes]]
-source = "ui.story-requested"
-order = 10
-action = "flow.story"
-
-[[routes]]
-source = "ui.story-closed-to-title"
-order = 10
-action = "flow.story-to-title"
-
-[[routes]]
-source = "ui.story-closed-to-lobby"
-order = 10
-action = "flow.story-to-lobby"
-
-[[routes]]
 source = "ui.watch-replay"
 order = 10
 action = "flow.watch-replay"

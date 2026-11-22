@@ -230,14 +230,12 @@ describe("the art manifest", () => {
     );
     expect(looping.map((track) => track.alias)).toEqual(
       expect.arrayContaining([
-        "ambience.dawn",
         "ambience.menu",
         "ambience.rooftop",
         "ambience.snowShrine",
         "ambience.sunkenDome",
         "music.chromeInTheRain",
         "music.mainMenu",
-        "music.tutorial",
       ]),
     );
     for (const track of looping) {

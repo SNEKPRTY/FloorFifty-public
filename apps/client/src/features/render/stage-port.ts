@@ -146,7 +146,7 @@ export interface StagePort {
   setSkirtLine?(line: number | undefined): void;
   /**
    * What the visible band is (`features/platform/band.ts`): the whole window for a menu, the
-   * 16:9 field for a race, a replay and the story. Rewrites the band at
+   * 16:9 field for a race and a replay. Rewrites the band at
    * once and on every later layout. The app starts in `"menu"`.
    * Optional: a stage without a window to fill has no band.
    */

@@ -117,8 +117,7 @@ describe("type discipline", () => {
     // `.ff-wordmark` sets Fraunces. A line a player reads in their language (the
     // winner, the unlock banner) wears it only by mistake: zh-Hans showed the
     // winner's Latin name in the serif beside Noto Sans SC.
-    // The story's credits open on the brand's wordmark too (story mode v2 spec, "The ending and the credits").
-    const BRAND_WORDMARKS = new Set(["features/boot/SplashRoot.svelte", "features/lobby/MenuHero.svelte", "features/story/StoryFinale.svelte"]);
+    const BRAND_WORDMARKS = new Set(["features/boot/SplashRoot.svelte", "features/lobby/MenuHero.svelte"]);
     const strays = styled
       .filter(({ file }) => file.endsWith(".svelte") && !BRAND_WORDMARKS.has(file))
       .filter(({ text }) => /class="[^"]*\bff-wordmark\b/.test(text))

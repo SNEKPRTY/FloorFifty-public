@@ -9,7 +9,7 @@
    */
   import * as m from "../../paraglide/messages.js";
   import { onMount } from "svelte";
-  import type { StoryContent } from "@floor-fifty/shared/content/game-content";
+  import type { ControlPrompts } from "@floor-fifty/shared/content/game-content";
   import Button from "../kit/Button.svelte";
   import Modal from "../kit/Modal.svelte";
   import PagerDots from "../kit/layout/PagerDots.svelte";
@@ -17,7 +17,7 @@
   import { inputMethod } from "../platform/input-method.svelte";
   import type { SettingsStore } from "../profile/store/settings.svelte";
   import { isTap, releaseStep } from "../select/page-swipe";
-  import { GLYPH_FOR_CHIP, chipWords } from "../story/control-chip";
+  import { GLYPH_FOR_CHIP, chipWords } from "./control-chip";
   import { INSTRUCTION_SLIDES, slideAfter } from "./instructions";
 
   let {
@@ -27,8 +27,8 @@
     onClose,
   }: {
     settings: SettingsStore;
-    /** The story's prompts: slides 1 and 3 name the control the player holds. */
-    prompts: StoryContent["prompts"] | undefined;
+    /** The control prompts: slides 1 and 3 name the control the player holds. */
+    prompts: ControlPrompts | undefined;
     artSrc: (alias: string) => string | undefined;
     onClose: () => void;
   } = $props();

@@ -81,7 +81,7 @@ export type Hosting = {
   onHostGain(listener: (gain: number) => void): () => void;
   hostReserved(): HostReserved;
   onHostReserved(listener: (reserved: HostReserved) => void): () => void;
-  /** A round (a race or a story run) began. A second start before an end is ignored. */
+  /** A round (a race) began. A second start before an end is ignored. */
   roundStart(): void;
   /** The open round ended. Without an open round it is ignored. */
   roundEnd(outcome: RoundOutcome): void;

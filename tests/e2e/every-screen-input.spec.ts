@@ -153,9 +153,7 @@ async function expectFocusInside(page: Page, testId: string): Promise<void> {
  * A row of cells that keep up and down for their own value is walked with
  * the pad's right, as a player would.
  * A roster of chips counts as reached once one chip is: the pad steers
- * through the rest of its grid with the d-pad (`gamepad.spec.ts`). The
- * story hub's row of chapters is the same: one card reached, the pad goes
- * along the rest with left and right (`gamepad.spec.ts`).
+ * through the rest of its grid with the d-pad (`gamepad.spec.ts`).
  */
 async function reachEvery(page: Page, hands: Hands, within?: string): Promise<void> {
   const total = await page.evaluate((id) => {
@@ -167,7 +165,7 @@ async function reachEvery(page: Page, hands: Hands, within?: string): Promise<vo
     });
     document.querySelectorAll("[data-walk-stop]").forEach((element) => element.removeAttribute("data-walk-stop"));
     const grouped = (element: HTMLElement): string | undefined =>
-      element.closest('[data-testid="tile-grid"]') !== null ? "grid" : element.closest('[data-testid="story-hub"] [role="group"]') !== null ? "chapters" : undefined;
+      element.closest('[data-testid="tile-grid"]') !== null ? "grid" : undefined;
     controls.forEach((element, index) => element.setAttribute("data-walk-stop", grouped(element) ?? String(index)));
     return controls.length;
   }, within);
@@ -308,38 +306,6 @@ for (const input of ["keyboard", "pad"] as const) {
         await reachEvery(page, hands, "settings-modal");
       });
       await expectScreen(page, "title");
-    });
-
-    test("the story: the hub's and the pause's controls are reached, Leave goes to the hub, and Back to the title", async ({ page }) => {
-      test.slow();
-      const hands = await titleWith(page, input);
-      await hands.reach("quick-story");
-      await hands.press();
-      await expectScreen(page, "story");
-      await expect(page.getByTestId("story-hub")).toBeVisible({ timeout: CLIENT_BOOT_MS });
-      await hands.arrived();
-      // The whole screen: the hub is all of it, and Tab goes on past its last control as on the title.
-      await reachEvery(page, hands);
-      // Back along the row to chapter 1, the one open: the pad's left, or the arrow key.
-      await hands.reach("story-chapter-card");
-      for (let step = 0; step < 4; step += 1) await (hands.pad === undefined ? page.keyboard.press("ArrowLeft") : hands.pad.step("left", "dpad"));
-      await expect(page.getByTestId("story-hub")).toHaveAttribute("data-selected", "0");
-      await hands.reach("story-play");
-      await hands.press();
-      await expect(page.getByTestId("story-cutscene")).toBeVisible({ timeout: CLIENT_BOOT_MS });
-      await hands.reach("story-cutscene-skip");
-      await hands.press();
-      await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible({ timeout: CLIENT_BOOT_MS });
-      await hands.pause();
-      await expect(page.getByTestId("pause-overlay")).toBeVisible({ timeout: SCREEN_SETTLE_MS });
-      await hands.arrived();
-      await reachEvery(page, hands, "pause-overlay");
-      await hands.reach("pause-leave");
-      await hands.press();
-      await expect(page.getByTestId("story-hub")).toBeVisible({ timeout: SCREEN_SETTLE_MS });
-      await hands.reach("story-hub-back");
-      await hands.press();
-      await expectScreen(page, "title", SCREEN_SETTLE_MS);
     });
 
     test("the first-match gate: its controls are reached, Show me how opens Instructions, and Skip goes on", async ({ page }) => {

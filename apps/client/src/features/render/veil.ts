@@ -21,7 +21,7 @@ export const REDUCED_HALF_MS = 100;
 export const VEIL_Z = 70;
 /**
  * The loader between screens, and a failure's Try again, while a liquid move
- * covers the screen: above the veil, or a cold Story from the title would
+ * covers the screen: above the veil, or a cold screen from the title would
  * be a blue wipe with no progress and a failed one a blue wipe for ever.
  */
 export const LOADER_Z = VEIL_Z + 2;

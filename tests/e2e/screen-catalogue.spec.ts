@@ -6,7 +6,6 @@ import { evidenceDir } from "./support/evidence";
 import { SWEEP, walkFlow, type FlowScreen, type Sweep } from "./support/layout";
 import { expectScreen } from "./support/room-driver";
 import { waitForServer } from "./support/server-fixture";
-import { noteTouch, openStory } from "./support/story";
 
 /**
  * The screen catalogue (UI layout system spec §8.1): every screen and every
@@ -141,21 +140,5 @@ for (const sweep of SWEEP) {
       }
     });
     await test.step("corner controls agree", () => expectSameCorner(corners));
-  });
-
-  test(`catalogue story ${sweep.factor} ${size}`, async ({ browser }) => {
-    test.slow();
-    const page = await openStory(browser, sweep);
-    try {
-      await noteTouch(page, sweep);
-      await visitState(page, sweep, "story line");
-
-      await page.keyboard.press("Escape");
-      await expect(page.getByTestId("pause-resume")).toBeVisible();
-      await visitState(page, sweep, "story paused");
-      await page.getByTestId("pause-resume").click();
-    } finally {
-      await page.context().close();
-    }
   });
 }

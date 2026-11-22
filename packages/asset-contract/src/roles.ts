@@ -280,7 +280,7 @@ export const ROLES = {
   uiText: 9,
   /** Secondary UI rows. `#7f708a`, muted against `uiText` but clear of the fill. */
   uiMuted: 6,
-  // The story's dawn (story spec §2, and `dawn-concept.png`).
+  // The dawn's colours (the uncatalogued dawn stage, and `dawn-concept.png`).
   // Stippled in pairs by `quantizeDithered`, so the palette's lack of a pale
   // teal is made up by mixing `dawnHigh` with `dawnTeal`.
   /** The violet-grey at the top of the sky. */

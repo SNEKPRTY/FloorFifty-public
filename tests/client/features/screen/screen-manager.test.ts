@@ -67,7 +67,6 @@ describe("screen transitions", () => {
         Lobby: () => recording("Lobby"),
         Gameplay: () => recording("Gameplay"),
         GameEnd: () => recording("GameEnd"),
-        Story: () => recording("Story"),
         Replay: () => recording("Replay"),
       },
       context,
@@ -103,7 +102,6 @@ describe("screen transitions", () => {
         Lobby: () => claiming("Lobby"),
         Gameplay: () => nullScreen("Gameplay"),
         GameEnd: () => nullScreen("GameEnd"),
-        Story: () => nullScreen("Story"),
         Replay: () => nullScreen("Replay"),
       },
       context,
@@ -141,7 +139,6 @@ describe("screen transitions", () => {
         Lobby: () => nullScreen("Lobby"),
         Gameplay: () => nullScreen("Gameplay"),
         GameEnd: () => nullScreen("GameEnd"),
-        Story: () => nullScreen("Story"),
         Replay: () => nullScreen("Replay"),
       },
       fakeContext(),
@@ -176,7 +173,6 @@ describe("screen transitions", () => {
         }),
         Gameplay: () => nullScreen("Gameplay"),
         GameEnd: () => nullScreen("GameEnd"),
-        Story: () => nullScreen("Story"),
         Replay: () => nullScreen("Replay"),
       },
       fakeContext(),
@@ -342,8 +338,8 @@ describe("a liquid edge", () => {
     };
     let cleared: Promise<void> | undefined;
     const factories = Object.fromEntries(SCREEN_IDS.map((id) => [id, loggingScreen(id, log)])) as unknown as Record<ScreenId, ScreenFactory>;
-    factories.Story = () => ({
-      name: "Story",
+    factories.Replay = () => ({
+      name: "Replay",
       async enter(context) {
         cleared = context.veilCleared?.().then(() => void log.push("cleared"));
       },
@@ -351,7 +347,7 @@ describe("a liquid edge", () => {
     });
     const manager = new ScreenManager(factories, fakeContext(), () => undefined, () => veil);
     await manager.transition("MainMenu");
-    const going = manager.transition("Story", "liquid");
+    const going = manager.transition("Replay", "liquid");
     finishCover();
     await vi.waitFor(() => expect(log).toContain("reveal"));
     await Promise.resolve();
@@ -368,8 +364,8 @@ describe("a liquid edge", () => {
     const { veil, finishCover } = recordingVeil(log);
     let cleared: Promise<void> | undefined;
     const factories = Object.fromEntries(SCREEN_IDS.map((id) => [id, loggingScreen(id, log)])) as unknown as Record<ScreenId, ScreenFactory>;
-    factories.Story = () => ({
-      name: "Story",
+    factories.Replay = () => ({
+      name: "Replay",
       async enter(context) {
         cleared = context.veilCleared?.();
         await new Promise<void>(() => undefined);
@@ -387,7 +383,7 @@ describe("a liquid edge", () => {
     const manager = new ScreenManager(factories, fakeContext(), () => undefined, () => veil);
     await manager.transition("Lobby");
     expect(log).toContain("lobby clear");
-    void manager.transition("Story", "liquid");
+    void manager.transition("Replay", "liquid");
     finishCover();
     await vi.waitFor(() => expect(cleared).toBeDefined());
     manager.dispose();

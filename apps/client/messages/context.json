@@ -1,42 +1,34 @@
 {
-  "content_story_city_title": {
-    "note": "The name of a story chapter: on the chapter list, the chapter card and the results. A place, not a sentence. Short.",
-    "maxChars": 24
-  },
-  "content_story_deep_title": {
-    "note": "The name of a story chapter: on the chapter list, the chapter card and the results. A place, not a sentence. Short.",
-    "maxChars": 24
-  },
-  "content_story_prompt_fast_fall_buttons": {
-    "note": "A short chip over the story's climb that names a control, for a player on a touch screen with the on-screen buttons",
+  "content_prompt_fast_fall_buttons": {
+    "note": "A short caption in the Instructions that names a control, for a player on a touch screen with the on-screen buttons",
     "maxChars": 56
   },
-  "content_story_prompt_fast_fall_gamepad": {
-    "note": "A short chip over the story's climb that names a control, for a player on a controller. {glyph} is where the controller's button picture goes; keep it exactly once.",
+  "content_prompt_fast_fall_gamepad": {
+    "note": "A short caption in the Instructions that names a control, for a player on a controller. {glyph} is where the controller's button picture goes; keep it exactly once.",
     "maxChars": 56
   },
-  "content_story_prompt_fast_fall_keyboard": {
-    "note": "A short chip over the story's climb that names a control, for a player on a keyboard",
+  "content_prompt_fast_fall_keyboard": {
+    "note": "A short caption in the Instructions that names a control, for a player on a keyboard",
     "maxChars": 56
   },
-  "content_story_prompt_fast_fall_touch": {
-    "note": "A short chip over the story's climb that names a control, for a player on a touch screen, swiping",
+  "content_prompt_fast_fall_touch": {
+    "note": "A short caption in the Instructions that names a control, for a player on a touch screen, swiping",
     "maxChars": 56
   },
-  "content_story_prompt_move_buttons": {
-    "note": "A short chip over the story's climb that names a control, for a player on a touch screen with the on-screen buttons",
+  "content_prompt_move_buttons": {
+    "note": "A short caption in the Instructions that names a control, for a player on a touch screen with the on-screen buttons",
     "maxChars": 56
   },
-  "content_story_prompt_move_gamepad": {
-    "note": "A short chip over the story's climb that names a control, for a player on a controller. {glyph} is where the controller's button picture goes; keep it exactly once.",
+  "content_prompt_move_gamepad": {
+    "note": "A short caption in the Instructions that names a control, for a player on a controller. {glyph} is where the controller's button picture goes; keep it exactly once.",
     "maxChars": 56
   },
-  "content_story_prompt_move_keyboard": {
-    "note": "A short chip over the story's climb that names a control, for a player on a keyboard",
+  "content_prompt_move_keyboard": {
+    "note": "A short caption in the Instructions that names a control, for a player on a keyboard",
     "maxChars": 56
   },
-  "content_story_prompt_move_touch": {
-    "note": "A short chip over the story's climb that names a control, for a player on a touch screen, swiping",
+  "content_prompt_move_touch": {
+    "note": "A short caption in the Instructions that names a control, for a player on a touch screen, swiping",
     "maxChars": 56
   },
   "document_title": {
@@ -60,10 +52,6 @@
   "shell_fullscreen_exit": {
     "note": "Quick-action button shown while in full screen; leaves it.",
     "maxChars": 18
-  },
-  "shell_story": {
-    "note": "Quick-action button on the title that starts the short story.",
-    "maxChars": 16
   },
   "shell_contact": {
     "note": "Quick-action button that opens the studio's social links (Instagram, X, Discord, website).",
@@ -100,10 +88,6 @@
   },
   "shell_loading_race": {
     "note": "Shown while a race's art and music load.",
-    "maxChars": 32
-  },
-  "shell_loading_story": {
-    "note": "Shown while the story's art and music load.",
     "maxChars": 32
   },
   "shell_rotate_hint": {
@@ -782,11 +766,6 @@
     "maxChars": 16,
     "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
   },
-  "story_exit": {
-    "note": "Story pause overlay: leave the story.",
-    "maxChars": 16,
-    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
-  },
   "results_race_over": {
     "note": "Results heading when nobody finished.",
     "maxChars": 24,
@@ -849,16 +828,6 @@
   "touch_guide_buttons_hint": {
     "note": "Touch guide caption: on-screen buttons can replace swiping, in Settings.",
     "maxChars": 60,
-    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
-  },
-  "story_race_now": {
-    "note": "End of tutorial: go find a race.",
-    "maxChars": 16,
-    "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
-  },
-  "story_play_now": {
-    "note": "End of tutorial (reached from the title): go to the lobby.",
-    "maxChars": 16,
     "screenshot": "docs/i18n/screens/en/tablet-portrait-pause.png"
   },
   "a11y_glyph_left_stick": {
@@ -1037,11 +1006,6 @@
   "content_pack_after_hours_title": {
     "note": "A content pack's name, over its page of tiles and in 'DLC · … pack'.",
     "maxChars": 12
-  },
-  "content_stage_dawn_name": {
-    "note": "A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.",
-    "maxChars": 24,
-    "screenshot": "docs/i18n/screens/en/tablet-portrait-select.png"
   },
   "content_stage_rooftops_name": {
     "note": "A stage's name (the city a race is climbed in), on its tile, in the picker and at the reveal.",
@@ -1748,444 +1712,8 @@
     "note": "Main button of that dialog: opens the how-to-play carousel.",
     "maxChars": 20
   },
-  "gate_story": {
-    "note": "Button of that dialog: starts the short story instead.",
-    "maxChars": 20
-  },
   "gate_skip": {
     "note": "Button of that dialog: skip the help and go on to the match.",
     "maxChars": 12
-  },
-  "story_goal_reach": {
-    "note": "Story HUD objective chip, top centre: climb to this floor. {floor} is a number.",
-    "maxChars": 28
-  },
-  "story_goal_lamp": {
-    "note": "Story HUD objective chip: drop hard onto a lamp to break it open.",
-    "maxChars": 20
-  },
-  "story_goal_rescue": {
-    "note": "Story HUD objective chip: climb back down to the friend named {name}.",
-    "maxChars": 24
-  },
-  "story_goal_climb": {
-    "note": "Story HUD objective chip while lava chases: climb fast to floor {floor}.",
-    "maxChars": 24
-  },
-  "story_floors_away": {
-    "note": "Under the story's edge arrow: how many floors away the target is ({count} is 2 or more).",
-    "maxChars": 20
-  },
-  "story_floor_away": {
-    "note": "Under the story's edge arrow: the target is one floor away.",
-    "maxChars": 12
-  },
-  "story_wind": {
-    "note": "Story HUD chip beside an arrow: a gust of wind is blowing or about to.",
-    "maxChars": 12
-  },
-  "story_safe_spot": {
-    "note": "Story HUD flash: the game saved the player's restart point here.",
-    "maxChars": 16
-  },
-  "story_glims_count": {
-    "note": "A chapter's count of glims (tiny living lights) carried: {count} of {total}. Hub card and HUD.",
-    "maxChars": 32
-  },
-  "story_chapter_number": {
-    "note": "Small label above a story chapter's name: Chapter 1, Chapter 2 and so on.",
-    "maxChars": 24
-  },
-  "story_glims_lit": {
-    "note": "The ending: {count} (2 or more) glims the player carried light up the sky.",
-    "maxChars": 44
-  },
-  "story_glim_lit": {
-    "note": "The ending: the one glim the player carried lights up the sky.",
-    "maxChars": 32
-  },
-  "story_credits_by": {
-    "note": "Credits: who made the game. SNEKPRTY is a name; keep it as is.",
-    "maxChars": 24
-  },
-  "story_credits_story": {
-    "note": "Credits: the story's title, 'Don't Look Down' (the game's motto).",
-    "maxChars": 36
-  },
-  "story_credits_thanks": {
-    "note": "Last line of the credits: thanks for playing the story.",
-    "maxChars": 28
-  },
-  "story_chapters": {
-    "note": "Button: go to the story's chapter list.",
-    "maxChars": 16
-  },
-  "story_hub_totals": {
-    "note": "Story chapter list, under the heading: stars and glims collected over every chapter.",
-    "maxChars": 76
-  },
-  "story_locked": {
-    "note": "Story chapter list: a locked chapter; the player must finish the chapter {number} first.",
-    "maxChars": 40
-  },
-  "story_stars": {
-    "note": "Screen reader text on a chapter card: how many of its three stars are earned.",
-    "maxChars": 28
-  },
-  "story_restart": {
-    "note": "Pause menu in the story: restart this chapter from its start.",
-    "maxChars": 24
-  },
-  "story_results_title": {
-    "note": "Heading of the results after a story chapter is finished.",
-    "maxChars": 20
-  },
-  "story_star_finished": {
-    "note": "Results, first star: the chapter was finished.",
-    "maxChars": 16
-  },
-  "story_star_glims": {
-    "note": "Results, second star earned: every glim carried, {count} of {total}.",
-    "maxChars": 44
-  },
-  "story_star_fast": {
-    "note": "Results, third star earned: the time {time} beat the target {par} (both like 1:05).",
-    "maxChars": 36
-  },
-  "story_star_glims_need": {
-    "note": "Results, second star not earned: what it takes (find all {total} glims).",
-    "maxChars": 36
-  },
-  "story_star_fast_need": {
-    "note": "Results, third star not earned: finish faster than {par} (like 1:05).",
-    "maxChars": 32
-  },
-  "story_again": {
-    "note": "Results button: play the same chapter again.",
-    "maxChars": 12
-  },
-  "content_story_city_bark_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_city_bark_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_city_bark_2_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_city_bark_3_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_city_bark_4_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_city_bark_5_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_0_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_1_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_2_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_2_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_2_2": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_2_3": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_2_4": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_lowtown_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_cut_the_city_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_city_0_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_city_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_city_1_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_city_1_2": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_city_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_cut_the_deep_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_deep_0_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_deep_0_2": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_deep_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_cut_the_ledge_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_ledge_0_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_ledge_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_ledge_1_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_ledge_1_2": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_ledge_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_cut_the_top_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_top_0_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_top_0_2": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_top_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_top_1_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_top_2_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_top_2_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_the_top_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_cut_together_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_together_0_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_together_0_2": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_together_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_together_1_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_cut_together_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_deep_bark_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_2_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_3_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_3_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_4_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_5_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_6_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_deep_bark_7_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_fifty_bark_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_fifty_bark_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_fifty_bark_1_1": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_fifty_bark_2_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_fifty_bark_3_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_fifty_bark_4_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_fifty_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_last": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_lowtown_bark_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_lowtown_bark_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_lowtown_bark_2_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_lowtown_bark_3_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_lowtown_bark_4_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_lowtown_bark_5_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_lowtown_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_snow_bark_0_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_bark_1_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_bark_2_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_bark_3_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_bark_4_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_bark_5_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_bark_6_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_bark_7_0": {
-    "note": "One line of talk in the story mode (a cutscene's dialogue box, or a short line said while climbing), by Frog, Oni, the player's climber or the narrator. Plain words an 8-year-old understands; a short sentence. 'Glim' is a tiny living light: use the one word your language uses for it everywhere.",
-    "maxChars": 80
-  },
-  "content_story_snow_title": {
-    "note": "The name of a story chapter or cutscene: on the chapter list, the chapter card and the results. A place or a short phrase, not a sentence.",
-    "maxChars": 24
-  },
-  "content_story_thesis_0": {
-    "note": "The story's lesson, two lines on a card at the end: the best climbers look down (to help others). Plain words an 8-year-old understands.",
-    "maxChars": 80
-  },
-  "content_story_thesis_1": {
-    "note": "The story's lesson, two lines on a card at the end: the best climbers look down (to help others). Plain words an 8-year-old understands.",
-    "maxChars": 80
   }
 }

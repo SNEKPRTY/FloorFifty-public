@@ -21,7 +21,7 @@ import type { PlayerId } from "../common/ids";
 import type { ServerErrorCode } from "../common/protocol";
 
 /** Every screen the client implements. Content selects; it never adds. */
-export const SCREEN_IDS = ["Splash", "MainMenu", "Lobby", "Gameplay", "GameEnd", "Story", "Replay"] as const;
+export const SCREEN_IDS = ["Splash", "MainMenu", "Lobby", "Gameplay", "GameEnd", "Replay"] as const;
 export type ScreenId = (typeof SCREEN_IDS)[number];
 
 /** Every navigation fact a flow action may resolve. */
@@ -36,9 +36,6 @@ export const FLOW_EVENTS = [
   "leaveRace",
   "raceAgain",
   "returnToMenu",
-  "story",
-  "storyToTitle",
-  "storyToLobby",
   "watchReplay",
   "replayExit",
   "replayExitToRoom",
@@ -84,12 +81,6 @@ export type PresentationEventMap = {
   readonly "ui.back-requested": Readonly<Record<string, never>>;
   /** The pause overlay's Leave race, once the seat is given up. */
   readonly "ui.leave-race-settled": Readonly<Record<string, never>>;
-  /** The title's quick action, or the lobby's first-Play offer (launch polish §3.1.4). */
-  readonly "ui.story-requested": Readonly<Record<string, never>>;
-  /** The story closed toward the title: Exit from there, or Back to title. */
-  readonly "ui.story-closed-to-title": Readonly<Record<string, never>>;
-  /** The story closed toward the lobby: Exit from there, or Race now. */
-  readonly "ui.story-closed-to-lobby": Readonly<Record<string, never>>;
   /** Results' Watch replay, once the replay has been checked against this client's content (race-options spec §7.1). */
   readonly "ui.watch-replay": Readonly<Record<string, never>>;
   /** The replay closed back to results. */
@@ -118,9 +109,6 @@ export const PRESENTATION_EVENT_NAMES = [
   "ui.play-requested",
   "ui.back-requested",
   "ui.leave-race-settled",
-  "ui.story-requested",
-  "ui.story-closed-to-title",
-  "ui.story-closed-to-lobby",
   "ui.watch-replay",
   "ui.replay-exit",
   "ui.replay-exit-to-room",
@@ -138,9 +126,6 @@ export const PRESENTATION_ACTION_IDS = [
   "flow.play",
   "flow.back",
   "flow.leave-race",
-  "flow.story",
-  "flow.story-to-title",
-  "flow.story-to-lobby",
   "flow.watch-replay",
   "flow.replay-exit",
   "flow.replay-exit-to-room",
@@ -172,8 +157,8 @@ export type PresentationConfig = {
 export const FLOW_TARGETS = {
   Splash: { splashComplete: ["MainMenu"], resumeRoom: ["Lobby"] },
   // The title. Rooms are formed in the lobby it leads to (launch polish §3.1.1).
-  MainMenu: { play: ["Lobby"], story: ["Story"] },
-  Lobby: { back: ["MainMenu"], roomRacing: ["Gameplay"], raceFinished: ["GameEnd"], story: ["Story"] },
+  MainMenu: { play: ["Lobby"] },
+  Lobby: { back: ["MainMenu"], roomRacing: ["Gameplay"], raceFinished: ["GameEnd"] },
   Gameplay: { raceFinished: ["GameEnd"], recoverToMenu: ["MainMenu"], leaveRace: ["MainMenu"] },
   GameEnd: {
     raceAgain: ["Lobby"],
@@ -181,8 +166,6 @@ export const FLOW_TARGETS = {
     roomRacing: ["Gameplay"],
     watchReplay: ["Replay"],
   },
-  // Offline, so it closes back to where it was opened (launch polish §3.1.4).
-  Story: { storyToTitle: ["MainMenu"], storyToLobby: ["Lobby"] },
   // The viewer is the client's own (D-O6): it leaves for results, or for the
   // room once the room has moved on.
   Replay: { replayExit: ["GameEnd"], replayExitToRoom: ["Lobby"] },
@@ -200,9 +183,6 @@ export const PRESENTATION_ROUTE_CAPABILITIES = {
   "ui.play-requested": ["flow.play"],
   "ui.back-requested": ["flow.back"],
   "ui.leave-race-settled": ["flow.leave-race"],
-  "ui.story-requested": ["flow.story"],
-  "ui.story-closed-to-title": ["flow.story-to-title"],
-  "ui.story-closed-to-lobby": ["flow.story-to-lobby"],
   "ui.watch-replay": ["flow.watch-replay"],
   "ui.replay-exit": ["flow.replay-exit"],
   "ui.replay-exit-to-room": ["flow.replay-exit-to-room"],
@@ -225,9 +205,6 @@ export const PRESENTATION_ROUTE_REQUIREMENTS = [
   ["ui.play-requested", "flow.play"],
   ["ui.back-requested", "flow.back"],
   ["ui.leave-race-settled", "flow.leave-race"],
-  ["ui.story-requested", "flow.story"],
-  ["ui.story-closed-to-title", "flow.story-to-title"],
-  ["ui.story-closed-to-lobby", "flow.story-to-lobby"],
   ["ui.watch-replay", "flow.watch-replay"],
   ["ui.replay-exit", "flow.replay-exit"],
   ["ui.replay-exit-to-room", "flow.replay-exit-to-room"],

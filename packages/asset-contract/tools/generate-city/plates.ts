@@ -86,20 +86,6 @@ export type Plate = {
 };
 
 export const PLATES: readonly Plate[] = [
-  // The tutorial's near rooftops, in silhouette: one swatch is the whole point.
-  {
-    source: "dawn-near.png",
-    powder: true,
-    file: "world-dawn-near.png",
-    width: 960,
-    height: 440,
-    ramp: ["outline"],
-    headroom: 0.1,
-    grid: 2,
-    minShape: 8,
-    minOpaqueArea: 64,
-    requireBottomConnection: true,
-  },
   // One value. "Remove dark outlines from far buildings" and let haze do the
   // work; a second tone here would start rebuilding the edge that rule removes.
   {

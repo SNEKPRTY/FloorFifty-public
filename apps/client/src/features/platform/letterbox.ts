@@ -149,7 +149,7 @@ export class LetterboxFrame {
    * play field on every device, deliberately.
    *
    * In landscape the bars frame a race's picture (`setCutLine`: a race, a
-   * replay, the story) in the palette's black, as solid bars (Owner,
+   * replay) in the palette's black, as solid bars (Owner,
    * 2026-11-20). The menus show the scenery in the strips instead, and draw the
    * bars only while the splash asks for its true black (`setBarBlack`). The
    * play layer's own mask does the cropping either way. The rest is how they
@@ -211,7 +211,7 @@ export class LetterboxFrame {
   /** The last layout's canvas and field, so a new line can be drawn without one. */
   private last: { viewWidth: number; viewHeight: number; fieldFoot: number; phonePortrait: boolean; landscape: boolean } | undefined;
 
-  /** The 2 px cut line belongs to the field (a race, a replay, the story); menus fill the window and have none. */
+  /** The 2 px cut line belongs to the field (a race, a replay); menus fill the window and have none. */
   private cutLine = true;
 
   /** The cut line, and the solid bars of a race's picture in landscape. Takes effect at the next `layout`. */
@@ -413,7 +413,7 @@ export class LetterboxFrame {
 
   private applyBarLook(): void {
     const landscape = this.last?.landscape ?? false;
-    // A race's picture (a race, a replay, the story) is framed by solid bars in landscape, in the palette's
+    // A race's picture (a race, a replay) is framed by solid bars in landscape, in the palette's
     // black (Owner, 2026-11-20: "Bring back black bars"); the menus fill the window and show the scenery.
     const framed = landscape && this.cutLine;
     const keep = Math.round(255 * (1 - this.blackness));

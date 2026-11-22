@@ -53,7 +53,6 @@
     artSrc,
     content,
     onBack,
-    onStory,
     heroRises = true,
     access = NO_ACCESS,
     seatedOnEntry = undefined,
@@ -68,8 +67,6 @@
     /** A getter, because the artifact can be replaced while the panel is up. */
     content: () => GameContentPayload | undefined;
     onBack: () => void;
-    /** Opens the story, which the match gate offers; absent while story mode is hidden. */
-    onStory?: () => void;
     /** Off when arriving from the title, whose hero is already on screen. */
     heroRises?: boolean;
     /** What this device may pick: the dev flag, what it earned and what it owns. */
@@ -265,9 +262,8 @@
                   {setStatus}
                   touchMode={settings.value.input.touchMode}
                   {settings}
-                  prompts={content()?.story?.prompts}
+                  prompts={content()?.prompts}
                   {artSrc}
-                  {...onStory === undefined ? {} : { onStory }}
                 />
               </MenuSheet>
             </div>

@@ -20,17 +20,8 @@ const SHOWN_HOW = (): void => {
   window.localStorage.setItem(key, JSON.stringify({ ...stored, version: 2, seen }));
 };
 
-/**
- * Story mode is on for every player now (apps/client/src/features/story/enabled.ts); every client still sets the
- * old flag before the page loads, so the specs keep their coverage if the story is ever hidden again.
- */
-const STORY_ON = (): void => {
-  window.localStorage.setItem("floor-fifty.dev.story", "on");
-};
-
 const shownHow = async (context: BrowserContext): Promise<void> => {
   await context.addInitScript(SHOWN_HOW);
-  await context.addInitScript(STORY_ON);
 };
 
 // Playwright owns fixture-created contexts, but browser.newContext() clients

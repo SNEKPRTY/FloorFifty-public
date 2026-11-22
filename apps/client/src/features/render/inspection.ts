@@ -86,8 +86,8 @@ export type VisualInspection = Readonly<{
 export type InputInspection = Readonly<{ left: boolean; right: boolean; fastFall: boolean }>;
 
 /**
- * The two counts the phase 2 gate's leak checks compare: a race, a quality
- * switch or the story must hand both back to where they started.
+ * The two counts the phase 2 gate's leak checks compare: a race or a quality
+ * switch must hand both back to where they started.
  * Installed for the app's whole life, not by a screen, because the title --
  * where the before and after are read -- holds neither.
  */
@@ -143,8 +143,6 @@ declare global {
     __ffBackdrop?: () => BackdropInspection;
     /** Installed by a race only where visual inspection is enabled. */
     __ffRacer?: () => RacerInspection;
-    /** Installed by the story only where visual inspection is enabled. */
-    __ffStory?: () => StoryInspection;
   }
 }
 
@@ -178,28 +176,7 @@ export type RacerInspection = Readonly<{
   tick: number;
 }>;
 
-/**
- * The story as a browser spec reads it (`window.__ffStory`): the step on
- * screen, the chapter and its tick, and what the story bot would press now,
- * so a spec plays a chapter on real keys, a pad or a finger.
- */
-export type StoryInspection = Readonly<{
-  step: "hub" | "cutscene" | "climb" | "results" | "ending" | "finale" | undefined;
-  chapter: number | undefined;
-  tick: number;
-  /** The run's tick when the chapter was finished, once it is. */
-  doneAtTick: number | undefined;
-  /** The lava in this phase, and whether its edge is drawn inside the part of the field a player can see; undefined with no lava. */
-  lava: Readonly<{ under: "player" | "actor"; onScreen: boolean; phaseTicks: number }> | undefined;
-  /** Lamps opened in this run of the chapter. */
-  lamps: number;
-  /** The bot's advice for the next tick, worked out on the state just drawn. */
-  want: Readonly<{ left: boolean; right: boolean; fastFall: boolean }>;
-  /** Puts the story bot at the controls inside the tick (true) or gives them back (false); false until the bot has loaded. */
-  drive: (on: boolean) => boolean;
-}>;
-
-type HookName = "__ffInspect" | "__ffInput" | "__ffCounts" | "__ffJuice" | "__ffBackdrop" | "__ffRacer" | "__ffStory";
+type HookName = "__ffInspect" | "__ffInput" | "__ffCounts" | "__ffJuice" | "__ffBackdrop" | "__ffRacer";
 
 /**
  * Whether this build may expose the inspection hook.
@@ -271,14 +248,6 @@ export function installRacerInspection(
   options: { enabled?: boolean; target?: Window } = {},
 ): () => void {
   return installHook("__ffRacer", read, options);
-}
-
-/** Publishes the story's step and its bot's advice as `window.__ffStory`, under the same rules. */
-export function installStoryInspection(
-  read: () => StoryInspection,
-  options: { enabled?: boolean; target?: Window } = {},
-): () => void {
-  return installHook("__ffStory", read, options);
 }
 
 /** The one gated install and guarded release every hook shares. */

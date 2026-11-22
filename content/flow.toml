@@ -82,30 +82,6 @@ event = "roomRacing"
 to = "Gameplay"
 transition = "liquid"
 
-[[transitions]]
-from = "MainMenu"
-event = "story"
-to = "Story"
-transition = "liquid"
-
-[[transitions]]
-from = "Lobby"
-event = "story"
-to = "Story"
-transition = "liquid"
-
-[[transitions]]
-from = "Story"
-event = "storyToTitle"
-to = "MainMenu"
-transition = "liquid"
-
-[[transitions]]
-from = "Story"
-event = "storyToLobby"
-to = "Lobby"
-transition = "liquid"
-
 # The replay of the race just finished (race-options spec §7.1). The viewer is
 # the client's own: it returns to results, or to the room once the room has
 # moved on.

@@ -62,26 +62,6 @@ event = "splashComplete"
 from = "Splash"
 
 [[transitions]]
-from = "MainMenu"
-event = "story"
-to = "Story"
-
-[[transitions]]
-from = "Lobby"
-event = "story"
-to = "Story"
-
-[[transitions]]
-from = "Story"
-event = "storyToTitle"
-to = "MainMenu"
-
-[[transitions]]
-from = "Story"
-event = "storyToLobby"
-to = "Lobby"
-
-[[transitions]]
 from = "GameEnd"
 event = "watchReplay"
 to = "Replay"

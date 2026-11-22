@@ -8,12 +8,6 @@
    * Built on `Modal`, so focus, Escape and the controller behave as they do
    * on every other dialog. Escape steps back one level: from Settings or
    * Leave to the menu, and from the menu it resumes.
-   *
-   * The story pauses for real, so it says so in `status`, names its way
-   * out in `leaveLabel`, and leaves at once (`confirmLeave: false`): nothing
-   * is lost by leaving it. It also offers `onRestart`, "Start chapter
-   * again", which a controller, driving the racer while the story runs,
-   * reaches no other way. The defaults are the race's.
    */
   import * as m from "../../paraglide/messages.js";
   import { tick } from "svelte";
@@ -30,20 +24,10 @@
     settings,
     onResume,
     onLeave,
-    onRestart,
-    status,
-    leaveLabel,
-    confirmLeave = true,
   }: {
     settings: SettingsStore;
     onResume: () => void;
     onLeave: () => void;
-    /** Where given, a "Start chapter again" button before the way out. */
-    onRestart?: () => void;
-    /** Replaces the race's "Race continues" line; `null` draws none (the title says it). */
-    status?: string | null;
-    leaveLabel?: string;
-    confirmLeave?: boolean;
   } = $props();
 
   let view = $state<"menu" | "settings" | "leave">("menu");
@@ -92,15 +76,9 @@
 <svelte:window onresize={measureHud} />
 
 <Modal title={m.pause_title()} testId="pause-overlay" fade onClose={view === "menu" ? onResume : back} clearTop={hudFoot}>
-  {#if status !== null}
-    <p role="status" class="ff-aq-body m-0 text-aq-ink">
-      {#if status === undefined}
-        <RichText parts={m.pause_race_continues.parts({})} />
-      {:else}
-        {status}
-      {/if}
-    </p>
-  {/if}
+  <p role="status" class="ff-aq-body m-0 text-aq-ink">
+    <RichText parts={m.pause_race_continues.parts({})} />
+  </p>
 
   <div bind:this={views} class="contents">
     <ViewSwitch {view} class="ff-pause__views">
@@ -120,20 +98,8 @@
         {#if shown === "menu"}
           <!-- Two across once the dialog is 340 px wide (a phone held sideways, a
                tablet, a desktop), so every choice fits the 270 px a browser leaves
-               without scrolling (spec §5.7). The story's two ways out, Start again
-               and Leave, stand apart under a line, so they are not read as part of the
-               menu above and two alike words are not side by side with it. -->
-          {#snippet leave()}
-            <Button
-              kind="stop"
-              data-testid="pause-leave"
-              data-sfx="back"
-              onclick={() => (confirmLeave ? void show("leave", "pause-leave-cancel") : onLeave())}
-            >
-              {leaveLabel ?? m.pause_leave_race()}
-            </Button>
-          {/snippet}
-          <div class="ff-pause__menu grid gap-8" class:ff-pause__three={onRestart !== undefined}>
+               without scrolling (spec §5.7). -->
+          <div class="ff-pause__menu grid gap-8">
             <Button kind="go" data-testid="pause-resume" onclick={onResume}>{m.pause_resume()}</Button>
             <Button
               kind="ghost"
@@ -146,14 +112,10 @@
               {muted ? m.shell_unmute() : m.shell_mute()}
             </Button>
             <Button kind="ghost" data-testid="pause-settings" onclick={() => void show("settings")}>{m.pause_settings()}</Button>
-            {#if onRestart === undefined}{@render leave()}{/if}
+            <Button kind="stop" data-testid="pause-leave" data-sfx="back" onclick={() => void show("leave", "pause-leave-cancel")}>
+              {m.pause_leave_race()}
+            </Button>
           </div>
-          {#if onRestart !== undefined}
-            <div data-testid="pause-exit-group" class="ff-pause__exit grid gap-8">
-              <Button kind="ghost" data-testid="pause-restart" onclick={onRestart}>{m.story_restart()}</Button>
-              {@render leave()}
-            </div>
-          {/if}
         {:else if shown === "settings"}
           <Button kind="ghost" data-testid="pause-settings-back" data-sfx="back" onclick={back}>
             <span aria-hidden="true">←</span> {m.shell_back()}
@@ -189,20 +151,10 @@
   }
   /* Led by the dialog's own width (its `ff-dialog` container), not the form
      factor: two across where a whole word fits in each (about 230 px a
-     column; at 340 "Configuración" split), one column below. The story's menu is Resume over a pair, and its
-     two ways out sit under a line of their own. */
-  .ff-pause__exit {
-    margin-top: 12px;
-    padding-top: 12px;
-    border-top: 2px solid var(--ff-panel-bevel);
-  }
+     column; at 340 "Configuración" split), one column below. */
   @container ff-dialog (min-width: 460px) {
-    .ff-pause__menu,
-    .ff-pause__exit {
+    .ff-pause__menu {
       grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    .ff-pause__three > :global(:first-child) {
-      grid-column: span 2;
     }
   }
 </style>

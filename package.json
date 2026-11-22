@@ -47,7 +47,6 @@
     "assets:generate": "vite-node packages/asset-contract/tools/generate-pixellab.ts",
     "assets:images": "vite-node packages/asset-contract/tools/generate-images.ts",
     "assets:portraits": "vite-node packages/asset-contract/tools/generate-portraits.ts",
-    "assets:story": "vite-node packages/asset-contract/tools/generate-story-panels.ts",
     "assets:sounds": "vite-node packages/asset-contract/tools/generate-sounds.ts",
     "assets:measure": "vite-node packages/asset-contract/tools/measure-audio.ts",
     "assets:covers": "vite-node packages/asset-contract/tools/generate-covers.ts",

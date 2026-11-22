@@ -76,33 +76,6 @@ describe("the title, lobby and race flow", () => {
     app.dispose();
   });
 
-  it("opens the tutorial from the title and returns to it", async () => {
-    const app = await presentationHarness({ config: shipped });
-    await app.runtime.start();
-    await app.settleTransitions();
-
-    app.runtime.publish("ui.story-requested", {});
-    await app.settleTransitions();
-    expect(app.screens.currentName).toBe("Story");
-
-    app.runtime.publish("ui.story-closed-to-title", {});
-    await app.settleTransitions();
-    expect(app.screens.currentName).toBe("MainMenu");
-    expect(app.failures).toEqual([]);
-    app.dispose();
-  });
-
-  it("opens the tutorial from the lobby and returns to it", async () => {
-    const app = await presentationHarness({ config: shipped, currentScreen: "Lobby" });
-    app.runtime.publish("ui.story-requested", {});
-    await app.settleTransitions();
-    app.runtime.publish("ui.story-closed-to-lobby", {});
-    await app.settleTransitions();
-    expect(app.screenHistory).toEqual(["Lobby", "Story", "Lobby"]);
-    expect(app.failures).toEqual([]);
-    app.dispose();
-  });
-
   it("sends a resumed seat from the splash to the lobby", async () => {
     const network = new FakeNetwork();
     network.resumeOutcome = "resumed";

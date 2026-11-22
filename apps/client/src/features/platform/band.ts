@@ -2,9 +2,9 @@
  * The visible band (UI layout system spec §4.1).
  *
  * Everything laid over the game -- a screen's frame, the race HUD, the replay
- * bar, the story card -- positions inside it. In a menu it is the whole
- * window, so a menu fills an iPad or a desktop; in a race, a replay or the
- * story it is the 16:9 field between the letterbox's crop (`LETTERBOX_CROP_FRACTION`),
+ * bar -- positions inside it. In a menu it is the whole
+ * window, so a menu fills an iPad or a desktop; in a race or a replay it
+ * is the 16:9 field between the letterbox's crop (`LETTERBOX_CROP_FRACTION`),
  * so nothing lands past the part of the course a player sees. In portrait
  * there is no crop and the band is the canvas either way.
  *
@@ -13,7 +13,7 @@
  * whole viewport) hold until the first layout.
  */
 
-/** The whole window for menus; the 16:9 field for a race, a replay and the story. */
+/** The whole window for menus; the 16:9 field for a race and a replay. */
 export type BandMode = "menu" | "field";
 
 /** The shortest bottom bar, in CSS pixels, that DOM text may sit in. */

@@ -172,7 +172,7 @@ export default defineConfig({
       // The frame budget is measured by its own project, alone. See below. The
       // responsive sweep and its evidence build a context per viewport, so they
       // run once, in `responsive`, rather than at this project's size.
-      testIgnore: /(?:frame-budget|perf-probe|perf-profile|shader-bench|responsive-layout|screen-catalogue|story-evidence|languages|visual-audit|screens-walk(?:-check)?)\.spec\.ts/,
+      testIgnore: /(?:frame-budget|perf-probe|perf-profile|shader-bench|responsive-layout|screen-catalogue|languages|visual-audit|screens-walk(?:-check)?)\.spec\.ts/,
     },
     /**
      * The controller journeys again in WebKit, because players with a pad on
@@ -274,7 +274,7 @@ export default defineConfig({
     {
       name: "responsive",
       use: { ...gpuChromium("Desktop Chrome") },
-      testMatch: /(?:responsive-layout|screen-catalogue|story-evidence|languages|visual-audit)\.spec\.ts/,
+      testMatch: /(?:responsive-layout|screen-catalogue|languages|visual-audit)\.spec\.ts/,
     },
     /**
      * What a frame costs (`perf-probe.spec.ts`): CPU, GPU, draw calls,

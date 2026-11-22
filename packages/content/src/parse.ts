@@ -23,7 +23,7 @@ import { modeSchema } from "./schema/mode";
 import { songSchema } from "./schema/song";
 import { stageSchema } from "./schema/stage";
 import { tuningMapSchema } from "./schema/tuning";
-import { storySchema } from "./schema/story";
+import { promptsSchema } from "./schema/prompts";
 import { unlocksSchema } from "./schema/unlocks";
 import { blockedNamesSchema } from "./schema/blocked-names";
 import { juiceSchema } from "./schema/juice";
@@ -51,7 +51,7 @@ type SourceKind =
   | "unlocks"
   | "blockedNames"
   | "juice"
-  | "story"
+  | "prompts"
   | "character"
   | "stage"
   | "song"
@@ -196,7 +196,7 @@ export function parseSources(tree: RawSourceTree): ParseResult {
       ? undefined
       : { file: authoredBlockedNames.file, value: authoredBlockedNames.value.words };
   const juice = single(tree.juice, "juice", juiceSchema);
-  const story = single(tree.story, "story", storySchema);
+  const prompts = single(tree.prompts, "prompts", promptsSchema);
   const characters = many(tree.characters, "character", characterSchema);
   const stages = many(tree.stages, "stage", stageSchema);
   const songs = many(tree.songs, "song", songSchema);
@@ -211,7 +211,7 @@ export function parseSources(tree: RawSourceTree): ParseResult {
     unlocks === undefined ||
     blockedNames === undefined ||
     juice === undefined ||
-    story === undefined
+    prompts === undefined
   )
     return { ok: false, diagnostics: sortDiagnostics(diagnostics) };
 
@@ -223,7 +223,7 @@ export function parseSources(tree: RawSourceTree): ParseResult {
     unlocks,
     blockedNames,
     juice,
-    story,
+    prompts,
     characters,
     stages,
     songs,

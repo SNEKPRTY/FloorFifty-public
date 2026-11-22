@@ -10,11 +10,9 @@ const { content } = parseGameContentArtifact(
 describe("songs off the stage", () => {
   it("names no stage on any song", () => {
     for (const song of content.songs) expect(song).not.toHaveProperty("stageId");
-    expect(content.story.chapters[0]!.song).not.toHaveProperty("stageId");
   });
 
-  it("gives the first chapter the song its file names, outside the catalog", () => {
-    expect(content.story.chapters[0]!.song.id).toBe("dawn-tutorial");
+  it("keeps the dawn tutorial's song out of the catalog", () => {
     expect(content.songs.map((song) => song.id)).not.toContain("dawn-tutorial");
   });
 });

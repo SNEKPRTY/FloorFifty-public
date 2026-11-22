@@ -1,6 +1,6 @@
 <script lang="ts">
   /**
-   * The title's quick actions (spec §3.1.1, §3.1.5): fullscreen, story,
+   * The title's quick actions (spec §3.1.1, §3.1.5): fullscreen,
    * instructions and contact, as one row of utilities (UI layout spec §6.1). Mute is the
    * corner's, as on every screen. Fullscreen is offered as the browser allows
    * it: a toggle where element fullscreen exists, Add to Home Screen help on
@@ -16,11 +16,10 @@
   import type { BarAction } from "../kit/layout/action-bar";
 
   let {
-    onStory,
     onInstructions,
     onContact,
     onHomeScreen,
-  }: { onStory?: () => void; onInstructions?: () => void; onContact: () => void; onHomeScreen: () => void } = $props();
+  }: { onInstructions?: () => void; onContact: () => void; onHomeScreen: () => void } = $props();
 
   // State, because inside Ruken the host's answer to the first press can
   // change it (to the Home Screen help on an iPhone).
@@ -62,16 +61,14 @@
     { id: "quick-contact", label: m.shell_contact(), icon: contactIcon, kind: "utility" as const, sfx: "none", onSelect: onContact },
   ]);
 
-  /** How to play: the story and the instructions, a bar of their own so each bar stays one row. */
+  /** How to play: the instructions, a bar of their own so each bar stays one row. */
   const learn = $derived<BarAction[]>([
-    ...(onStory !== undefined ? [{ id: "quick-story", label: m.shell_story(), icon: storyIcon, kind: "utility" as const, onSelect: onStory }] : []),
     // Quiet: the carousel it opens plays ui.open (polish spec §8.2).
     ...(onInstructions !== undefined ? [{ id: "quick-instructions", label: m.shell_instructions(), icon: instructionsIcon, kind: "utility" as const, sfx: "none", onSelect: onInstructions }] : []),
   ]);
 </script>
 
 {#snippet fullscreenIcon()}<Icon name={fullscreen ? "collapse" : "expand"} />{/snippet}
-{#snippet storyIcon()}<Icon name="play" />{/snippet}
 {#snippet instructionsIcon()}<Icon name="help" />{/snippet}
 {#snippet contactIcon()}<Icon name="at" />{/snippet}
 

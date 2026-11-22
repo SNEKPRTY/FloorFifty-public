@@ -58,8 +58,8 @@ test.describe("title", () => {
     test(`every corner and bottom-row button has a word on ${view.key}`, async ({ browser }) => {
       const page = await openOn(browser, view);
       await expectWordedButtons(page, page.locator('[data-screen="title"]'));
-      // The three utilities of the bottom row, icon and word, never the icon alone.
-      for (const id of ["quick-story", "quick-instructions", "quick-contact"]) {
+      // The utilities of the bottom row, icon and word, never the icon alone.
+      for (const id of ["quick-instructions", "quick-contact"]) {
         expect((await page.getByTestId(id).innerText()).trim(), `${id} shows its word`).not.toBe("");
       }
       expect((await page.getByTestId("title-language").innerText()).trim(), "the language button shows its endonym").not.toBe("");
@@ -799,15 +799,14 @@ test.describe("contact", () => {
 
 /**
  * The lobby on a first visit, and the match gate it raises (story-mode spec, "The first-match gate"):
- * the gate reads in lines of more than one word, Show me how is the one green, Play story is blue, the
+ * the gate reads in lines of more than one word, Show me how is the one green, the
  * name and code fields show their whole text, and nothing covers the gate's Skip.
  */
 test.describe("lobby", () => {
   const GREEN = "rgb(22, 90, 76)"; // #165a4c, Deep Pine (--ff-go)
-  const BLUE = "rgb(77, 101, 180)"; // #4d65b4, Cornflower Blue (--ff-plain)
   const LATIN: readonly LocaleTag[] = ["en", "es-419"];
   const SMALL: View = { key: "desktop-360x640", options: { viewport: { width: 360, height: 640 }, deviceScaleFactor: 2 }, host: "standalone", touch: false, phoneLandscape: false };
-  const GATE_BUTTONS = ["match-gate-show", "match-gate-story", "match-gate-skip"] as const;
+  const GATE_BUTTONS = ["match-gate-show", "match-gate-skip"] as const;
 
   /** The lobby of a player who has not been shown how. */
   async function openLobby(browser: Browser, view: View, locale: LocaleTag = walkLocale()): Promise<Page> {
@@ -839,10 +838,10 @@ test.describe("lobby", () => {
       for (const id of GATE_BUTTONS) await expect(page.getByTestId(id), id).toBeInViewport({ ratio: 1 });
     });
 
-    test(`the gate's Show me how is the one green and Play story is blue on ${view.key}`, async ({ browser }) => {
+    test(`the gate's Show me how is the one green on ${view.key}`, async ({ browser }) => {
       const page = await openGate(browser, view);
       await expect(page.getByTestId("match-gate-show")).toHaveCSS("background-color", GREEN);
-      await expect(page.getByTestId("match-gate-story")).toHaveCSS("background-color", BLUE);
+      await expect(page.getByTestId("match-gate-skip")).not.toHaveCSS("background-color", GREEN);
     });
 
     for (const locale of LATIN) {
@@ -1485,27 +1484,11 @@ test.describe("race overlays", () => {
   }
 });
 
-/** The story, entered from the title. */
-async function intoStory(browser: Browser, view: View, locale: LocaleTag): Promise<Page> {
-  const context = await browser.newContext(view.options);
-  await seedSettings(context, { locale });
-  const page = await context.newPage();
-  await openTitle(page);
-  await page.getByTestId("quick-story").click();
-  await expectScreen(page, "story");
-  await page.getByTestId("story-play").click({ timeout: 30_000 });
-  await page.getByTestId("story-cutscene-skip").click({ timeout: 30_000 });
-  await expect(page.getByTestId("story-line").or(page.getByTestId("story-chip")).first()).toBeVisible();
-  const coach = page.getByTestId("swipe-coach-dismiss");
-  if (await coach.isVisible().catch(() => false)) await coach.click();
-  return page;
-}
-
 test.describe("pause", () => {
   const PAUSE_VIEWS = UI_VIEWS.filter((view) => ["iphone-se-portrait", "iphone-se-landscape", "desktop-1280x800"].includes(view.key));
 
   for (const view of PAUSE_VIEWS) {
-    test(`pause and story: words whole, nothing covered on ${view.key}`, async ({ browser }) => {
+    test(`pause: words whole, nothing covered on ${view.key}`, async ({ browser }) => {
       test.setTimeout(240_000);
       const race = await intoRace(browser, view, "es-419", { mode: "floors-20" });
       await race.getByTestId("pause-open").click();
@@ -1515,43 +1498,6 @@ test.describe("pause", () => {
       await expectUncovered(race, overlay);
       await expectInsideViewport(race, overlay);
       await expectMinText(race, overlay, 12);
-
-      const story = await intoStory(browser, view, "es-419");
-      await story.keyboard.press("Escape");
-      const paused = story.getByTestId("pause-overlay");
-      await expect(paused).toBeVisible();
-      await expect(story.getByTestId("story-line").or(story.getByTestId("story-chip")), "the words are not drawn under the pause panel").toHaveCount(0);
-      await expectWholeWords(story, paused);
-      await expectUncovered(story, paused);
-      await expectInsideViewport(story, paused);
-      // Start again and Leave stand apart from the menu, under a line.
-      const group = (await story.getByTestId("pause-exit-group").boundingBox())!;
-      const resume = (await story.getByTestId("pause-resume").boundingBox())!;
-      expect(group.y, "the exit group is below the menu").toBeGreaterThan(resume.y + resume.height);
     });
   }
-
-  test("the story words read in lines of more than one word on the iphone-se-portrait", async ({ browser }) => {
-    test.setTimeout(240_000);
-    const view = UI_VIEWS.find((candidate) => candidate.key === "iphone-se-portrait")!;
-    const page = await intoStory(browser, view, "es-419");
-    const lines = await page.getByTestId("story-line").or(page.getByTestId("story-chip")).first().evaluate((node) => {
-      const words: number[] = [];
-      const walker = document.createTreeWalker(node, NodeFilter.SHOW_TEXT);
-      for (let text = walker.nextNode(); text !== null; text = walker.nextNode()) {
-        const value = text.textContent ?? "";
-        for (const match of value.matchAll(/\S+/g)) {
-          const range = document.createRange();
-          range.setStart(text, match.index!);
-          range.setEnd(text, match.index! + match[0].length);
-          words.push(Math.round(range.getBoundingClientRect().top));
-        }
-      }
-      const perLine = new Map<number, number>();
-      for (const top of words) perLine.set(top, (perLine.get(top) ?? 0) + 1);
-      return [...perLine.values()];
-    });
-    expect(lines.length, "the words' lines").toBeLessThanOrEqual(4);
-    expect(Math.min(...lines), "a line holds a single word").toBeGreaterThan(1);
-  });
 });

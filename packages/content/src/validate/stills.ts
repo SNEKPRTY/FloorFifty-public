@@ -2,8 +2,8 @@
  * The select screen's still.
  *
  * A stage offered in the select screen needs its preview (select spec §4.5).
- * Only catalogued stages are held to it: a draft, or the story's own
- * stage, is never offered, so it may go without.
+ * Only catalogued stages are held to it: a draft is never offered, so it
+ * may go without.
  */
 
 import { type Diagnostic, sortDiagnostics } from "../diagnostics";

@@ -20,15 +20,12 @@ import { GameplayScreen } from "../../../../apps/client/src/features/race/gamepl
 import { LobbyScreen } from "../../../../apps/client/src/features/lobby/lobby";
 import { MainMenuScreen } from "../../../../apps/client/src/features/title/main-menu";
 import { ReplayScreen } from "../../../../apps/client/src/features/replay/replay";
-import { StoryScreen } from "../../../../apps/client/src/features/story/story";
-import { GENERATED_CONTENT } from "../../../../apps/server/src/content/generated-content";
 import { snapshotAt } from "../snapshots";
 import { ErrorChannel } from "../../../../apps/client/src/features/net/error-view";
-import { inputMethod, type InputMethod } from "../../../../apps/client/src/features/platform/input-method.svelte";
 import type { SettingsStore } from "../../../../apps/client/src/features/profile/store/settings.svelte";
 import type { Hosting } from "../../../../apps/client/src/features/ruken/host";
 import { trackScreen } from "../open-screens";
-import { FakeContainer, FakeTicker, fakeStage, type FakeStage } from "./stage";
+import { FakeTicker, fakeStage, type FakeStage } from "./stage";
 import { FakeAssets } from "./assets";
 import { FakeAudio } from "./audio";
 import { FakeNetwork } from "./network";
@@ -93,7 +90,6 @@ export function screenManagerWithFakes(): {
       Lobby: () => new RecordingScreen("Lobby", log),
       Gameplay: () => new RecordingScreen("Gameplay", log),
       GameEnd: () => new RecordingScreen("GameEnd", log),
-      Story: () => new RecordingScreen("Story", log),
       Replay: () => new RecordingScreen("Replay", log),
     },
     context,
@@ -505,120 +501,6 @@ export async function gameplayWithFakeNetwork(
     errorShown: () => shownCode,
     settle: async () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
-      settleUi();
-    },
-  };
-}
-
-/**
- * The story mounted on a fake stage whose ticker a test drives.
- *
- * Served the shipped content, so its chapters and prompts are the authored ones.
- * `frames(n)` ticks the stage as a display would; `key` holds a key for about
- * that long in frames, as a player does.
- */
-export async function storyWithFakes(
-  options: {
-    method?: InputMethod;
-    previousScreen?: ScreenId;
-    settings?: SettingsStore;
-    /** Serves an artifact compiled before the story existed. */
-    withoutStory?: boolean;
-    audio?: FakeAudio;
-    /** Ruken, for a screen that runs hosted (see `tests/client/ruken`). */
-    hosting?: Hosting;
-    /** Stays on the hub the story opens on; otherwise "Play" is pressed there, for the focused chapter's cutscene. */
-    atHub?: boolean;
-  } = {},
-): Promise<{
-  screen: import("../../../../apps/client/src/features/story/story").StoryScreen;
-  settings: SettingsStore;
-  audio: FakeAudio;
-  ticker: FakeTicker;
-  stage: FakeStage;
-  /** Display objects on the stage before the screen entered. */
-  displayObjectsBefore: number;
-  countDisplayObjects(): number;
-  /** The names of every event published, in order. */
-  published(): PresentationEnvelope["name"][];
-  click(testId: string): void;
-  query<T extends Element>(testId: string): T | null;
-  frames(count: number): void;
-  key(code: string, ms: number): void;
-  escape(): void;
-}> {
-  const ticker = new FakeTicker();
-  const stage = fakeStage({ ticker });
-  const settings = options.settings ?? fakeSettings();
-  const published = recordingPublisher();
-  inputMethod.note(options.method ?? "keyboard");
-
-  const layers = [stage.scene, stage.field, stage.backdrop, stage.world, stage.ui] as unknown as FakeContainer[];
-  const count = (node: { children?: readonly unknown[] }): number =>
-    (node.children ?? []).reduce<number>((sum, child) => sum + 1 + count(child as typeof node), 0);
-  const countDisplayObjects = (): number => layers.reduce((sum, layer) => sum + count(layer), 0);
-  const displayObjectsBefore = countDisplayObjects();
-
-  // The stale artifact the story's fallback exists for: cast through
-  // `unknown`, because the current schema would refuse it.
-  const served = options.withoutStory
-    ? ({
-        ...GENERATED_CONTENT,
-        content: (({ story: _story, ...rest }) => rest)(GENERATED_CONTENT.content),
-      } as unknown as GameContent)
-    : GENERATED_CONTENT;
-  const audio = options.audio ?? new FakeAudio();
-
-  const screen = new StoryScreen();
-  await screen.enter({
-    stage,
-    assets: new FakeAssets(),
-    audio,
-    network: new FakeNetwork(),
-    content: fakeContentPort(served),
-    errors: new ErrorChannel(),
-    publishPresentationEvent: published.publish,
-    settings,
-    gamepad: { setRaceTarget: () => {} },
-    carryOver: new CarryOver(),
-    ...(options.hosting === undefined ? {} : { hosting: options.hosting }),
-    ...(options.previousScreen === undefined ? {} : { previousScreen: options.previousScreen }),
-  });
-  settleUi();
-
-  const query = <T extends Element>(testId: string): T | null =>
-    stage.overlay.querySelector<T>(`[data-testid="${testId}"]`);
-  if (options.atHub !== true) {
-    query<HTMLButtonElement>("story-play")?.click();
-    settleUi();
-  }
-  const frames = (count: number): void => {
-    for (let index = 0; index < count; index += 1) ticker.tick(16.6667);
-    settleUi();
-  };
-
-  return {
-    screen,
-    stage,
-    settings,
-    audio,
-    ticker,
-    displayObjectsBefore,
-    countDisplayObjects,
-    published: () => published.events.map((event) => event.name),
-    click: (testId) => {
-      query<HTMLButtonElement>(testId)?.click();
-      settleUi();
-    },
-    query,
-    frames,
-    key: (code, ms) => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { code }));
-      frames(Math.round(ms / 16));
-      window.dispatchEvent(new KeyboardEvent("keyup", { code }));
-    },
-    escape: () => {
-      window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", code: "Escape" }));
       settleUi();
     },
   };

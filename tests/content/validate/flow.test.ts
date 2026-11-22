@@ -63,10 +63,6 @@ describe("the shipped flow's transitions", () => {
     "GameEnd.returnToMenu",
     "GameEnd.roomRacing",
     "Gameplay.leaveRace",
-    "MainMenu.story",
-    "Lobby.story",
-    "Story.storyToTitle",
-    "Story.storyToLobby",
     // The replay's edges (race-options spec §7.1).
     "GameEnd.watchReplay",
     "Replay.replayExit",
