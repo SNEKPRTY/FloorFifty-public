@@ -343,6 +343,14 @@ const RTT_SAMPLES = 7;
  * Everything else -- 1006 above all, a socket that died without a close frame
  * -- is a drop, and a drop is what the grace window exists for.
  */
+/**
+ * The loading bar's real steps through a join: the request is on its way, the
+ * server has reserved a seat, the socket is in. Weighted by the waits they end:
+ * the reservation carries the HTTP round trip and the room opening, the last
+ * step a new socket's handshakes.
+ */
+export const JOIN_STEPS = { asked: 0.1, reserved: 0.55, seated: 1 } as const;
+
 const NORMAL_CLOSE = 1000;
 const CONSENTED_CLOSE = 4000;
 const SERVER_SHUTDOWN_CLOSE = 4001;
@@ -398,8 +406,30 @@ export class ColyseusNetworkManager implements NetworkPort {
     this.replay = undefined;
     this.finished = undefined;
     if (previous !== undefined) void previous.leave(true).catch(() => undefined);
-    if (this.current(generation)) this.setState("connecting");
+    if (this.current(generation)) {
+      this.setState("connecting");
+      this.joinProgress(JOIN_STEPS.asked);
+    }
     return generation;
+  }
+
+  private joinProgress(fraction: number): void {
+    for (const listener of [...this.subscribers]) listener.onJoinProgress?.(fraction);
+  }
+
+  /**
+   * Reports the seat the server reserved, the middle of a join, for the loading
+   * bar. The SDK's `create`, `joinById` and `joinOrCreate` each pass their
+   * reservation through `consumeSeatReservation` before opening the socket, so
+   * that one call is wrapped; a client without it (a test's) reports nothing.
+   */
+  private watchSeat(client: Client, generation: number): void {
+    const consume = (client as Partial<Client>).consumeSeatReservation?.bind(client);
+    if (consume === undefined) return;
+    client.consumeSeatReservation = ((...args: Parameters<Client["consumeSeatReservation"]>) => {
+      if (this.current(generation)) this.joinProgress(JOIN_STEPS.reserved);
+      return consume(...args);
+    }) as Client["consumeSeatReservation"];
   }
 
   private adoptIfCurrent(room: Room, generation: number): boolean {
@@ -699,6 +729,7 @@ export class ColyseusNetworkManager implements NetworkPort {
       room.removeAllListeners();
       if (this.room === room) this.room = undefined;
     };
+    if (this.state === "connecting") this.joinProgress(JOIN_STEPS.seated);
     this.setState("connected");
   }
 
@@ -759,6 +790,7 @@ export class ColyseusNetworkManager implements NetworkPort {
     const generation = this.beginJoin();
     if (!this.current(generation)) return;
     const client = this.createClient(this.url);
+    this.watchSeat(client, generation);
     try {
       this.adoptIfCurrent(await client.create("race", { name, protocolVersion: PROTOCOL_VERSION, ...this.accessOptions(), ...this.colourOptions(), deviceClass: this.deviceClass, ...BUILD_JOIN_FACTS }), generation);
     } catch (error) {
@@ -770,6 +802,7 @@ export class ColyseusNetworkManager implements NetworkPort {
     const generation = this.beginJoin();
     if (!this.current(generation)) return;
     const client = this.createClient(this.url);
+    this.watchSeat(client, generation);
     try {
       this.adoptIfCurrent(await client.joinById(code, { name, protocolVersion: PROTOCOL_VERSION, ...this.accessOptions(), ...this.colourOptions(), deviceClass: this.deviceClass, ...BUILD_JOIN_FACTS }), generation);
     } catch (error) {
@@ -781,6 +814,7 @@ export class ColyseusNetworkManager implements NetworkPort {
     const generation = this.beginJoin();
     if (!this.current(generation)) return;
     const client = this.createClient(this.url);
+    this.watchSeat(client, generation);
     const options = {
       name,
       protocolVersion: PROTOCOL_VERSION,

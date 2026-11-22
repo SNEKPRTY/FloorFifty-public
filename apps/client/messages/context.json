@@ -212,6 +212,18 @@
     "maxChars": 20,
     "screenshot": "docs/i18n/screens/en/tablet-portrait-menu.png"
   },
+  "lobby_finding_race": {
+    "note": "Lobby: the words over the loading bar from the press of Find a race until the player is seated in a room.",
+    "maxChars": 32
+  },
+  "lobby_making_room": {
+    "note": "Lobby: the words over the loading bar from the press of Create room until the player's new room is open.",
+    "maxChars": 32
+  },
+  "lobby_joining_room": {
+    "note": "Lobby: the words over the loading bar from the press of Join room (with a typed code) until the player is seated.",
+    "maxChars": 32
+  },
   "lobby_room_code": {
     "note": "Label of the six-character code that identifies a room (lobby field, and in the ready room).",
     "maxChars": 20,

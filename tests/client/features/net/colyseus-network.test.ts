@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { PROTOCOL_VERSION, RECONNECT_GRACE_TICKS, TICK_MS } from "@floor-fifty/shared/common/constants";
 import {
   ColyseusNetworkManager,
+  JOIN_STEPS,
   reconnectDelay,
   schemaToSnapshot,
 } from "../../../../apps/client/src/features/net/colyseus-network";
@@ -211,6 +212,46 @@ describe("the colyseus network manager", () => {
     expect(client.create).not.toHaveBeenCalled();
     expect(manager.roomCode).toBe(room.roomId);
     expect(manager.connectionState).toBe("connected");
+  });
+
+  it("reports a join's real steps for the loading bar: asked, seat reserved, seated", async () => {
+    const { client, room } = fakeColyseusClient();
+    const steps: number[] = [];
+    // The SDK passes each reservation through this before opening the socket.
+    const sdk = client as unknown as { consumeSeatReservation: (reservation: unknown) => Promise<unknown> };
+    sdk.consumeSeatReservation = vi.fn(async () => room);
+    client.joinOrCreate.mockImplementationOnce(async () => sdk.consumeSeatReservation({ roomId: room.roomId }));
+    const manager = new ColyseusNetworkManager("http://test", () => client);
+    manager.subscribe({ onJoinProgress: (fraction) => steps.push(fraction) });
+
+    await manager.quickMatch("Kite");
+
+    expect(steps).toEqual([JOIN_STEPS.asked, JOIN_STEPS.reserved, JOIN_STEPS.seated]);
+    expect(JOIN_STEPS.seated).toBe(1);
+  });
+
+  it("says nothing more about a join a newer one replaced", async () => {
+    const first = fakeColyseusClient();
+    const second = fakeColyseusClient();
+    let release: () => void = () => undefined;
+    const sdk = first.client as unknown as { consumeSeatReservation: (reservation: unknown) => Promise<unknown> };
+    sdk.consumeSeatReservation = vi.fn(async () => first.room);
+    first.client.joinOrCreate.mockImplementationOnce(async () => {
+      await new Promise<void>((resolve) => (release = resolve));
+      return sdk.consumeSeatReservation({});
+    });
+    const clients = [first.client, second.client];
+    const manager = new ColyseusNetworkManager("http://test", () => clients.shift()!);
+    const steps: number[] = [];
+    manager.subscribe({ onJoinProgress: (fraction) => steps.push(fraction) });
+
+    const stale = manager.quickMatch("Kite");
+    await manager.createRoom("Kite");
+    release();
+    await stale;
+
+    // The first join's reservation and seat are never reported once the second began.
+    expect(steps).toEqual([JOIN_STEPS.asked, JOIN_STEPS.asked, JOIN_STEPS.seated]);
   });
 
   it("tries once more when the room it was offered has just closed", async () => {
