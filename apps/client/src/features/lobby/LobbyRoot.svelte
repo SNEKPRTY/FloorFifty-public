@@ -44,6 +44,7 @@
   import RoomCode from "./RoomCode.svelte";
   import MenuHero from "./MenuHero.svelte";
   import MenuSheet from "../settings/MenuSheet.svelte";
+  import JoinLoader from "./JoinLoader.svelte";
 
   let {
     store,
@@ -136,6 +137,15 @@
         }),
     }),
   );
+
+  /**
+   * The loading bar's words and fill while a create, join or find is on its
+   * way (`JoinLoader`). The words are the panel's, set on the press; the fill
+   * is the join's own steps, heard here because this outlives every join.
+   */
+  let joiningLabel = $state<() => string>(m.shell_connection_connecting);
+  let joinFraction = $state(0);
+  $effect(() => network.subscribe({ onJoinProgress: (fraction) => (joinFraction = fraction) }));
 
   /**
    * Whether the player is in a room, and so which half to show.
@@ -259,6 +269,7 @@
                 <ConnectPanel
                   {network}
                   {attempt}
+                  onJoining={(label) => (joiningLabel = label)}
                   {setStatus}
                   touchMode={settings.value.input.touchMode}
                   {settings}
@@ -285,6 +296,12 @@
     onClose={() => setStatus(() => "")}
   />
 </section>
+
+<!-- Outside the section, like the Character page: a fixed overlay inside the
+     glass panels would take their backdrop filter as its containing block. -->
+{#if store.connection === "connecting"}
+  <JoinLoader label={joiningLabel()} fraction={joinFraction} />
+{/if}
 
 {#if characterOpen && inRoom && mySeat?.player !== undefined}
   <CharacterPage

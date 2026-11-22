@@ -50,6 +50,11 @@ export type NetworkListeners = {
    * open (`closesInSeconds` is then null) (audit B1).
    */
   onIdleWarning?(warning: IdleWarning): void;
+  /**
+   * How far a create, join or find has got, as a real fraction for the loading
+   * bar: `JOIN_STEPS` in `colyseus-network.ts`. Heard from the press to the seat.
+   */
+  onJoinProgress?(fraction: number): void;
 };
 
 export interface NetworkPort {

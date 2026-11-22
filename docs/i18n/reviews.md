@@ -119,3 +119,8 @@ approved, and `pnpm i18n:check --release` green.
 | 2026-11-19 | es-419 | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |
 | 2026-11-19 | pt-BR | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |
 | 2026-11-19 | zh-Hans | owner (mcthaydt), as-is, card 2026-11-19 | 1 approved |
+| 2026-11-22 | es-419 | claude (read against the English, 2026-11-22), owner to confirm | 3 approved |
+| 2026-11-22 | pt-BR | claude (read against the English, 2026-11-22), owner to confirm | 3 approved |
+| 2026-11-22 | ja | claude (read against the English, 2026-11-22), owner to confirm | 3 approved |
+| 2026-11-22 | ko | claude (read against the English, 2026-11-22), owner to confirm | 3 approved |
+| 2026-11-22 | zh-Hans | claude (read against the English, 2026-11-22), owner to confirm | 3 approved |

@@ -36,6 +36,7 @@
     settings,
     prompts,
     artSrc,
+    onJoining,
   }: {
     network: NetworkPort;
     /** Runs a room command, reporting a refusal in place. */
@@ -45,6 +46,8 @@
     prompts: ControlPrompts | undefined;
     artSrc: (alias: string) => string | undefined;
     setStatus: (message: () => string, tone?: "info" | "error") => void;
+    /** The loading bar's words for the join a press starts (`JoinLoader`). */
+    onJoining?: (label: () => string) => void;
     /** Which touch controls a race will show, so the help names those. */
     touchMode?: "swipe" | "buttons";
   } = $props();
@@ -122,13 +125,26 @@
     if (action !== undefined) run(action);
   }
 
+  /**
+   * A join already on its way is never started over: a second press (Enter, a
+   * pad's A, a tap before the loading bar covers the screen) used to cancel it
+   * and begin again, so an impatient player waited longest.
+   */
+  function joining(): boolean {
+    return network.connectionState === "connecting";
+  }
+
   function create(): void {
+    if (joining()) return;
     const value = playerName();
+    onJoining?.(m.lobby_making_room);
     attempt(() => network.createRoom(value));
   }
 
   function findRace(): void {
+    if (joining()) return;
     const value = playerName();
+    onJoining?.(m.lobby_finding_race);
     attempt(() => network.quickMatch(value));
   }
 
@@ -145,12 +161,14 @@
   }
 
   function join(): void {
+    if (joining()) return;
     const room = code.trim().toUpperCase();
     if (room.length !== ROOM_CODE_LENGTH) {
       setStatus(() => m.lobby_room_code_length({ length: ROOM_CODE_LENGTH }), "error");
       return;
     }
     const value = playerName();
+    onJoining?.(m.lobby_joining_room);
     attempt(() => network.joinRoom(room, value));
   }
 
